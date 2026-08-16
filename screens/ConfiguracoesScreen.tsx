@@ -12,8 +12,10 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from '../theme/colors';
 
 type Props = {
+
   onVoltar: () => void;
   onAbrirBackup: () => void;
+  onAbrirNotificacoes: () => void;
   onAbrirAparencia: () => void;
   onAbrirPrivacidade: () => void;
   onAbrirSobre: () => void;
@@ -43,6 +45,7 @@ export default function ConfiguracoesScreen({
   onAbrirPerguntas,
   onAbrirFaleConosco,
   onAbrirRelatarProblema,
+  onAbrirNotificacoes,
 }: Props) {
   return (
     <SafeAreaView style={styles.container}>
@@ -98,6 +101,7 @@ export default function ConfiguracoesScreen({
             icon="notifications-outline"
             titulo="Notificações"
             subtitulo="Sons, vibrações e lembretes"
+            onPress={onAbrirNotificacoes}
           />
         </View>
 
@@ -280,11 +284,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingTop: 40,
     paddingVertical: 14,
   },
 
   headerTitle: {
-    fontSize: 18,
+    fontSize: 21,
     fontWeight: '700',
     color: colors.text,
   },

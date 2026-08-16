@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 
 import Splash from "./src/screens/Splash/Splash";
+import LoginScreen from "./screens/LoginScreen";
+import CadastroScreen from "./screens/CadastroScreen";
+import RecSenhaScreen from "./screens/RecSenhaScreen";
+import HomeScreen from "./screens/Home/HomeScreen";
+import MedicamentosScreen from "./screens/Medicamentos/MedicamentosScreen";
+import AdicionarMedicamentoScreen from "./screens/Medicamentos/AdicionarMedicamentoScreen";
+import BottomNavBar from "./components/BottomNavBar";
+
 import Lembretes from "./src/screens/Lembretes/Lembretes";
 import NovoLembrete from "./src/screens/NovoLembrete/NovoLembrete";
 import Notificacoes from "./src/screens/Notificacoes/Notificacoes";
@@ -37,7 +45,15 @@ export default function App() {
   const [splash, setSplash] = useState(true);
   const [telaAtual, setTelaAtual] = useState(0);
   const [onboardingFinalizado, setOnboardingFinalizado] = useState(false);
+  const [telaLogin, setTelaLogin] = useState(false);
+const [telaCadastro, setTelaCadastro] = useState(false);
+const [telaRecSenha, setTelaRecSenha] = useState(false);
+  const [abaAtual, setAbaAtual] = useState<
+    "inicio" | "agenda" | "medicamentos" | "perfil"
+  >("inicio");
 
+
+  const [telaAdicionarMedicamento, setTelaAdicionarMedicamento] =useState(false);  
   const [telaLembretes, setTelaLembretes] = useState(false);
   const [telaNovoLembrete, setTelaNovoLembrete] = useState(false);
   const [telaNotificacoes, setTelaNotificacoes] = useState(false);
@@ -54,11 +70,58 @@ export default function App() {
   const [telaFaleConosco, setTelaFaleConosco] = useState(false);
   const [telaRelatarProblema, setTelaRelatarProblema] = useState(false);
 
+  // Splash
   if (splash) {
     return <Splash onFinish={() => setSplash(false)} />;
   }
 
-  // Subtelas de configurações
+  if (telaLogin) {
+  return (
+    <LoginScreen
+      onAbrirCadastro={() => {
+        setTelaLogin(false);
+        setTelaCadastro(true);
+      }}
+      onAbrirRecuperacao={() => {
+        setTelaLogin(false);
+        setTelaRecSenha(true);
+      }}
+      onEntrar={() => {
+        setTelaLogin(false);
+        setOnboardingFinalizado(true);
+      }}
+    />
+  );
+}
+
+if (telaCadastro) {
+  return (
+    <CadastroScreen
+      onVoltarLogin={() => {
+        setTelaCadastro(false);
+        setTelaLogin(true);
+      }}
+      onCadastrar={() => {
+        setTelaCadastro(false);
+        setTelaLogin(true);
+      }}
+    />
+  );
+}
+
+if (telaRecSenha) {
+  return (
+    <RecSenhaScreen
+      onVoltarLogin={() => {
+        setTelaRecSenha(false);
+        setTelaLogin(true);
+      }}
+    />
+  );
+}
+  // =========================
+  // CONFIGURAÇÕES
+  // =========================
 
   if (telaBackup) {
     return (
@@ -124,25 +187,28 @@ export default function App() {
     );
   }
 
-  // Tela principal de configurações
-
   if (telaConfiguracoes) {
     return (
       <ConfiguracoesScreen
         onVoltar={() => setTelaConfiguracoes(false)}
         onAbrirBackup={() => setTelaBackup(true)}
+        onAbrirNotificacoes={() => setTelaNotificacoes(true)}
         onAbrirAparencia={() => setTelaAparencia(true)}
         onAbrirPrivacidade={() => setTelaPrivacidade(true)}
         onAbrirSobre={() => setTelaSobreApp(true)}
         onAbrirTermos={() => setTelaTermos(true)}
         onAbrirPerguntas={() => setTelaPerguntas(true)}
         onAbrirFaleConosco={() => setTelaFaleConosco(true)}
-        onAbrirRelatarProblema={() => setTelaRelatarProblema(true)}
+        onAbrirRelatarProblema={() =>
+          setTelaRelatarProblema(true)
+        }
       />
     );
   }
 
-  // Telas já existentes no projeto
+  // =========================
+  // NOTIFICAÇÕES
+  // =========================
 
   if (telaNotificacoes) {
     return (
@@ -151,6 +217,10 @@ export default function App() {
       />
     );
   }
+
+  // =========================
+  // NOVO LEMBRETE
+  // =========================
 
   if (telaNovoLembrete) {
     return (
@@ -164,34 +234,118 @@ export default function App() {
     );
   }
 
+  // =========================
+  // LISTA DE LEMBRETES
+  // =========================
+
   if (telaLembretes) {
     return (
       <Lembretes
         onVoltar={() => setTelaLembretes(false)}
-        onAdicionarLembrete={() => setTelaNovoLembrete(true)}
+        onAdicionarLembrete={() =>
+          setTelaNovoLembrete(true)
+        }
+        onAbrirConfiguracoes={() =>
+          setTelaConfiguracoes(true)
+        }
       />
     );
   }
 
+  if (telaAdicionarMedicamento) {
+  return (
+    <AdicionarMedicamentoScreen
+      onVoltar={() => setTelaAdicionarMedicamento(false)}
+    />
+  );
+}
+
   if (onboardingFinalizado) {
     return (
-      <Lembretes
-        onVoltar={() => setOnboardingFinalizado(false)}
-        onAdicionarLembrete={() => setTelaNovoLembrete(true)}
-      />
+      <View style={styles.appContainer}>
+
+        {/* Conteúdo da tela */}
+        <View style={styles.mainContent}>
+
+          {/* HOME */}
+          {abaAtual === "inicio" && (
+            <HomeScreen
+              onAddAlarme={() =>
+                setTelaNovoLembrete(true)
+              }
+              onPressBell={() =>
+                setTelaNotificacoes(true)
+              }
+              onPressQuickAction={(acao) => {
+                if (acao === "alertas") {
+                  setTelaLembretes(true);
+                }
+              }}
+            />
+          )}
+
+          {/* AGENDA */}
+          {abaAtual === "agenda" && (
+            <View style={styles.placeholder}>
+              <Text style={styles.placeholderText}>
+                Agenda
+              </Text>
+            </View>
+          )}
+
+          {/* MEDICAMENTOS */}
+          {abaAtual === "medicamentos" && (
+  <MedicamentosScreen
+    onAddMedicamento={() =>
+      setTelaAdicionarMedicamento(true)
+    }
+  />
+)}
+
+          {/* PERFIL */}
+          {abaAtual === "perfil" && (
+            <View style={styles.placeholder}>
+              <Text style={styles.placeholderText}>
+                Perfil
+              </Text>
+            </View>
+          )}
+
+        </View>
+
+        {/* NAVBAR */}
+        <BottomNavBar
+          activeTab={abaAtual}
+          onHome={() =>
+            setAbaAtual("inicio")
+          }
+          onAgenda={() => {}}
+          onMedicamentos={() =>
+            setAbaAtual("medicamentos")
+          }
+          onPerfil={() => {}}
+        />
+
+      </View>
     );
   }
+
+  // =========================
+  // ONBOARDING
+  // =========================
 
   function proximaTela() {
     if (telaAtual < telas.length - 1) {
       setTelaAtual(telaAtual + 1);
     } else {
       setOnboardingFinalizado(true);
+      setTelaLogin(true);
     }
   }
 
   function pular() {
     setOnboardingFinalizado(true);
+    setTelaLogin(true);
   }
 
   return (
@@ -218,12 +372,18 @@ export default function App() {
           onPress={pular}
           activeOpacity={0.7}
         >
-          <Text style={styles.textoPular}>Pular</Text>
+          <Text style={styles.textoPular}>
+            Pular
+          </Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>
   );
 }
+
+// =========================
+// ESTILOS
+// =========================
 
 const styles = StyleSheet.create({
   container: {
@@ -266,5 +426,27 @@ const styles = StyleSheet.create({
     color: "#009B4D",
     fontSize: 15,
     fontWeight: "bold",
+  },
+
+  appContainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+
+  mainContent: {
+    flex: 1,
+  },
+
+  placeholder: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f2f2f2",
+  },
+
+  placeholderText: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#1f7a4d",
   },
 });

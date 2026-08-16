@@ -27,16 +27,15 @@ const TEXT = "#17232B";
 type Props = {
   onVoltar: () => void;
   onAdicionarLembrete: () => void;
+  onAbrirConfiguracoes: () => void;
 };
 
 export default function Lembretes({
   onVoltar,
   onAdicionarLembrete,
+  onAbrirConfiguracoes,
 }: Props) {
-  function abrirConfiguracoes() {
-    console.log("Configurações");
-  }
-
+  
   function abrirCalendario() {
     console.log("Calendário de tratamento");
   }
@@ -115,7 +114,7 @@ export default function Lembretes({
           <View style={styles.opcoes}>
             <TouchableOpacity
               style={styles.card}
-              onPress={abrirConfiguracoes}
+              onPress={onAbrirConfiguracoes}
               activeOpacity={0.7}
             >
               <View style={styles.iconeCard}>
@@ -195,17 +194,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
+    paddingTop: 14,
   },
 
   botaoVoltar: {

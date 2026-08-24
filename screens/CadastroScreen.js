@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   StyleSheet,
   Text,
@@ -8,8 +9,14 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
+import colors from '../theme/colors';
 
-export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
+export default function CadastroScreen({
+  onVoltarLogin,
+  onCadastrar,
+  onAbrirTermos,
+  onAbrirPrivacidade,
+}) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -17,7 +24,9 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
 
   return (
     <SafeAreaView style={styles.container}>
+
       <View style={styles.headerBackground}>
+
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
             <Image
@@ -27,16 +36,22 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
           </View>
         </View>
 
-        <Text style={styles.welcomeText}>Bem-Vindo</Text>
+        <Text style={styles.welcomeText}>
+          Bem-Vindo
+        </Text>
+
       </View>
 
       <View style={styles.cardContainer}>
-        <Text style={styles.registerTitle}>Cadastro</Text>
+
+        <Text style={styles.registerTitle}>
+          Cadastro
+        </Text>
 
         <TextInput
           style={styles.input}
           placeholder="Nome Completo"
-          placeholderTextColor="#A0A0A0"
+          placeholderTextColor={colors.placeholder}
           value={nome}
           onChangeText={setNome}
         />
@@ -44,7 +59,7 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#A0A0A0"
+          placeholderTextColor={colors.placeholder}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -54,13 +69,14 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
         <TextInput
           style={styles.input}
           placeholder="Senha"
-          placeholderTextColor="#A0A0A0"
+          placeholderTextColor={colors.placeholder}
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
         />
 
         <View style={styles.checkboxContainer}>
+
           <TouchableOpacity
             style={[
               styles.checkbox,
@@ -68,30 +84,51 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
             ]}
             onPress={() => setAceitouTermos(!aceitouTermos)}
           >
-            {aceitouTermos && <View style={styles.checkboxCheck} />}
+            {aceitouTermos && (
+              <View style={styles.checkboxCheck} />
+            )}
           </TouchableOpacity>
 
           <Text style={styles.checkboxLabel}>
             Li e concordo com os{' '}
-            <Text style={styles.linkText}>Termos de Uso</Text>
-            {' '}e a{' '}
-            <Text style={styles.linkText}>
-              Política de Privacidade.
+
+            <Text
+              style={styles.linkText}
+              onPress={onAbrirTermos}
+            >
+              Termos de Uso
             </Text>
+
+            {' '}e a{' '}
+
+            <Text
+              style={styles.linkText}
+              onPress={onAbrirPrivacidade}
+            >
+              Política de Privacidade
+            </Text>
+
+            .
           </Text>
+
         </View>
 
         <TouchableOpacity
           style={styles.button}
           onPress={onCadastrar}
         >
-          <Text style={styles.buttonText}>Cadastrar</Text>
+          <Text style={styles.buttonText}>
+            Cadastrar
+          </Text>
         </TouchableOpacity>
+
       </View>
 
       <View style={styles.footerContainer}>
+
         <Text style={styles.footerText}>
           Já tem uma conta?{' '}
+
           <Text
             style={styles.loginText}
             onPress={onVoltarLogin}
@@ -99,7 +136,9 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
             Login
           </Text>
         </Text>
+
       </View>
+
     </SafeAreaView>
   );
 }
@@ -107,11 +146,11 @@ export default function CadastroScreen({ onVoltarLogin, onCadastrar }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.authBackground,
   },
 
   headerBackground: {
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
     height: '45%',
     borderBottomLeftRadius: 180,
     borderBottomRightRadius: 180,
@@ -129,7 +168,7 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
@@ -144,14 +183,14 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    color: '#FFFFFF',
+    color: colors.card,
     fontSize: 28,
     fontWeight: 'bold',
     transform: [{ scaleX: 1 / 1.2 }],
   },
 
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 20,
     padding: 25,
     marginHorizontal: 30,
@@ -170,19 +209,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '500',
     textAlign: 'center',
-    color: '#000000',
+    color: colors.authText,
     marginBottom: 20,
   },
 
   input: {
     height: 50,
-    borderColor: '#E0E0E0',
+    borderColor: colors.border,
     borderWidth: 1,
     borderRadius: 25,
     paddingHorizontal: 20,
     fontSize: 16,
-    color: '#333333',
-    backgroundColor: '#FAFAFA',
+    color: colors.inputText,
+    backgroundColor: colors.inputBackground,
     marginBottom: 15,
   },
 
@@ -198,40 +237,40 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#A0A0A0',
+    borderColor: colors.placeholder,
     marginTop: 2,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
   },
 
   checkboxChecked: {
-    borderColor: '#6FA47F',
+    borderColor: colors.authPrimary,
   },
 
   checkboxCheck: {
     width: 10,
     height: 10,
     borderRadius: 2,
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
   },
 
   checkboxLabel: {
     flex: 1,
     fontSize: 11,
-    color: '#555555',
+    color: colors.authMuted,
     lineHeight: 15,
     fontWeight: '600',
   },
 
   linkText: {
-    color: '#6FA47F',
+    color: colors.authPrimary,
     textDecorationLine: 'underline',
   },
 
   button: {
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
     height: 50,
     borderRadius: 25,
     alignItems: 'center',
@@ -239,7 +278,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.card,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -254,11 +293,11 @@ const styles = StyleSheet.create({
 
   footerText: {
     fontSize: 14,
-    color: '#000000',
+    color: colors.authText,
   },
 
   loginText: {
-    color: '#6FA47F',
+    color: colors.authPrimary,
     fontWeight: 'bold',
   },
 });

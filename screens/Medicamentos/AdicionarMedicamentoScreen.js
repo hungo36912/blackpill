@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 
 import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
+import typography from '../../theme/typography';
 
 import ScreenHeader from '../../components/ScreenHeader';
 import SearchBar from '../../components/SearchBar';
@@ -61,27 +63,27 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing['4xl'],
   },
 
   question: {
-    fontSize: 21,
+    fontSize: typography.size.xl,
     fontWeight: '700',
     color: colors.primary,
     lineHeight: 28,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
 
   subtext: {
     fontSize: 13.5,
     color: colors.textSecondary,
     lineHeight: 20,
-    marginBottom: 22,
+    marginBottom: spacing.xl + 2,
   },
 
   searchWrap: {
-    marginBottom: 22,
+    marginBottom: spacing.xl + 2,
   },
 });

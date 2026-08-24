@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+
 import {
   View,
   Text,
@@ -6,11 +7,16 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
 
-import colors from '../theme/colors';
-import AccordionItem from '../components/AccordionItem';
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "../theme/colors";
+import { spacing } from "../theme/spacing";
+import { typography } from "../theme/typography";
+import { radius } from "../theme/radius";
+
+import AccordionItem from "../components/AccordionItem";
 
 type Props = {
   onVoltar: () => void;
@@ -34,7 +40,7 @@ export default function TermosDeUsoScreen({
           Termos de uso
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -47,7 +53,7 @@ export default function TermosDeUsoScreen({
             />
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={styles.flex}>
             <Text style={styles.tituloTopo}>
               Bem-vindo ao AlertaMed
             </Text>
@@ -70,7 +76,7 @@ export default function TermosDeUsoScreen({
           icon="phone-portrait-outline"
           titulo="2. Uso do Aplicativo"
           texto={
-            'O AlertaMed foi desenvolvido para auxiliar no gerenciamento de medicamentos e tratamentos de saúde, oferecendo recursos como:\n\n• Cadastro de medicamentos\n• Lembretes de horários\n• Histórico de utilização\n• Organização de tratamentos\n• Compartilhamento com cuidadores\n\nO aplicativo não substitui orientações médicas ou farmacêuticas.'
+            "O AlertaMed foi desenvolvido para auxiliar no gerenciamento de medicamentos e tratamentos de saúde, oferecendo recursos como:\n\n• Cadastro de medicamentos\n• Lembretes de horários\n• Histórico de utilização\n• Organização de tratamentos\n• Compartilhamento com cuidadores\n\nO aplicativo não substitui orientações médicas ou farmacêuticas."
           }
         />
 
@@ -78,7 +84,7 @@ export default function TermosDeUsoScreen({
           icon="person-outline"
           titulo="3. Responsabilidades do Usuário"
           texto={
-            'O usuário é responsável por:\n\n• Manter seus dados atualizados\n• Utilizar informações verdadeiras\n• Proteger sua senha de acesso\n• Utilizar o aplicativo de forma ética e legal'
+            "O usuário é responsável por:\n\n• Manter seus dados atualizados\n• Utilizar informações verdadeiras\n• Proteger sua senha de acesso\n• Utilizar o aplicativo de forma ética e legal"
           }
         />
 
@@ -110,7 +116,7 @@ export default function TermosDeUsoScreen({
               />
             </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={styles.flex}>
               <Text style={styles.titulo}>
                 Dúvidas?
               </Text>
@@ -138,30 +144,34 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
 
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: typography.size.xl,
+    fontWeight: "700",
     color: colors.text,
   },
 
+  headerSpacer: {
+    width: 26,
+  },
+
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing["3xl"],
   },
 
   cardTopo: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   iconCircle: {
@@ -169,52 +179,56 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: spacing.md,
+  },
+
+  flex: {
+    flex: 1,
   },
 
   tituloTopo: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: typography.size.md,
+    fontWeight: "700",
     color: colors.primary,
   },
 
   textoTopo: {
-    fontSize: 13.5,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginTop: 4,
+    marginTop: spacing.xs,
     lineHeight: 19,
   },
 
   card: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
   },
 
   header2: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
 
   titulo: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: typography.size.md,
+    fontWeight: "700",
     color: colors.primary,
   },
 
   texto: {
-    fontSize: 13.5,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginTop: 4,
+    marginTop: spacing.xs,
     lineHeight: 19,
   },
 
   rodape: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.textSecondary,
-    fontSize: 12,
-    marginTop: 20,
+    fontSize: typography.size.xs,
+    marginTop: spacing.xl,
   },
 });

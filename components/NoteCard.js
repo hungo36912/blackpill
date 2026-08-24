@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function NoteCard({
   icon,
@@ -34,19 +37,19 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: colors.primaryLight,
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
     alignItems: 'flex-start',
   },
 
   icon: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: spacing.md - 2,
   },
 
   content: {
@@ -54,14 +57,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: '700',
     color: colors.primary,
-    marginBottom: 5,
+    marginBottom: spacing.xs + 1,
   },
 
   text: {
-    fontSize: 13,
+    fontSize: typography.size.sm - 1,
     lineHeight: 19,
     color: colors.textSecondary,
   },

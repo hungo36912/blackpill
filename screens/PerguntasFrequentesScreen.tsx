@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -7,13 +8,18 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
 
-import colors from '../theme/colors';
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "../theme/colors";
+import { spacing } from "../theme/spacing";
+import { typography } from "../theme/typography";
+import { radius } from "../theme/radius";
 
 type Props = {
   onVoltar: () => void;
+  onAbrirRelatarProblema: () => void;
 };
 
 type FAQItem = {
@@ -27,35 +33,35 @@ type PerguntaItemProps = {
 
 const FAQ_LEMBRETES: FAQItem[] = [
   {
-    pergunta: 'Como adicionar um novo lembrete?',
+    pergunta: "Como adicionar um novo lembrete?",
     resposta:
       'Na tela inicial, toque no botão "+" e preencha o nome do medicamento, horário e frequência.',
   },
   {
-    pergunta: 'Posso editar o horário de um lembrete já criado?',
+    pergunta: "Posso editar o horário de um lembrete já criado?",
     resposta:
       'Sim. Abra o lembrete na tela "Lembretes", toque nele e ajuste o horário, a frequência ou a dose. As alterações são salvas automaticamente.',
   },
   {
-    pergunta: 'O que acontece se eu não confirmar uma dose?',
+    pergunta: "O que acontece se eu não confirmar uma dose?",
     resposta:
-      'O aplicativo envia uma nova notificação após alguns minutos e registra a dose como não confirmada no seu histórico.',
+      "O aplicativo envia uma nova notificação após alguns minutos e registra a dose como não confirmada no seu histórico.",
   },
 ];
 
 const FAQ_CONTA: FAQItem[] = [
   {
-    pergunta: 'Como funciona o backup dos meus dados?',
+    pergunta: "Como funciona o backup dos meus dados?",
     resposta:
-      'Seus lembretes e bulas são salvos automaticamente na nuvem quando a sincronização automática está ativada.',
+      "Seus lembretes e bulas são salvos automaticamente na nuvem quando a sincronização automática está ativada.",
   },
   {
-    pergunta: 'Esqueci minha senha, o que faço?',
+    pergunta: "Esqueci minha senha, o que faço?",
     resposta:
       'Toque em "Esqueci minha senha" na tela de login e siga as instruções enviadas por e-mail.',
   },
   {
-    pergunta: 'Como excluir minha conta?',
+    pergunta: "Como excluir minha conta?",
     resposta:
       'Acesse Configurações, depois Privacidade, e toque em "Excluir conta".',
   },
@@ -75,7 +81,7 @@ function PerguntaItem({ item }: PerguntaItemProps) {
         </Text>
 
         <Ionicons
-          name={aberta ? 'chevron-up' : 'chevron-down'}
+          name={aberta ? "chevron-up" : "chevron-down"}
           size={18}
           color={
             aberta
@@ -96,8 +102,9 @@ function PerguntaItem({ item }: PerguntaItemProps) {
 
 export default function PerguntasFrequentesScreen({
   onVoltar,
+  onAbrirRelatarProblema,
 }: Props) {
-  const [busca, setBusca] = useState<string>('');
+  const [busca, setBusca] = useState<string>("");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -114,7 +121,7 @@ export default function PerguntasFrequentesScreen({
           Perguntas frequentes
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -156,7 +163,11 @@ export default function PerguntasFrequentesScreen({
           />
         ))}
 
-        <TouchableOpacity style={styles.suporteCard}>
+        <TouchableOpacity
+          style={styles.suporteCard}
+          onPress={onAbrirRelatarProblema}
+          activeOpacity={0.7}
+        >
           <View style={styles.iconCircle}>
             <Ionicons
               name="chatbubble-ellipses-outline"
@@ -165,7 +176,7 @@ export default function PerguntasFrequentesScreen({
             />
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={styles.flex}>
             <Text style={styles.suporteTitulo}>
               Não encontrou sua dúvida?
             </Text>
@@ -193,85 +204,89 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
 
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: typography.size.xl,
+    fontWeight: "700",
     color: colors.text,
   },
 
+  headerSpacer: {
+    width: 26,
+  },
+
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing["3xl"],
   },
 
   buscaBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.card,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 16,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    marginBottom: spacing.lg,
   },
 
   buscaInput: {
     flex: 1,
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: spacing.sm,
+    fontSize: typography.size.sm,
     color: colors.text,
   },
 
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: typography.size.xs,
+    fontWeight: "600",
     color: colors.textSecondary,
-    marginTop: 14,
-    marginBottom: 8,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
     letterSpacing: 0.5,
   },
 
   perguntaCard: {
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 10,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
   },
 
   perguntaHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   perguntaTexto: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: typography.size.sm,
+    fontWeight: "600",
     color: colors.text,
-    marginRight: 10,
+    marginRight: spacing.sm,
   },
 
   respostaTexto: {
-    fontSize: 13.5,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginTop: 10,
+    marginTop: spacing.md,
     lineHeight: 19,
   },
 
   suporteCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 14,
-    marginTop: 10,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginTop: spacing.sm,
   },
 
   iconCircle: {
@@ -279,20 +294,24 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 19,
     backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: spacing.md,
+  },
+
+  flex: {
+    flex: 1,
   },
 
   suporteTitulo: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: typography.size.sm,
+    fontWeight: "700",
     color: colors.primary,
   },
 
   suporteTexto: {
-    fontSize: 12.5,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: spacing.xs,
   },
 });

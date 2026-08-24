@@ -12,7 +12,13 @@ import {
   Switch,
   Modal,
   Platform,
+  ScrollView,
 } from "react-native";
+
+import colors from "../../../theme/colors";
+import spacing from "../../../theme/spacing";
+import typography from "../../../theme/typography";
+import radius from "../../../theme/radius";
 
 import {
   ArrowLeft,
@@ -22,8 +28,8 @@ import {
   Check,
 } from "lucide-react-native";
 
-const GREEN = "#439B58";
-const TEXT = "#17232B";
+const GREEN = colors.reminder;
+const TEXT = colors.reminderText;
 
 type Props = {
   onVoltar: () => void;
@@ -38,31 +44,23 @@ export default function NovoLembrete({
 }: Props) {
   const [notificacao, setNotificacao] = useState(false);
 
-  // Medicamento
   const [medicamento, setMedicamento] = useState("");
 
-  // Horário
   const [horario, setHorario] = useState("");
   const [mostrarHorario, setMostrarHorario] = useState(false);
 
-  // Frequência
   const [frequencia, setFrequencia] = useState("");
   const [mostrarFrequencia, setMostrarFrequencia] =
     useState(false);
 
-  // Dias específicos
   const [diasSelecionados, setDiasSelecionados] =
     useState<number[]>([]);
 
-  // Data - "Uma vez"
   const [dataSelecionada, setDataSelecionada] =
     useState<Date | null>(null);
   const [data, setData] = useState("");
   const [mostrarData, setMostrarData] = useState(false);
 
-  /*
-   * VALIDAÇÃO
-   */
   const formularioValido =
     medicamento.trim() !== "" &&
     horario !== "" &&
@@ -79,9 +77,6 @@ export default function NovoLembrete({
       )
     );
 
-  /*
-   * HORÁRIO
-   */
   function selecionarHorario() {
     setMostrarHorario(true);
   }
@@ -92,7 +87,6 @@ export default function NovoLembrete({
   ) {
     setMostrarHorario(false);
 
-    // Usuário cancelou
     if (!date) {
       return;
     }
@@ -110,9 +104,6 @@ export default function NovoLembrete({
     setHorario(`${horas}:${minutos}`);
   }
 
-  /*
-   * FREQUÊNCIA
-   */
   function selecionarFrequencia(
     opcao: string
   ) {
@@ -136,9 +127,6 @@ export default function NovoLembrete({
     setMostrarFrequencia(false);
   }
 
-  /*
-   * DIAS DA SEMANA
-   */
   function alternarDia(index: number) {
     const jaSelecionado =
       diasSelecionados.includes(index);
@@ -157,9 +145,6 @@ export default function NovoLembrete({
     }
   }
 
-  /*
-   * DATA
-   */
   function selecionarData() {
     setMostrarData(true);
   }
@@ -170,7 +155,6 @@ export default function NovoLembrete({
   ) {
     setMostrarData(false);
 
-    // Usuário cancelou
     if (!date) {
       return;
     }
@@ -191,9 +175,6 @@ export default function NovoLembrete({
     setData(`${dia}/${mes}/${ano}`);
   }
 
-  /*
-   * DATA ATUAL DO SELETOR DE HORÁRIO
-   */
   function obterDataHorario() {
     const agora = new Date();
 
@@ -218,20 +199,17 @@ export default function NovoLembrete({
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor="#FFFFFF"
+        backgroundColor={colors.card}
       />
 
       <View style={styles.container}>
-
-        {/* =========================
-            CABEÇALHO
-        ========================== */}
-
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.botaoVoltar}
             onPress={onVoltar}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
             <ArrowLeft
               size={28}
@@ -247,14 +225,12 @@ export default function NovoLembrete({
           <View style={styles.espacoHeader} />
         </View>
 
-        {/* =========================
-            CONTEÚDO
-        ========================== */}
-
-        <View style={styles.conteudo}>
-
-          {/* MEDICAMENTO */}
-
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.conteudo}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text style={styles.label}>
             Medicamento
           </Text>
@@ -262,13 +238,12 @@ export default function NovoLembrete({
           <TextInput
             style={styles.campo}
             placeholder="Digite o nome do medicamento"
-            placeholderTextColor="#999999"
+            placeholderTextColor={colors.textSecondary}
             value={medicamento}
             onChangeText={setMedicamento}
             autoCapitalize="words"
+            accessibilityLabel="Nome do medicamento"
           />
-
-          {/* HORÁRIO */}
 
           <Text style={styles.label}>
             Horário
@@ -278,6 +253,12 @@ export default function NovoLembrete({
             style={styles.campo}
             onPress={selecionarHorario}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={
+              horario
+                ? `Horário selecionado: ${horario}`
+                : "Selecionar horário"
+            }
           >
             <Text
               style={
@@ -290,7 +271,7 @@ export default function NovoLembrete({
             </Text>
 
             <Clock
-              size={25}
+              size={26}
               color={GREEN}
               strokeWidth={2}
             />
@@ -310,8 +291,6 @@ export default function NovoLembrete({
             />
           )}
 
-          {/* FREQUÊNCIA */}
-
           <Text style={styles.label}>
             Frequência
           </Text>
@@ -322,6 +301,8 @@ export default function NovoLembrete({
               setMostrarFrequencia(true)
             }
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Selecionar frequência"
           >
             <Text
               style={
@@ -336,22 +317,18 @@ export default function NovoLembrete({
 
             {frequencia ? (
               <Check
-                size={24}
+                size={25}
                 color={GREEN}
                 strokeWidth={2.5}
               />
             ) : (
               <ChevronRight
                 size={25}
-                color="#333333"
+                color={TEXT}
                 strokeWidth={2}
               />
             )}
           </TouchableOpacity>
-
-          {/* =========================
-              DIAS ESPECÍFICOS
-          ========================== */}
 
           {frequencia === "Dias específicos" && (
             <View style={styles.diasContainer}>
@@ -379,6 +356,11 @@ export default function NovoLembrete({
                           alternarDia(index)
                         }
                         activeOpacity={0.7}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Dia ${dia}`}
+                        accessibilityState={{
+                          selected: selecionado,
+                        }}
                       >
                         <Text
                           style={
@@ -405,7 +387,6 @@ export default function NovoLembrete({
                   diasSelecionados.length === 0
                 }
                 onPress={() => {
-                  // Mantém a frequência selecionada
                   setFrequencia(
                     "Dias específicos"
                   );
@@ -419,10 +400,6 @@ export default function NovoLembrete({
             </View>
           )}
 
-          {/* =========================
-              DATA - UMA VEZ
-          ========================== */}
-
           {frequencia === "Uma vez" && (
             <>
               <Text style={styles.label}>
@@ -433,6 +410,12 @@ export default function NovoLembrete({
                 style={styles.campo}
                 onPress={selecionarData}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  data
+                    ? `Data selecionada: ${data}`
+                    : "Selecionar data"
+                }
               >
                 <Text
                   style={
@@ -445,7 +428,7 @@ export default function NovoLembrete({
                 </Text>
 
                 <Calendar
-                  size={25}
+                  size={26}
                   color={GREEN}
                   strokeWidth={2}
                 />
@@ -470,18 +453,12 @@ export default function NovoLembrete({
             </>
           )}
 
-          {/* NOTIFICAÇÃO */}
-
           <Text style={styles.label}>
             Notificação
           </Text>
 
-          <View
-            style={styles.notificacaoContainer}
-          >
-            <Text
-              style={styles.notificacaoTexto}
-            >
+          <View style={styles.notificacaoContainer}>
+            <Text style={styles.notificacaoTexto}>
               Receber lembrete
             </Text>
 
@@ -489,18 +466,17 @@ export default function NovoLembrete({
               value={notificacao}
               onValueChange={setNotificacao}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 notificacao
                   ? GREEN
-                  : "#FFFFFF"
+                  : colors.card
               }
+              accessibilityLabel="Receber lembrete"
             />
           </View>
-
-          {/* SALVAR */}
 
           <TouchableOpacity
             style={[
@@ -512,16 +488,17 @@ export default function NovoLembrete({
             onPress={onSalvar}
             disabled={!formularioValido}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Salvar lembrete"
+            accessibilityState={{
+              disabled: !formularioValido,
+            }}
           >
             <Text style={styles.textoSalvar}>
               Salvar lembrete
             </Text>
           </TouchableOpacity>
-        </View>
-
-        {/* =========================
-            MODAL DE FREQUÊNCIA
-        ========================== */}
+        </ScrollView>
 
         <Modal
           visible={mostrarFrequencia}
@@ -533,12 +510,9 @@ export default function NovoLembrete({
         >
           <View style={styles.modalFundo}>
             <View style={styles.modalContainer}>
-
               <Text style={styles.modalTitulo}>
                 Frequência
               </Text>
-
-              {/* TODOS OS DIAS */}
 
               <TouchableOpacity
                 style={styles.opcaoFrequencia}
@@ -572,8 +546,6 @@ export default function NovoLembrete({
                 </Text>
               </TouchableOpacity>
 
-              {/* DIAS ESPECÍFICOS */}
-
               <TouchableOpacity
                 style={styles.opcaoFrequencia}
                 onPress={() =>
@@ -606,8 +578,6 @@ export default function NovoLembrete({
                 </Text>
               </TouchableOpacity>
 
-              {/* UMA VEZ */}
-
               <TouchableOpacity
                 style={styles.opcaoFrequencia}
                 onPress={() =>
@@ -638,8 +608,6 @@ export default function NovoLembrete({
                 </Text>
               </TouchableOpacity>
 
-              {/* CONFIRMAR */}
-
               <TouchableOpacity
                 style={styles.botaoModalConfirmar}
                 onPress={() =>
@@ -655,8 +623,6 @@ export default function NovoLembrete({
                   Confirmar
                 </Text>
               </TouchableOpacity>
-
-              {/* CANCELAR */}
 
               <TouchableOpacity
                 style={styles.botaoCancelar}
@@ -680,85 +646,86 @@ export default function NovoLembrete({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   header: {
-    height: 76,
+    minHeight: 76,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
+    borderBottomColor: colors.border,
   },
 
   botaoVoltar: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
 
   tituloHeader: {
     flex: 1,
     textAlign: "center",
-    fontSize: 21,
+    fontSize: typography.size.xl,
+    lineHeight: typography.size.xl + 8,
     fontWeight: "700",
-    color: "#111111",
+    color: TEXT,
   },
 
   espacoHeader: {
-    width: 42,
+    width: 48,
+  },
+
+  scroll: {
+    flex: 1,
   },
 
   conteudo: {
-    flex: 1,
-    paddingHorizontal: 22,
-    paddingTop: 25,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing["3xl"],
   },
 
   label: {
-    fontSize: 17,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "600",
     color: TEXT,
-    marginBottom: 9,
-    marginTop: 18,
+    marginBottom: spacing.sm,
+    marginTop: spacing.lg,
   },
 
   campo: {
     width: "100%",
-    height: 62,
+    minHeight: 62,
     borderWidth: 1,
-    borderColor: "#777777",
-    borderRadius: 10,
-    paddingHorizontal: 17,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   placeholder: {
-    fontSize: 16,
-    color: "#555555",
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
+    color: colors.textSecondary,
+    flex: 1,
   },
 
   valor: {
-    fontSize: 16,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     color: TEXT,
     flex: 1,
   },
@@ -766,35 +733,36 @@ const styles = StyleSheet.create({
   horario: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
-    color: "#555555",
-    marginLeft: 25,
+    fontSize: typography.size.lg,
+    lineHeight: typography.size.lg + 6,
+    color: colors.textSecondary,
+    marginLeft: spacing.lg,
   },
 
   horarioSelecionado: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
+    fontSize: typography.size.lg,
+    lineHeight: typography.size.lg + 6,
     color: TEXT,
-    marginLeft: 25,
+    marginLeft: spacing.lg,
   },
 
-  /* DIAS */
-
   diasContainer: {
-    marginTop: 15,
-    padding: 16,
+    marginTop: spacing.md,
+    padding: spacing.md,
     borderWidth: 1,
-    borderColor: "#E0E0E0",
-    borderRadius: 10,
-    backgroundColor: "#FAFAFA",
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.primaryLight,
   },
 
   subtitulo: {
-    fontSize: 16,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "600",
     color: TEXT,
-    marginBottom: 15,
+    marginBottom: spacing.md,
   },
 
   diasSemana: {
@@ -803,14 +771,14 @@ const styles = StyleSheet.create({
   },
 
   dia: {
-    width: 37,
-    height: 37,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     borderWidth: 1,
-    borderColor: "#BBBBBB",
+    borderColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   diaSelecionado: {
@@ -819,66 +787,64 @@ const styles = StyleSheet.create({
   },
 
   textoDia: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
+    lineHeight: typography.size.sm + 5,
     fontWeight: "600",
     color: TEXT,
   },
 
   textoDiaSelecionado: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
+    lineHeight: typography.size.sm + 5,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: colors.card,
   },
 
   botaoConfirmar: {
-    height: 45,
-    borderRadius: 8,
+    minHeight: 48,
+    borderRadius: radius.md,
     backgroundColor: GREEN,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 18,
+    marginTop: spacing.lg,
   },
 
   botaoConfirmarDesabilitado: {
-    backgroundColor: "#C8C8C8",
+    backgroundColor: colors.border,
   },
 
   textoConfirmar: {
-    color: "#FFFFFF",
-    fontSize: 16,
+    color: colors.card,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "700",
   },
 
-  /* NOTIFICAÇÃO */
-
   notificacaoContainer: {
     width: "100%",
-    minHeight: 55,
+    minHeight: 58,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 2,
   },
 
   notificacaoTexto: {
-    fontSize: 17,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     color: TEXT,
   },
 
-  /* SALVAR */
-
   botaoSalvar: {
     width: "100%",
-    height: 58,
-    borderRadius: 10,
+    minHeight: 58,
+    borderRadius: radius.md,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "auto",
-    marginBottom: 25,
+    marginTop: spacing["2xl"],
   },
 
   botaoDesabilitado: {
-    backgroundColor: "#C8C8C8",
+    backgroundColor: colors.border,
   },
 
   botaoAtivo: {
@@ -886,30 +852,30 @@ const styles = StyleSheet.create({
   },
 
   textoSalvar: {
-    fontSize: 17,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: colors.card,
   },
-
-  /* MODAL */
 
   modalFundo: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.35)",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 25,
+    paddingHorizontal: spacing.lg,
   },
 
   modalContainer: {
     width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    paddingHorizontal: 22,
-    paddingTop: 24,
-    paddingBottom: 20,
+    backgroundColor: colors.card,
+    borderRadius: radius.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
     elevation: 8,
-    shadowColor: "#000",
+
+    shadowColor: colors.text,
     shadowOffset: {
       width: 0,
       height: 3,
@@ -919,28 +885,29 @@ const styles = StyleSheet.create({
   },
 
   modalTitulo: {
-    fontSize: 20,
+    fontSize: typography.size.xl,
+    lineHeight: typography.size.xl + 8,
     fontWeight: "700",
     color: TEXT,
-    marginBottom: 10,
+    marginBottom: spacing.sm,
   },
 
   opcaoFrequencia: {
-    minHeight: 58,
+    minHeight: 62,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: spacing.sm,
   },
 
   radio: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#777777",
+    borderColor: colors.textSecondary,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 14,
+    marginRight: spacing.md,
   },
 
   radioSelecionado: {
@@ -948,42 +915,45 @@ const styles = StyleSheet.create({
   },
 
   radioInterno: {
-    width: 11,
-    height: 11,
+    width: 12,
+    height: 12,
     borderRadius: 6,
     backgroundColor: GREEN,
   },
 
   textoOpcao: {
-    fontSize: 16,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     color: TEXT,
   },
 
   botaoModalConfirmar: {
-    height: 48,
+    minHeight: 50,
     backgroundColor: GREEN,
-    borderRadius: 9,
+    borderRadius: radius.md,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 15,
+    marginTop: spacing.md,
   },
 
   textoModalConfirmar: {
-    fontSize: 16,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: colors.card,
   },
 
   botaoCancelar: {
-    height: 42,
+    minHeight: 46,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 5,
+    marginTop: spacing.xs,
   },
 
   textoCancelar: {
-    fontSize: 15,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     fontWeight: "600",
-    color: "#666666",
+    color: colors.textSecondary,
   },
 });

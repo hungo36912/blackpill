@@ -2,6 +2,9 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function SearchBar({ value, onChangeText }) {
   return (
@@ -30,16 +33,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: spacing.lg,
   },
 
   input: {
     flex: 1,
-    marginLeft: 10,
-    fontSize: 14,
+    marginLeft: spacing.md,
+    fontSize: typography.size.sm,
     color: colors.text,
   },
 });

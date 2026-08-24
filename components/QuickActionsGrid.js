@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import QuickActionButton from './QuickActionButton';
+import spacing from '../theme/spacing';
 
 export default function QuickActionsGrid({ actions }) {
   return (
@@ -23,6 +24,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 10,
+    rowGap: spacing.md - 2,
   },
 });

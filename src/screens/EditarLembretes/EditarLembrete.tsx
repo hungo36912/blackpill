@@ -18,6 +18,11 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+import colors from "../../../theme/colors";
+import spacing from "../../../theme/spacing";
+import typography from "../../../theme/typography";
+import radius from "../../../theme/radius";
+
 import {
   ArrowLeft,
   Clock,
@@ -26,9 +31,9 @@ import {
   CalendarDays,
 } from "lucide-react-native";
 
-const GREEN = "#439B58";
-const TEXT = "#17232B";
-const RED = "#C93636";
+const GREEN = colors.reminder;
+const TEXT = colors.reminderText;
+const RED = colors.reminderDanger;
 
 type Props = {
   onVoltar?: () => void;
@@ -41,34 +46,26 @@ export default function EditarLembrete({
   onSalvar,
   onExcluir,
 }: Props) {
-  /* =========================
-     MEDICAMENTO
-  ========================= */
+  const [medicamento, setMedicamento] =
+    useState("Losartana");
 
-  const [medicamento, setMedicamento] = useState("Losartana");
+  const [horario, setHorario] =
+    useState("08:00");
 
-  /* =========================
-     HORÁRIO
-  ========================= */
+  const [horarioDate, setHorarioDate] =
+    useState(() => {
+      const date = new Date();
 
-  const [horario, setHorario] = useState("08:00");
+      date.setHours(8);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
 
-  const [horarioDate, setHorarioDate] = useState(() => {
-    const date = new Date();
+      return date;
+    });
 
-    date.setHours(8);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    return date;
-  });
-
-  const [mostrarHorario, setMostrarHorario] = useState(false);
-
-  /* =========================
-     FREQUÊNCIA
-  ========================= */
+  const [mostrarHorario, setMostrarHorario] =
+    useState(false);
 
   const [frequencia, setFrequencia] =
     useState("Todos os dias");
@@ -76,34 +73,19 @@ export default function EditarLembrete({
   const [mostrarFrequencia, setMostrarFrequencia] =
     useState(false);
 
-  /* =========================
-     DIAS ESPECÍFICOS
-  ========================= */
-
   const [diasSelecionados, setDiasSelecionados] =
     useState<number[]>([]);
 
-  /* =========================
-     DATA
-  ========================= */
-
   const [data, setData] = useState("");
 
-  const [dataDate, setDataDate] = useState<Date | null>(
-    null
-  );
+  const [dataDate, setDataDate] =
+    useState<Date | null>(null);
 
-  const [mostrarData, setMostrarData] = useState(false);
+  const [mostrarData, setMostrarData] =
+    useState(false);
 
-  /* =========================
-     NOTIFICAÇÃO
-  ========================= */
-
-  const [notificacao, setNotificacao] = useState(true);
-
-  /* =========================
-     OPÇÕES
-  ========================= */
+  const [notificacao, setNotificacao] =
+    useState(true);
 
   const opcoesFrequencia = [
     "Todos os dias",
@@ -121,17 +103,12 @@ export default function EditarLembrete({
     "D",
   ];
 
-  /* =========================
-     ALTERAR HORÁRIO
-  ========================= */
-
   function alterarHorario(
     event: DateTimePickerEvent,
     selectedDate?: Date
   ) {
     setMostrarHorario(false);
 
-    // Usuário cancelou
     if (
       event.type === "dismissed" ||
       !selectedDate
@@ -153,10 +130,6 @@ export default function EditarLembrete({
 
     setHorario(`${horas}:${minutos}`);
   }
-
-  /* =========================
-     SELECIONAR FREQUÊNCIA
-  ========================= */
 
   function selecionarFrequencia(
     opcao: string
@@ -180,10 +153,6 @@ export default function EditarLembrete({
     }
   }
 
-  /* =========================
-     SELECIONAR DIA
-  ========================= */
-
   function alternarDia(index: number) {
     setDiasSelecionados((diasAtuais) => {
       if (diasAtuais.includes(index)) {
@@ -196,17 +165,12 @@ export default function EditarLembrete({
     });
   }
 
-  /* =========================
-     ALTERAR DATA
-  ========================= */
-
   function alterarData(
     event: DateTimePickerEvent,
     selectedDate?: Date
   ) {
     setMostrarData(false);
 
-    // Usuário cancelou
     if (
       event.type === "dismissed" ||
       !selectedDate
@@ -221,7 +185,9 @@ export default function EditarLembrete({
       .toString()
       .padStart(2, "0");
 
-    const mes = (selectedDate.getMonth() + 1)
+    const mes = (
+      selectedDate.getMonth() + 1
+    )
       .toString()
       .padStart(2, "0");
 
@@ -229,10 +195,6 @@ export default function EditarLembrete({
 
     setData(`${dia}/${mes}/${ano}`);
   }
-
-  /* =========================
-     SALVAR
-  ========================= */
 
   function salvarAlteracoes() {
     if (!medicamento.trim()) {
@@ -282,10 +244,6 @@ export default function EditarLembrete({
     );
   }
 
-  /* =========================
-     EXCLUIR
-  ========================= */
-
   function excluirLembrete() {
     Alert.alert(
       "Excluir lembrete",
@@ -306,15 +264,9 @@ export default function EditarLembrete({
     );
   }
 
-  /* =========================
-     RENDER
-  ========================= */
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-
-        {/* CABEÇALHO */}
 
         <View style={styles.header}>
           <TouchableOpacity
@@ -343,8 +295,6 @@ export default function EditarLembrete({
           keyboardShouldPersistTaps="handled"
         >
 
-          {/* MEDICAMENTO */}
-
           <Text style={styles.label}>
             Medicamento
           </Text>
@@ -356,8 +306,6 @@ export default function EditarLembrete({
             placeholder="Digite o nome do medicamento"
             placeholderTextColor="#999999"
           />
-
-          {/* HORÁRIO */}
 
           <Text style={styles.label}>
             Horário
@@ -395,8 +343,6 @@ export default function EditarLembrete({
             />
           )}
 
-          {/* FREQUÊNCIA */}
-
           <Text style={styles.label}>
             Frequência
           </Text>
@@ -419,61 +365,52 @@ export default function EditarLembrete({
             />
           </TouchableOpacity>
 
-          {/* DIAS ESPECÍFICOS */}
-
           {frequencia ===
             "Dias específicos" && (
             <View style={styles.diasContainer}>
-
               <Text style={styles.subtitulo}>
                 Selecione os dias
               </Text>
 
               <View style={styles.diasLinha}>
-                {dias.map(
-                  (dia, index) => {
-                    const selecionado =
-                      diasSelecionados.includes(
-                        index
-                      );
-
-                    return (
-                      <TouchableOpacity
-                        key={`${dia}-${index}`}
-                        style={[
-                          styles.dia,
-                          selecionado &&
-                            styles.diaSelecionado,
-                        ]}
-                        onPress={() =>
-                          alternarDia(index)
-                        }
-                        activeOpacity={0.7}
-                      >
-                        {selecionado ? (
-                          <Check
-                            size={18}
-                            color="#FFFFFF"
-                            strokeWidth={3}
-                          />
-                        ) : (
-                          <Text
-                            style={
-                              styles.textoDia
-                            }
-                          >
-                            {dia}
-                          </Text>
-                        )}
-                      </TouchableOpacity>
+                {dias.map((dia, index) => {
+                  const selecionado =
+                    diasSelecionados.includes(
+                      index
                     );
-                  }
-                )}
+
+                  return (
+                    <TouchableOpacity
+                      key={`${dia}-${index}`}
+                      style={[
+                        styles.dia,
+                        selecionado &&
+                          styles.diaSelecionado,
+                      ]}
+                      onPress={() =>
+                        alternarDia(index)
+                      }
+                      activeOpacity={0.7}
+                    >
+                      {selecionado ? (
+                        <Check
+                          size={18}
+                          color="#FFFFFF"
+                          strokeWidth={3}
+                        />
+                      ) : (
+                        <Text
+                          style={styles.textoDia}
+                        >
+                          {dia}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
           )}
-
-          {/* UMA VEZ */}
 
           {frequencia === "Uma vez" && (
             <View>
@@ -523,8 +460,6 @@ export default function EditarLembrete({
             </View>
           )}
 
-          {/* NOTIFICAÇÃO */}
-
           <Text style={styles.label}>
             Notificação
           </Text>
@@ -542,8 +477,8 @@ export default function EditarLembrete({
               value={notificacao}
               onValueChange={setNotificacao}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 notificacao
@@ -552,8 +487,6 @@ export default function EditarLembrete({
               }
             />
           </View>
-
-          {/* SALVAR */}
 
           <TouchableOpacity
             style={styles.botaoSalvar}
@@ -564,8 +497,6 @@ export default function EditarLembrete({
               Salvar alterações
             </Text>
           </TouchableOpacity>
-
-          {/* EXCLUIR */}
 
           <TouchableOpacity
             style={styles.botaoExcluir}
@@ -579,8 +510,6 @@ export default function EditarLembrete({
 
         </ScrollView>
 
-        {/* MODAL DE FREQUÊNCIA */}
-
         <Modal
           visible={mostrarFrequencia}
           transparent={true}
@@ -590,7 +519,6 @@ export default function EditarLembrete({
           }
         >
           <View style={styles.modalFundo}>
-
             <View style={styles.modalContainer}>
 
               <Text style={styles.modalTitulo}>
@@ -660,42 +588,31 @@ export default function EditarLembrete({
   );
 }
 
-/* =========================
-   ESTILOS
-========================= */
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.background,
   },
 
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.background,
   },
 
   header: {
     height: 76,
-
     flexDirection: "row",
     alignItems: "center",
-
-    paddingHorizontal: 20,
-    paddingTop: 8,
-
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
-
+    borderBottomColor: colors.border,
     elevation: 3,
-
-    shadowColor: "#000",
-
+    shadowColor: colors.text,
     shadowOffset: {
       width: 0,
       height: 2,
     },
-
     shadowOpacity: 0.08,
     shadowRadius: 3,
   },
@@ -703,20 +620,16 @@ const styles = StyleSheet.create({
   botaoVoltar: {
     width: 42,
     height: 42,
-
     justifyContent: "center",
     alignItems: "flex-start",
   },
 
   tituloHeader: {
     flex: 1,
-
     textAlign: "center",
-
-    fontSize: 21,
+    fontSize: typography.size.xl,
     fontWeight: "700",
-
-    color: "#111111",
+    color: colors.text,
   },
 
   espacoHeader: {
@@ -728,88 +641,77 @@ const styles = StyleSheet.create({
   },
 
   conteudo: {
-    paddingHorizontal: 22,
-    paddingTop: 10,
-    paddingBottom: 45,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing["4xl"],
   },
 
   label: {
-    fontSize: 17,
+    fontSize: typography.size.md,
     fontWeight: "600",
-
     color: TEXT,
-
-    marginBottom: 9,
-    marginTop: 18,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
   },
 
   campoTexto: {
     width: "100%",
     height: 62,
-
     borderWidth: 1,
-    borderColor: "#777777",
-    borderRadius: 10,
-
-    paddingHorizontal: 17,
-
-    fontSize: 16,
-    color: TEXT,
-
-    backgroundColor: "#FFFFFF",
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    fontSize: typography.size.md,
+    color: colors.text,
+    backgroundColor: colors.card,
   },
 
   campo: {
     width: "100%",
     height: 62,
-
     borderWidth: 1,
-    borderColor: "#777777",
-    borderRadius: 10,
-
-    paddingHorizontal: 17,
-
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   horario: {
     flex: 1,
-
     textAlign: "center",
-
-    fontSize: 18,
+    fontSize: typography.size.lg,
     color: TEXT,
-
-    marginLeft: 25,
+    marginLeft: spacing.xl,
   },
 
   valor: {
     flex: 1,
-
-    fontSize: 16,
+    fontSize: typography.size.md,
     color: TEXT,
   },
 
   placeholder: {
     flex: 1,
-
-    fontSize: 16,
+    fontSize: typography.size.md,
     color: "#555555",
   },
 
   diasContainer: {
-    marginTop: 8,
+    marginTop: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 
   subtitulo: {
-    fontSize: 15,
+    fontSize: typography.size.md,
     color: TEXT,
-
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
 
   diasLinha: {
@@ -820,16 +722,12 @@ const styles = StyleSheet.create({
   dia: {
     width: 38,
     height: 38,
-
     borderRadius: 19,
-
     borderWidth: 1,
-    borderColor: "#AAAAAA",
-
+    borderColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
-
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   diaSelecionado: {
@@ -838,125 +736,97 @@ const styles = StyleSheet.create({
   },
 
   textoDia: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: "600",
-
     color: TEXT,
   },
 
   notificacaoContainer: {
     width: "100%",
     minHeight: 55,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
-    paddingHorizontal: 2,
+    paddingHorizontal: spacing.xs,
   },
 
   notificacaoTexto: {
-    fontSize: 17,
+    fontSize: typography.size.md,
     color: TEXT,
   },
 
   botaoSalvar: {
     width: "100%",
     height: 58,
-
-    borderRadius: 10,
-
+    borderRadius: radius.md,
     justifyContent: "center",
     alignItems: "center",
-
     backgroundColor: GREEN,
-
-    marginTop: 30,
+    marginTop: spacing.xl,
   },
 
   textoSalvar: {
-    fontSize: 17,
+    fontSize: typography.size.md,
     fontWeight: "700",
-
-    color: "#FFFFFF",
+    color: colors.card,
   },
 
   botaoExcluir: {
     width: "100%",
     height: 50,
-
     justifyContent: "center",
     alignItems: "center",
-
-    marginTop: 12,
-    marginBottom: 10,
+    marginTop: spacing.sm,
+    marginBottom: spacing.sm,
   },
 
   textoExcluir: {
-    fontSize: 16,
+    fontSize: typography.size.md,
     fontWeight: "600",
-
     color: RED,
   },
 
-  /* MODAL */
-
   modalFundo: {
     flex: 1,
-
-    backgroundColor:
-      "rgba(0, 0, 0, 0.35)",
-
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
     justifyContent: "center",
     alignItems: "center",
-
     paddingHorizontal: 25,
   },
 
   modalContainer: {
     width: "100%",
-
-    backgroundColor: "#FFFFFF",
-
-    borderRadius: 16,
-
-    padding: 22,
-
+    backgroundColor: colors.card,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
     elevation: 8,
-
-    shadowColor: "#000",
-
+    shadowColor: colors.text,
     shadowOffset: {
       width: 0,
       height: 3,
     },
-
     shadowOpacity: 0.2,
     shadowRadius: 6,
   },
 
   modalTitulo: {
-    fontSize: 20,
+    fontSize: typography.size.xl,
     fontWeight: "700",
-
     color: TEXT,
-
-    marginBottom: 10,
+    marginBottom: spacing.sm,
   },
 
   opcaoFrequencia: {
     minHeight: 54,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
     borderBottomWidth: 1,
-    borderBottomColor: "#EEEEEE",
+    borderBottomColor: colors.border,
   },
 
   textoOpcao: {
-    fontSize: 16,
+    fontSize: typography.size.md,
     color: TEXT,
   },
 
@@ -967,17 +837,14 @@ const styles = StyleSheet.create({
 
   botaoCancelar: {
     height: 45,
-
     justifyContent: "center",
     alignItems: "center",
-
-    marginTop: 8,
+    marginTop: spacing.xs,
   },
 
   textoCancelar: {
-    fontSize: 15,
+    fontSize: typography.size.md,
     fontWeight: "600",
-
-    color: "#666666",
+    color: colors.textSecondary,
   },
 });

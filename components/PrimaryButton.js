@@ -2,6 +2,9 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function PrimaryButton({
   label,
@@ -21,7 +24,7 @@ export default function PrimaryButton({
       {icon && (
         <Feather
           name={icon}
-          size={15}
+          size={20}
           color={colors.card}
           style={styles.icon}
         />
@@ -54,24 +57,27 @@ const styles = StyleSheet.create({
 
   block: {
     width: '100%',
-    borderRadius: 14,
-    paddingVertical: 15,
+    minHeight: 56,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
   },
 
   pill: {
-    borderRadius: 999,
-    paddingVertical: 14,
-    paddingHorizontal: 28,
+    minHeight: 52,
+    borderRadius: radius.pill,
+    paddingVertical: spacing.lg - 2,
+    paddingHorizontal: spacing.xl + spacing.sm,
     alignSelf: 'center',
   },
 
   icon: {
-    marginRight: 8,
+    marginRight: spacing.md - 2,
   },
 
   label: {
     color: colors.card,
-    fontSize: 14.5,
-    fontWeight: '700',
+    fontSize: typography.size.md,
+    fontWeight: typography.weight.bold,
   },
 });

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -7,10 +8,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
 
-import colors from '../theme/colors';
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "../theme/colors";
 
 type Props = {
   onVoltar: () => void;
@@ -22,25 +24,27 @@ export default function BackupSincronizacaoScreen({
   const [sincronizacaoAtiva, setSincronizacaoAtiva] =
     useState<boolean>(true);
 
-  const [ultimoBackup] = useState<string>('hoje às 07:42');
+  const [ultimoBackup] =
+    useState<string>("hoje às 07:42");
 
   function fazerBackupAgora(): void {
-    console.log('fazendo backup agora');
+    console.log("fazendo backup agora");
   }
 
   function restaurarBackup(): void {
     Alert.alert(
-      'Restaurar backup',
-      'Isso vai substituir os dados atuais do app pelos dados do último backup. Deseja continuar?',
+      "Restaurar backup",
+      "Isso vai substituir os dados atuais do app pelos dados do último backup. Deseja continuar?",
       [
         {
-          text: 'Cancelar',
-          style: 'cancel',
+          text: "Cancelar",
+          style: "cancel",
         },
         {
-          text: 'Restaurar',
-          style: 'destructive',
-          onPress: () => console.log('restaurando'),
+          text: "Restaurar",
+          style: "destructive",
+          onPress: () =>
+            console.log("restaurando"),
         },
       ]
     );
@@ -49,10 +53,16 @@ export default function BackupSincronizacaoScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -61,18 +71,20 @@ export default function BackupSincronizacaoScreen({
           Backup e sincronização
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.espacoHeader} />
       </View>
 
       <View style={styles.content}>
         <View style={styles.statusCard}>
-          <Ionicons
-            name="cloud-done-outline"
-            size={22}
-            color={colors.primary}
-          />
+          <View style={styles.statusIcon}>
+            <Ionicons
+              name="cloud-done-outline"
+              size={25}
+              color={colors.primary}
+            />
+          </View>
 
-          <View style={{ marginLeft: 10 }}>
+          <View style={styles.statusConteudo}>
             <Text style={styles.statusTitulo}>
               Backup atualizado
             </Text>
@@ -87,14 +99,19 @@ export default function BackupSincronizacaoScreen({
           CONTA
         </Text>
 
-        <TouchableOpacity style={styles.contaCard}>
+        <TouchableOpacity
+          style={styles.contaCard}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Conta Google Drive conectada"
+        >
           <View style={styles.avatar}>
             <Text style={styles.avatarTexto}>
               MJ
             </Text>
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={styles.contaConteudo}>
             <Text style={styles.contaEmail}>
               maria.j@email.com
             </Text>
@@ -106,7 +123,7 @@ export default function BackupSincronizacaoScreen({
 
           <Ionicons
             name="chevron-forward"
-            size={18}
+            size={22}
             color={colors.textSecondary}
           />
         </TouchableOpacity>
@@ -116,7 +133,7 @@ export default function BackupSincronizacaoScreen({
         </Text>
 
         <View style={styles.preferenciaCard}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.preferenciaConteudo}>
             <Text style={styles.preferenciaTitulo}>
               Sincronização automática
             </Text>
@@ -133,17 +150,25 @@ export default function BackupSincronizacaoScreen({
               false: colors.border,
               true: colors.primary,
             }}
-            thumbColor="#fff"
+            thumbColor="#FFFFFF"
+            accessibilityLabel="Sincronização automática"
+            accessibilityRole="switch"
+            accessibilityState={{
+              checked: sincronizacaoAtiva,
+            }}
           />
         </View>
 
         <TouchableOpacity
           style={styles.botaoSecundario}
           onPress={fazerBackupAgora}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Fazer backup agora"
         >
           <Ionicons
             name="refresh-outline"
-            size={18}
+            size={23}
             color={colors.text}
           />
 
@@ -155,6 +180,9 @@ export default function BackupSincronizacaoScreen({
         <TouchableOpacity
           style={styles.botaoPerigo}
           onPress={restaurarBackup}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Restaurar backup"
         >
           <Text style={styles.botaoPerigoTexto}>
             Restaurar backup
@@ -172,139 +200,196 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    minHeight: 76,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+
+  botaoVoltar: {
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '700',
+    flex: 1,
+    textAlign: "center",
+    fontSize: 21,
+    lineHeight: 29,
+    fontWeight: "700",
     color: colors.text,
   },
 
+  espacoHeader: {
+    width: 48,
+  },
+
   content: {
-    paddingHorizontal: 16,
+    flex: 1,
+    paddingHorizontal: 22,
+    paddingTop: 18,
   },
 
   statusCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    minHeight: 76,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.primaryLight,
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 10,
+    borderRadius: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 15,
+  },
+
+  statusIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.card,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  statusConteudo: {
+    flex: 1,
+    marginLeft: 14,
   },
 
   statusTitulo: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 17,
+    lineHeight: 23,
+    fontWeight: "700",
     color: colors.primary,
   },
 
   statusTexto: {
-    fontSize: 12.5,
+    fontSize: 14,
+    lineHeight: 20,
     color: colors.primary,
-    marginTop: 2,
+    marginTop: 3,
   },
 
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: "700",
     color: colors.textSecondary,
-    marginTop: 20,
-    marginBottom: 8,
-    letterSpacing: 0.5,
+    marginTop: 24,
+    marginBottom: 10,
+    letterSpacing: 0.6,
   },
 
   contaCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    minHeight: 72,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
 
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: colors.text,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 14,
   },
 
   avatarTexto: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 13,
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
+  },
+
+  contaConteudo: {
+    flex: 1,
   },
 
   contaEmail: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "600",
     color: colors.text,
   },
 
   contaTexto: {
-    fontSize: 12.5,
+    fontSize: 14,
+    lineHeight: 19,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: 3,
   },
 
   preferenciaCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    minHeight: 76,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+
+  preferenciaConteudo: {
+    flex: 1,
+    paddingRight: 12,
   },
 
   preferenciaTitulo: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "600",
     color: colors.text,
   },
 
   preferenciaTexto: {
-    fontSize: 12.5,
+    fontSize: 14,
+    lineHeight: 19,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: 3,
   },
 
   botaoSecundario: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    minHeight: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.card,
     borderRadius: 12,
-    paddingVertical: 15,
-    marginTop: 20,
+    paddingHorizontal: 16,
+    marginTop: 24,
   },
 
   botaoSecundarioTexto: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "600",
     color: colors.text,
-    marginLeft: 8,
+    marginLeft: 10,
   },
 
   botaoPerigo: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    minHeight: 56,
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: colors.danger,
     borderRadius: 12,
-    paddingVertical: 15,
+    paddingHorizontal: 16,
     marginTop: 12,
   },
 
   botaoPerigoTexto: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "600",
     color: colors.danger,
   },
 });

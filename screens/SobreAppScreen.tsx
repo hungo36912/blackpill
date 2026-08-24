@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   View,
   Text,
@@ -7,9 +8,14 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import colors from '../theme/colors';
+import { spacing } from '../theme/spacing';
+import { typography } from '../theme/typography';
+import { radius } from '../theme/radius';
+
 import AccordionItem from '../components/AccordionItem';
 
 type Props = {
@@ -34,7 +40,7 @@ export default function SobreAppScreen({
           Sobre o aplicativo
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -47,7 +53,7 @@ export default function SobreAppScreen({
             />
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={styles.textContainer}>
             <Text style={styles.nomeApp}>
               AlertaMed
             </Text>
@@ -106,7 +112,7 @@ export default function SobreAppScreen({
               />
             </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={styles.textContainer}>
               <Text style={styles.titulo}>
                 Fale com o Suporte
               </Text>
@@ -143,61 +149,70 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing['4xl'],
+    paddingVertical: spacing.lg,
   },
 
   headerTitle: {
-    fontSize: 18,
+    fontSize: typography.size.xl,
     fontWeight: '700',
     color: colors.text,
   },
 
+  headerSpacer: {
+    width: 26,
+  },
+
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing['3xl'],
   },
 
   cardTopo: {
     flexDirection: 'row',
     backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   logoCircle: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: spacing.md,
+  },
+
+  textContainer: {
+    flex: 1,
   },
 
   nomeApp: {
-    fontSize: 17,
+    fontSize: typography.size.lg,
     fontWeight: '700',
     color: colors.text,
   },
 
   slogan: {
-    fontSize: 13,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginBottom: 6,
+    marginBottom: spacing.sm,
   },
 
   descricaoTopo: {
-    fontSize: 13,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
     lineHeight: 18,
   },
 
   card: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
   },
 
   header2: {
@@ -212,26 +227,26 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: spacing.md,
   },
 
   titulo: {
-    fontSize: 15,
+    fontSize: typography.size.md,
     fontWeight: '700',
     color: colors.primary,
   },
 
   texto: {
-    fontSize: 13.5,
+    fontSize: typography.size.sm,
     color: colors.textSecondary,
-    marginTop: 4,
+    marginTop: spacing.xs,
     lineHeight: 19,
   },
 
   rodape: {
     textAlign: 'center',
     color: colors.textSecondary,
-    fontSize: 12,
-    marginTop: 20,
+    fontSize: typography.size.xs,
+    marginTop: spacing.xl,
   },
 });

@@ -7,6 +7,9 @@ import {
 } from 'react-native';
 
 import colors from '../../theme/colors';
+import radius from '../../theme/radius';
+import spacing from '../../theme/spacing';
+import typography from '../../theme/typography';
 
 import ScreenHeader from '../../components/ScreenHeader';
 import MedicationSummary from '../../components/MedicationSummary';
@@ -109,29 +112,29 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing['4xl'],
   },
 
   topCard: {
     backgroundColor: colors.primaryLight,
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 20,
+    borderRadius: radius['2xl'],
+    padding: spacing.lg,
+    marginBottom: spacing.xl,
   },
 
   noteWrap: {
-    marginBottom: 22,
+    marginBottom: spacing.xl + 2,
   },
 
   noteIconText: {
     color: colors.card,
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: typography.size.sm - 1,
   },
 
   actions: {
-    gap: 10,
+    gap: spacing.md - 2,
   },
 });

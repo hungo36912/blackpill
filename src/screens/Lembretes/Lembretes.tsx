@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   View,
   Text,
@@ -8,6 +9,11 @@ import {
   Dimensions,
   StatusBar,
 } from "react-native";
+
+import colors from "../../../theme/colors";
+import spacing from "../../../theme/spacing";
+import typography from "../../../theme/typography";
+import radius from "../../../theme/radius";
 
 import {
   ArrowLeft,
@@ -20,9 +26,9 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const GREEN = "#439B58";
-const DARK_GREEN = "#1D522C";
-const TEXT = "#17232B";
+const GREEN = colors.reminder;
+const DARK_GREEN = colors.reminderDark;
+const TEXT = colors.reminderText;
 
 type Props = {
   onVoltar: () => void;
@@ -35,7 +41,6 @@ export default function Lembretes({
   onAdicionarLembrete,
   onAbrirConfiguracoes,
 }: Props) {
-  
   function abrirCalendario() {
     console.log("Calendário de tratamento");
   }
@@ -44,7 +49,7 @@ export default function Lembretes({
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor="#FFFFFF"
+        backgroundColor={colors.card}
       />
 
       <View style={styles.container}>
@@ -53,6 +58,8 @@ export default function Lembretes({
             style={styles.botaoVoltar}
             onPress={onVoltar}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
             <ArrowLeft
               size={28}
@@ -71,7 +78,6 @@ export default function Lembretes({
         <View style={styles.conteudo}>
           <View style={styles.ilustracao}>
             <View style={styles.circuloIlustracao} />
-
             <View style={styles.ponto1} />
             <View style={styles.ponto2} />
             <View style={styles.ponto3} />
@@ -99,11 +105,13 @@ export default function Lembretes({
             style={styles.botaoAdicionar}
             onPress={onAdicionarLembrete}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Adicionar lembrete"
           >
             <Plus
-              size={30}
-              color="#FFFFFF"
-              strokeWidth={2}
+              size={28}
+              color={colors.card}
+              strokeWidth={2.2}
             />
 
             <Text style={styles.textoBotao}>
@@ -116,10 +124,13 @@ export default function Lembretes({
               style={styles.card}
               onPress={onAbrirConfiguracoes}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Configurações"
+              accessibilityHint="Sons, vibrações e notificações"
             >
               <View style={styles.iconeCard}>
                 <Settings
-                  size={36}
+                  size={34}
                   color={DARK_GREEN}
                   strokeWidth={1.8}
                 />
@@ -131,12 +142,12 @@ export default function Lembretes({
                 </Text>
 
                 <Text style={styles.descricaoCard}>
-                  Sons, Vibrações e notificações
+                  Sons, vibrações e notificações
                 </Text>
               </View>
 
               <ChevronRight
-                size={27}
+                size={26}
                 color={TEXT}
                 strokeWidth={2.5}
               />
@@ -146,10 +157,13 @@ export default function Lembretes({
               style={styles.card}
               onPress={abrirCalendario}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Calendário de tratamento"
+              accessibilityHint="Visualizar todos os horários"
             >
               <View style={styles.iconeCard}>
                 <CalendarDays
-                  size={36}
+                  size={34}
                   color={DARK_GREEN}
                   strokeWidth={1.8}
                 />
@@ -166,7 +180,7 @@ export default function Lembretes({
               </View>
 
               <ChevronRight
-                size={27}
+                size={26}
                 color={TEXT}
                 strokeWidth={2.5}
               />
@@ -181,45 +195,48 @@ export default function Lembretes({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   header: {
-    height: 76,
+    minHeight: 76,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 14,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
 
   botaoVoltar: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "flex-start",
   },
 
   tituloHeader: {
     flex: 1,
     textAlign: "center",
-    fontSize: 21,
+    fontSize: typography.size.xl,
+    lineHeight: typography.size.xl + 8,
     fontWeight: "700",
-    color: "#111111",
+    color: TEXT,
   },
 
   espacoHeader: {
-    width: 42,
+    width: 48,
   },
 
   conteudo: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 22,
+    paddingHorizontal: spacing.xl,
   },
 
   ilustracao: {
@@ -227,7 +244,7 @@ const styles = StyleSheet.create({
     height: width * 0.68,
     maxWidth: 270,
     maxHeight: 270,
-    marginTop: 10,
+    marginTop: spacing.sm,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
@@ -238,7 +255,7 @@ const styles = StyleSheet.create({
     width: 190,
     height: 190,
     borderRadius: 95,
-    backgroundColor: "#EAF5ED",
+    backgroundColor: colors.primaryLight,
   },
 
   ponto1: {
@@ -246,7 +263,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#D5E9DA",
+    backgroundColor: colors.primaryLight,
     top: 20,
     left: 30,
   },
@@ -256,7 +273,7 @@ const styles = StyleSheet.create({
     width: 11,
     height: 11,
     borderRadius: 6,
-    backgroundColor: "#D5E9DA",
+    backgroundColor: colors.primaryLight,
     top: 75,
     right: 15,
   },
@@ -266,7 +283,7 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 4,
-    backgroundColor: "#D5E9DA",
+    backgroundColor: colors.primaryLight,
     bottom: 55,
     left: 40,
   },
@@ -274,79 +291,87 @@ const styles = StyleSheet.create({
   titulo: {
     marginTop: -5,
     textAlign: "center",
-    fontSize: 26,
-    lineHeight: 34,
+    fontSize: typography.size.xl + 2,
+    lineHeight: typography.size.xl + 12,
     fontWeight: "700",
     color: TEXT,
   },
 
   descricao: {
-    marginTop: 12,
+    marginTop: spacing.md,
     textAlign: "center",
-    fontSize: 17,
-    lineHeight: 27,
-    color: "#28343B",
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 9,
+    color: colors.textSecondary,
   },
 
   botaoAdicionar: {
-    marginTop: 22,
+    marginTop: spacing.lg,
     width: "88%",
-    height: 60,
-    borderRadius: 10,
+    minHeight: 58,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.md,
     backgroundColor: GREEN,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 12,
+    gap: spacing.sm,
   },
 
   textoBotao: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
+    color: colors.card,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
+    fontWeight: "700",
   },
 
   opcoes: {
     width: "100%",
     marginTop: "auto",
-    paddingTop: 15,
-    paddingBottom: 20,
-    gap: 10,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.lg,
+    gap: spacing.sm,
   },
 
   card: {
     width: "100%",
-    minHeight: 62,
+    minHeight: 76,
     borderWidth: 1,
-    borderColor: "#777777",
-    borderRadius: 12,
-    paddingHorizontal: 14,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   iconeCard: {
-    width: 48,
+    width: 52,
+    height: 52,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
+    marginRight: spacing.sm,
+    borderRadius: radius.md,
+    backgroundColor: colors.primaryLight,
   },
 
   textosCard: {
     flex: 1,
+    paddingRight: spacing.sm,
   },
 
   tituloCard: {
-    fontSize: 15,
-    lineHeight: 19,
-    fontWeight: "500",
-    color: "#111111",
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
+    fontWeight: "600",
+    color: TEXT,
   },
 
   descricaoCard: {
-    fontSize: 12,
-    lineHeight: 15,
-    color: "#333333",
+    fontSize: typography.size.sm,
+    lineHeight: typography.size.sm + 5,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
 });

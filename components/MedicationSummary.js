@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function MedicationSummary({
   image,
@@ -39,13 +41,13 @@ const styles = StyleSheet.create({
   image: {
     width: 64,
     height: 64,
-    marginRight: 14,
+    marginRight: spacing.lg - 2,
   },
 
   imageSmall: {
     width: 48,
     height: 48,
-    marginRight: 12,
+    marginRight: spacing.md,
   },
 
   info: {
@@ -56,11 +58,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
 
   form: {
-    fontSize: 13,
+    fontSize: typography.size.sm - 1,
     color: colors.textSecondary,
   },
 });

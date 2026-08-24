@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function InfoCard({ title, items = [] }) {
   return (
@@ -30,16 +33,16 @@ export default function InfoCard({ title, items = [] }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
-    borderRadius: 18,
-    padding: 18,
-    marginBottom: 20,
+    borderRadius: radius.xl + 2,
+    padding: spacing.lg + 2,
+    marginBottom: spacing.xl,
   },
 
   title: {
-    fontSize: 16,
+    fontSize: typography.size.md,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
 
   grid: {
@@ -49,17 +52,17 @@ const styles = StyleSheet.create({
 
   item: {
     width: '50%',
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
 
   label: {
-    fontSize: 12,
+    fontSize: typography.size.xs,
     color: colors.textSecondary,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
 
   value: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: '600',
     color: colors.text,
   },

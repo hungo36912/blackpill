@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import colors from "../../../theme/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,7 +36,7 @@ export default function Splash({ onFinish }: SplashProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.card,
   },
 
   image: {

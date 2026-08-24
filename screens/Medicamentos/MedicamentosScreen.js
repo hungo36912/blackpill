@@ -1,28 +1,48 @@
-// screens/MedicamentosScreen.js
-// Tela "Medicamentos": busca + filtro no topo e, quando não há nenhum
-// medicamento cadastrado, o estado vazio com ilustração e botão de
-// adicionar. Troque `medicamentos` por dados vindos da API/contexto e
-// renderize uma FlatList no lugar do EmptyState quando a lista não
-// estiver vazia.
-
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { colors } from '../../theme/colors';
+
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+
+import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
+import typography from '../../theme/typography';
+
 import SearchBar from '../../components/SearchBar';
 import FilterButton from '../../components/FilterButton';
 import EmptyState from '../../components/EmptyState';
 
-export default function MedicamentosScreen({ onAddMedicamento }) {
+export default function MedicamentosScreen({
+  onAddMedicamento,
+}) {
   const [search, setSearch] = useState('');
-  const medicamentos = []; // troque por dados reais quando a API estiver pronta
+
+  const medicamentos = [];
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <Text style={styles.pageTitle}>Medicamentos</Text>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      <Text style={styles.pageTitle}>
+        Medicamentos
+      </Text>
 
       <View style={styles.searchRow}>
-        <SearchBar value={search} onChangeText={setSearch} />
-        <FilterButton onPress={() => {}} />
+        <View style={styles.searchContainer}>
+          <SearchBar
+            value={search}
+            onChangeText={setSearch}
+          />
+        </View>
+
+        <FilterButton
+          onPress={() => {}}
+        />
       </View>
 
       {medicamentos.length === 0 && (
@@ -40,23 +60,33 @@ export default function MedicamentosScreen({ onAddMedicamento }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.background,
   },
+
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing['4xl'],
   },
+
   pageTitle: {
     textAlign: 'center',
-    fontSize: 19,
+    fontSize: typography.size.xl,
+    lineHeight: typography.size.xl + 8,
     fontWeight: '700',
-    color: colors.textDark,
-    marginBottom: 24,
+    color: colors.text,
+    marginBottom: spacing.xl,
   },
+
   searchRow: {
+    width: '100%',
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 44,
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing['2xl'],
+  },
+
+  searchContainer: {
+    flex: 1,
   },
 });

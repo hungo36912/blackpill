@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function TipCard({ text }) {
   return (
@@ -24,17 +27,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.primaryLight,
-    borderRadius: 14,
-    padding: 14,
+    borderRadius: radius.lg,
+    padding: spacing.lg - 2,
   },
 
   icon: {
-    marginRight: 10,
+    marginRight: spacing.md - 2,
   },
 
   text: {
     flex: 1,
-    fontSize: 13,
+    fontSize: typography.size.sm - 1,
     lineHeight: 19,
     color: colors.textSecondary,
   },

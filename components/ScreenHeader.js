@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function ScreenHeader({ title, onBack, centered }) {
   return (
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     height: 48,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: spacing['2xl'],
   },
 
   back: {
@@ -49,10 +51,10 @@ const styles = StyleSheet.create({
 
   title: {
     flex: 1,
-    fontSize: 18,
+    fontSize: typography.size.lg,
     fontWeight: '700',
     color: colors.text,
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
 
   centeredTitle: {

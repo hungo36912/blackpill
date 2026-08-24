@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
 
 import ScreenHeader from '../../components/ScreenHeader';
 import MedicationSummary from '../../components/MedicationSummary';
@@ -100,21 +101,21 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing['4xl'],
   },
 
   summaryWrap: {
-    marginBottom: 22,
+    marginBottom: spacing.xl + 2,
   },
 
   accordion: {
-    gap: 10,
-    marginBottom: 20,
+    gap: spacing.md - 2,
+    marginBottom: spacing.xl,
   },
 
   noteWrap: {
-    marginBottom: 14,
+    marginBottom: spacing.lg - 2,
   },
-}); 
+});

@@ -8,6 +8,7 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
+import colors from '../theme/colors';
 
 export default function LoginScreen({
   onAbrirCadastro,
@@ -38,7 +39,7 @@ export default function LoginScreen({
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#A0A0A0"
+          placeholderTextColor={colors.placeholder}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -48,7 +49,7 @@ export default function LoginScreen({
         <TextInput
           style={styles.input}
           placeholder="Senha"
-          placeholderTextColor="#A0A0A0"
+          placeholderTextColor={colors.placeholder}
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
@@ -89,11 +90,11 @@ export default function LoginScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.authBackground,
   },
 
   headerBackground: {
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
     height: '45%',
     borderBottomLeftRadius: 180,
     borderBottomRightRadius: 180,
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
@@ -126,14 +127,14 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    color: '#FFFFFF',
+    color: colors.card,
     fontSize: 28,
     fontWeight: 'bold',
     transform: [{ scaleX: 1 / 1.2 }],
   },
 
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 20,
     padding: 25,
     marginHorizontal: 30,
@@ -152,19 +153,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '500',
     textAlign: 'center',
-    color: '#000000',
+    color: colors.authText,
     marginBottom: 20,
   },
 
   input: {
     height: 50,
-    borderColor: '#E0E0E0',
+    borderColor: colors.border,
     borderWidth: 1,
     borderRadius: 25,
     paddingHorizontal: 20,
     fontSize: 16,
-    color: '#333333',
-    backgroundColor: '#FAFAFA',
+    color: colors.inputText,
+    backgroundColor: colors.inputBackground,
     marginBottom: 15,
   },
 
@@ -174,13 +175,13 @@ const styles = StyleSheet.create({
   },
 
   forgotPasswordText: {
-    color: '#6FA47F',
+    color: colors.authPrimary,
     fontSize: 14,
     fontWeight: '500',
   },
 
   button: {
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
     height: 50,
     borderRadius: 25,
     alignItems: 'center',
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.card,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -203,11 +204,11 @@ const styles = StyleSheet.create({
 
   footerText: {
     fontSize: 14,
-    color: '#000000',
+    color: colors.authText,
   },
 
   signUpText: {
-    color: '#6FA47F',
+    color: colors.authPrimary,
     fontWeight: 'bold',
   },
 });

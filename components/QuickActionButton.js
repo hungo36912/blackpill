@@ -1,6 +1,15 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  View,
+  StyleSheet,
+} from 'react-native';
+
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function QuickActionButton({
   icon,
@@ -12,7 +21,9 @@ export default function QuickActionButton({
     <TouchableOpacity
       style={styles.card}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.75}
+      accessibilityRole="button"
+      accessibilityLabel={label}
     >
       <View
         style={[
@@ -34,31 +45,39 @@ export default function QuickActionButton({
 
 const styles = StyleSheet.create({
   card: {
-    flexBasis: '23%',
+    width: '48%',
+    minHeight: 112,
+
     backgroundColor: colors.card,
+
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 4,
+    borderRadius: radius.xl + 2,
+
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md - 2,
+
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+
+    gap: spacing.md - 2,
 
     shadowColor: colors.text,
     shadowOpacity: 0.05,
-    shadowRadius: 16,
+    shadowRadius: 10,
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 4,
     },
 
     elevation: 2,
   },
 
   iconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -72,10 +91,11 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontSize: 11.5,
+    fontSize: typography.size.sm,
     fontWeight: '600',
     color: colors.text,
+
     textAlign: 'center',
-    lineHeight: 14,
+    lineHeight: 19,
   },
 });

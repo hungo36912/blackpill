@@ -8,6 +8,7 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
+import colors from '../theme/colors';
 
 export default function RecSenhaScreen({ onVoltarLogin }) {
   const [email, setEmail] = useState('');
@@ -44,7 +45,7 @@ export default function RecSenhaScreen({ onVoltarLogin }) {
           <TextInput
             style={styles.input}
             placeholder="Digite seu email"
-            placeholderTextColor="#A0A0A0"
+            placeholderTextColor={colors.placeholder}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -84,7 +85,7 @@ export default function RecSenhaScreen({ onVoltarLogin }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.authBackground,
   },
 
   headerBar: {
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 32,
     fontWeight: '400',
-    color: '#000000',
+    color: colors.authText,
   },
 
   content: {
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
@@ -139,13 +140,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#000000',
+    color: colors.authText,
     marginBottom: 15,
   },
 
   description: {
     fontSize: 14,
-    color: '#555555',
+    color: colors.authMuted,
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 30,
@@ -159,24 +160,24 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000000',
+    color: colors.authText,
     marginBottom: 8,
   },
 
   input: {
     height: 50,
-    borderColor: '#E0E0E0',
+    borderColor: colors.border,
     borderWidth: 1,
     borderRadius: 12,
     paddingHorizontal: 20,
     fontSize: 15,
-    color: '#333333',
-    backgroundColor: '#FAFAFA',
+    color: colors.inputText,
+    backgroundColor: colors.inputBackground,
     marginBottom: 15,
   },
 
   button: {
-    backgroundColor: '#6FA47F',
+    backgroundColor: colors.authPrimary,
     height: 50,
     borderRadius: 12,
     alignItems: 'center',
@@ -185,13 +186,13 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.card,
     fontSize: 16,
     fontWeight: 'bold',
   },
 
   alertBox: {
-    backgroundColor: '#B8D4C1',
+    backgroundColor: colors.authNotice,
     width: '100%',
     borderRadius: 12,
     padding: 15,
@@ -202,13 +203,13 @@ const styles = StyleSheet.create({
   alertTitle: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#2E4A37',
+    color: colors.authNoticeText,
     marginBottom: 4,
   },
 
   alertDescription: {
     fontSize: 13,
-    color: '#2E4A37',
+    color: colors.authNoticeText,
     textAlign: 'center',
     lineHeight: 18,
   },
@@ -216,16 +217,16 @@ const styles = StyleSheet.create({
   outlineButton: {
     width: '100%',
     height: 45,
-    borderColor: '#A0A0A0',
+    borderColor: colors.placeholder,
     borderWidth: 1,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: colors.inputBackground,
   },
 
   outlineButtonText: {
-    color: '#6FA47F',
+    color: colors.authPrimary,
     fontSize: 14,
     fontWeight: '500',
   },

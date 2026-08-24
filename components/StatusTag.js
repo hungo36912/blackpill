@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function StatusTag({ label }) {
   return (
@@ -14,15 +17,15 @@ const styles = StyleSheet.create({
   tag: {
     alignSelf: 'flex-start',
     backgroundColor: colors.primary,
-    borderRadius: 999,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginTop: 8,
+    borderRadius: radius.pill,
+    paddingVertical: spacing.xs + 1,
+    paddingHorizontal: spacing.md - 2,
+    marginTop: spacing.sm,
   },
 
   text: {
     color: colors.card,
-    fontSize: 11,
+    fontSize: typography.size.xs - 1,
     fontWeight: '700',
   },
 });

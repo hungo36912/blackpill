@@ -1,8 +1,19 @@
 import React from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+
+import {
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+
+import {
+  Feather,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 
 import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
+import typography from '../../theme/typography';
 
 import AppHeader from '../../components/AppHeader';
 import SectionTitle from '../../components/SectionTitle';
@@ -15,25 +26,49 @@ const ACOES_RAPIDAS = [
     key: 'add',
     label: 'Adicionar remédio',
     variant: 'add',
-    icon: <Feather name="plus" size={18} color={colors.card} />,
+    icon: (
+      <Feather
+        name="plus"
+        size={20}
+        color={colors.card}
+      />
+    ),
   },
   {
     key: 'bulas',
     label: 'Ver bulas',
     variant: 'light',
-    icon: <Feather name="book-open" size={18} color={colors.primary} />,
+    icon: (
+      <Feather
+        name="book-open"
+        size={20}
+        color={colors.primary}
+      />
+    ),
   },
   {
     key: 'historico',
     label: 'Histórico',
     variant: 'light',
-    icon: <Feather name="calendar" size={18} color={colors.primary} />,
+    icon: (
+      <Feather
+        name="calendar"
+        size={20}
+        color={colors.primary}
+      />
+    ),
   },
   {
     key: 'alertas',
     label: 'Alertas e lembretes',
     variant: 'light',
-    icon: <Feather name="bell" size={18} color={colors.primary} />,
+    icon: (
+      <Feather
+        name="bell"
+        size={20}
+        color={colors.primary}
+      />
+    ),
   },
 ];
 
@@ -41,6 +76,7 @@ export default function HomeScreen({
   onAddAlarme,
   onPressQuickAction,
   onPressBell,
+  onPressSettings,
 }) {
   return (
     <ScrollView
@@ -48,7 +84,10 @@ export default function HomeScreen({
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <AppHeader onPressBell={onPressBell} />
+      <AppHeader
+        onPressBell={onPressBell}
+        onPressSettings={onPressSettings}
+      />
 
       <Text style={styles.greetingTitle}>
         Olá, Fulano
@@ -62,7 +101,7 @@ export default function HomeScreen({
         icon={
           <MaterialCommunityIcons
             name="pill"
-            size={18}
+            size={21}
             color={colors.text}
           />
         }
@@ -82,7 +121,7 @@ export default function HomeScreen({
         icon={
           <Feather
             name="zap"
-            size={18}
+            size={21}
             color={colors.text}
           />
         }
@@ -110,21 +149,23 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing['4xl'],
   },
 
   greetingTitle: {
-    fontSize: 23,
+    fontSize: typography.size.xl + 2,
+    lineHeight: typography.size.xl + 10,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: spacing.sm,
   },
 
   greetingSubtitle: {
-    fontSize: 14,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 7,
     color: colors.textSecondary,
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
 });

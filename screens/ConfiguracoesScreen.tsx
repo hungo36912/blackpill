@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+
 import {
   View,
   Text,
@@ -6,13 +7,16 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
 
-import colors from '../theme/colors';
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "../theme/colors";
+import { spacing } from "../theme/spacing";
+import { typography } from "../theme/typography";
+import { radius } from "../theme/radius";
 
 type Props = {
-
   onVoltar: () => void;
   onAbrirBackup: () => void;
   onAbrirNotificacoes: () => void;
@@ -26,14 +30,14 @@ type Props = {
 };
 
 type ItemMenuProps = {
-  icon: React.ComponentProps<typeof Ionicons>['name'];
+  icon: React.ComponentProps<typeof Ionicons>["name"];
   titulo: string;
   subtitulo?: string;
   onPress?: () => void;
   custom?: React.ReactNode;
 };
 
-type IdiomaId = 'pt-BR' | 'en' | 'es';
+type IdiomaId = "pt-BR" | "en" | "es";
 
 export default function ConfiguracoesScreen({
   onVoltar,
@@ -50,10 +54,16 @@ export default function ConfiguracoesScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -62,10 +72,14 @@ export default function ConfiguracoesScreen({
           Configurações
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.espacoHeader} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.sectionLabel}>
           GERAL
         </Text>
@@ -124,43 +138,43 @@ export default function ConfiguracoesScreen({
 
         <View style={styles.card}>
           <ItemMenu
-  icon="information-circle-outline"
-  titulo="Sobre o aplicativo"
-  subtitulo="Versão 0.0.7"
-  onPress={onAbrirSobre}
-/>
+            icon="information-circle-outline"
+            titulo="Sobre o aplicativo"
+            subtitulo="Versão 0.0.7"
+            onPress={onAbrirSobre}
+          />
 
-<Divisor />
+          <Divisor />
 
-<ItemMenu
-  icon="document-text-outline"
-  titulo="Termos de uso"
-  onPress={onAbrirTermos}
-/>
+          <ItemMenu
+            icon="document-text-outline"
+            titulo="Termos de uso"
+            onPress={onAbrirTermos}
+          />
 
-<Divisor />
+          <Divisor />
 
-<ItemMenu
-  icon="help-circle-outline"
-  titulo="Perguntas frequentes"
-  onPress={onAbrirPerguntas}
-/>
+          <ItemMenu
+            icon="help-circle-outline"
+            titulo="Perguntas frequentes"
+            onPress={onAbrirPerguntas}
+          />
 
-<Divisor />
+          <Divisor />
 
-<ItemMenu
-  icon="chatbubble-ellipses-outline"
-  titulo="Fale conosco"
-  onPress={onAbrirFaleConosco}
-/>
+          <ItemMenu
+            icon="chatbubble-ellipses-outline"
+            titulo="Fale conosco"
+            onPress={onAbrirFaleConosco}
+          />
 
-<Divisor />
+          <Divisor />
 
-<ItemMenu
-  icon="bug-outline"
-  titulo="Relatar problema"
-  onPress={onAbrirRelatarProblema}
-/>
+          <ItemMenu
+            icon="bug-outline"
+            titulo="Relatar problema"
+            onPress={onAbrirRelatarProblema}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -179,16 +193,21 @@ function ItemMenu({
       style={styles.item}
       onPress={onPress}
       disabled={!onPress}
+      activeOpacity={0.7}
+      accessibilityRole={
+        onPress ? "button" : undefined
+      }
+      accessibilityLabel={titulo}
     >
       <View style={styles.itemIconCircle}>
         <Ionicons
           name={icon}
-          size={20}
+          size={22}
           color={colors.primary}
         />
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View style={styles.itemConteudo}>
         <Text style={styles.itemTitulo}>
           {titulo}
         </Text>
@@ -205,7 +224,7 @@ function ItemMenu({
       {onPress && (
         <Ionicons
           name="chevron-forward"
-          size={18}
+          size={22}
           color={colors.textSecondary}
         />
       )}
@@ -215,28 +234,28 @@ function ItemMenu({
 
 function SeletorIdioma() {
   const [idioma, setIdioma] =
-    React.useState<IdiomaId>('pt-BR');
+    React.useState<IdiomaId>("pt-BR");
 
   const idiomas: {
     id: IdiomaId;
     label: string;
   }[] = [
     {
-      id: 'pt-BR',
-      label: 'Português (Brasil)',
+      id: "pt-BR",
+      label: "Português (Brasil)",
     },
     {
-      id: 'en',
-      label: 'English',
+      id: "en",
+      label: "English",
     },
     {
-      id: 'es',
-      label: 'Español',
+      id: "es",
+      label: "Español",
     },
   ];
 
   return (
-    <View style={{ marginTop: 10 }}>
+    <View style={styles.seletorIdioma}>
       {idiomas.map((item) => {
         const selecionado =
           item.id === idioma;
@@ -245,7 +264,15 @@ function SeletorIdioma() {
           <TouchableOpacity
             key={item.id}
             style={styles.idiomaRow}
-            onPress={() => setIdioma(item.id)}
+            onPress={() =>
+              setIdioma(item.id)
+            }
+            activeOpacity={0.7}
+            accessibilityRole="radio"
+            accessibilityLabel={item.label}
+            accessibilityState={{
+              selected: selecionado,
+            }}
           >
             <Text style={styles.idiomaTexto}>
               {item.label}
@@ -259,7 +286,9 @@ function SeletorIdioma() {
               ]}
             >
               {selecionado && (
-                <View style={styles.radioInterno} />
+                <View
+                  style={styles.radioInterno}
+                />
               )}
             </View>
           </TouchableOpacity>
@@ -280,66 +309,95 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingVertical: 14,
+    minHeight: 76,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+
+  botaoVoltar: {
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   headerTitle: {
-    fontSize: 21,
-    fontWeight: '700',
+    flex: 1,
+    textAlign: "center",
+    fontSize: typography.size.xl,
+    lineHeight: typography.size.xl + 8,
+    fontWeight: "700",
     color: colors.text,
   },
 
+  espacoHeader: {
+    width: 48,
+  },
+
+  scroll: {
+    flex: 1,
+  },
+
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing["3xl"],
   },
 
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: typography.size.sm,
+    lineHeight: typography.size.sm + 5,
+    fontWeight: "700",
     color: colors.textSecondary,
-    marginTop: 20,
-    marginBottom: 8,
-    letterSpacing: 0.5,
+    marginTop: spacing.xl,
+    marginBottom: spacing.sm,
+    letterSpacing: 0.6,
   },
 
   card: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    paddingHorizontal: 14,
+    borderRadius: radius.lg,
+    paddingHorizontal: spacing.lg,
+    overflow: "hidden",
   },
 
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
+    minHeight: 72,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: spacing.md,
   },
 
   itemIconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: spacing.md,
+  },
+
+  itemConteudo: {
+    flex: 1,
   },
 
   itemTitulo: {
-    fontSize: 14.5,
-    fontWeight: '600',
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
+    fontWeight: "600",
     color: colors.text,
   },
 
   itemSubtitulo: {
-    fontSize: 12.5,
+    fontSize: typography.size.sm,
+    lineHeight: typography.size.sm + 5,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: spacing.xs,
   },
 
   divisor: {
@@ -347,26 +405,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.border,
   },
 
+  seletorIdioma: {
+    marginTop: spacing.sm,
+  },
+
   idiomaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
+    minHeight: 48,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: spacing.xs,
   },
 
   idiomaTexto: {
-    fontSize: 14,
+    flex: 1,
+    fontSize: typography.size.md,
+    lineHeight: typography.size.md + 6,
     color: colors.text,
   },
 
   radioExterno: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   radioExternoAtivo: {
@@ -374,9 +439,9 @@ const styles = StyleSheet.create({
   },
 
   radioInterno: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     backgroundColor: colors.primary,
   },
 });

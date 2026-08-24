@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 import {
@@ -12,13 +11,15 @@ import {
   Modal,
 } from "react-native";
 
+import colors from "../../../theme/colors";
+
 import {
   ArrowLeft,
   ChevronRight,
 } from "lucide-react-native";
 
-const GREEN = "#439B58";
-const TEXT = "#17232B";
+const GREEN = colors.reminder;
+const TEXT = colors.reminderText;
 
 type Props = {
   onVoltar?: () => void;
@@ -65,9 +66,7 @@ export default function Notificacoes({
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
-        {/* CABEÇALHO */}
         <View style={styles.header}>
-
           <TouchableOpacity
             style={styles.botaoVoltar}
             onPress={onVoltar}
@@ -85,10 +84,8 @@ export default function Notificacoes({
           </Text>
 
           <View style={styles.espacoHeader} />
-
         </View>
 
-        {/* CONTEÚDO COM ROLAGEM */}
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.conteudo}
@@ -96,14 +93,11 @@ export default function Notificacoes({
           bounces={true}
           keyboardShouldPersistTaps="handled"
         >
-
           <Text style={styles.tituloSecao}>
             Configurações
           </Text>
 
-          {/* NOTIFICAÇÕES DE MEDICAMENTOS */}
           <View style={styles.configuracao}>
-
             <View style={styles.textos}>
               <Text style={styles.titulo}>
                 Notificações de medicamentos
@@ -119,15 +113,13 @@ export default function Notificacoes({
               onValueChange={(valor) => {
                 setNotificacoesMedicamentos(valor);
 
-                // Se desligar as notificações,
-                // fecha o seletor de antecedência.
                 if (!valor) {
                   setMostrarAntecedencia(false);
                 }
               }}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 notificacoesMedicamentos
@@ -135,12 +127,10 @@ export default function Notificacoes({
                   : "#FFFFFF"
               }
             />
-
           </View>
 
           <View style={styles.divisor} />
 
-          {/* AVISAR NO HORÁRIO */}
           <View
             style={[
               styles.configuracao,
@@ -148,7 +138,6 @@ export default function Notificacoes({
                 styles.configuracaoDesativada,
             ]}
           >
-
             <View style={styles.textos}>
               <Text style={styles.titulo}>
                 Avisar no horário
@@ -164,8 +153,8 @@ export default function Notificacoes({
               onValueChange={setAvisarNoHorario}
               disabled={!notificacoesMedicamentos}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 avisarNoHorario
@@ -173,12 +162,10 @@ export default function Notificacoes({
                   : "#FFFFFF"
               }
             />
-
           </View>
 
           <View style={styles.divisor} />
 
-          {/* AVISAR ANTES */}
           <View
             style={[
               styles.configuracao,
@@ -186,7 +173,6 @@ export default function Notificacoes({
                 styles.configuracaoDesativada,
             ]}
           >
-
             <View style={styles.textos}>
               <Text style={styles.titulo}>
                 Avisar antes
@@ -202,8 +188,8 @@ export default function Notificacoes({
               onValueChange={setAvisarAntes}
               disabled={!notificacoesMedicamentos}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 avisarAntes
@@ -211,13 +197,10 @@ export default function Notificacoes({
                   : "#FFFFFF"
               }
             />
-
           </View>
 
-          {/* TEMPO DE ANTECEDÊNCIA */}
           {avisarAntes && notificacoesMedicamentos && (
             <View style={styles.antecedenciaContainer}>
-
               <Text style={styles.label}>
                 Tempo de antecedência
               </Text>
@@ -229,7 +212,6 @@ export default function Notificacoes({
                 }
                 activeOpacity={0.7}
               >
-
                 <Text style={styles.valor}>
                   {antecedencia}
                 </Text>
@@ -239,15 +221,12 @@ export default function Notificacoes({
                   color="#333333"
                   strokeWidth={2}
                 />
-
               </TouchableOpacity>
-
             </View>
           )}
 
           <View style={styles.divisor} />
 
-          {/* SOM */}
           <View
             style={[
               styles.configuracao,
@@ -255,7 +234,6 @@ export default function Notificacoes({
                 styles.configuracaoDesativada,
             ]}
           >
-
             <View style={styles.textos}>
               <Text style={styles.titulo}>
                 Som
@@ -271,8 +249,8 @@ export default function Notificacoes({
               onValueChange={setSom}
               disabled={!notificacoesMedicamentos}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 som
@@ -280,12 +258,10 @@ export default function Notificacoes({
                   : "#FFFFFF"
               }
             />
-
           </View>
 
           <View style={styles.divisor} />
 
-          {/* VIBRAÇÃO */}
           <View
             style={[
               styles.configuracao,
@@ -293,7 +269,6 @@ export default function Notificacoes({
                 styles.configuracaoDesativada,
             ]}
           >
-
             <View style={styles.textos}>
               <Text style={styles.titulo}>
                 Vibração
@@ -309,8 +284,8 @@ export default function Notificacoes({
               onValueChange={setVibracao}
               disabled={!notificacoesMedicamentos}
               trackColor={{
-                false: "#D5D5D5",
-                true: "#A8D5B0",
+                false: colors.switchTrack,
+                true: colors.switchTrackActive,
               }}
               thumbColor={
                 vibracao
@@ -318,15 +293,11 @@ export default function Notificacoes({
                   : "#FFFFFF"
               }
             />
-
           </View>
 
-          {/* ESPAÇO FINAL */}
           <View style={styles.espacoInferior} />
-
         </ScrollView>
 
-        {/* MODAL DE TEMPO DE ANTECEDÊNCIA */}
         <Modal
           visible={mostrarAntecedencia}
           transparent={true}
@@ -335,11 +306,8 @@ export default function Notificacoes({
             setMostrarAntecedencia(false)
           }
         >
-
           <View style={styles.modalFundo}>
-
             <View style={styles.modalContainer}>
-
               <Text style={styles.modalTitulo}>
                 Tempo de antecedência
               </Text>
@@ -353,7 +321,6 @@ export default function Notificacoes({
                   }
                   activeOpacity={0.7}
                 >
-
                   <Text
                     style={[
                       styles.textoOpcao,
@@ -363,7 +330,6 @@ export default function Notificacoes({
                   >
                     {opcao}
                   </Text>
-
                 </TouchableOpacity>
               ))}
 
@@ -378,11 +344,8 @@ export default function Notificacoes({
                   Cancelar
                 </Text>
               </TouchableOpacity>
-
             </View>
-
           </View>
-
         </Modal>
 
       </View>
@@ -391,7 +354,6 @@ export default function Notificacoes({
 }
 
 const styles = StyleSheet.create({
-
   safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -402,58 +364,42 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
 
-  /* HEADER */
-
   header: {
     height: 76,
-
     flexDirection: "row",
     alignItems: "center",
-
     paddingHorizontal: 20,
     paddingTop: 8,
-
     borderBottomWidth: 1,
     borderBottomColor: "#E5E5E5",
-
     elevation: 3,
-
     shadowColor: "#000",
-
     shadowOffset: {
       width: 0,
       height: 2,
     },
-
     shadowOpacity: 0.08,
-
     shadowRadius: 3,
   },
 
   botaoVoltar: {
     width: 42,
     height: 42,
-
     justifyContent: "center",
     alignItems: "flex-start",
   },
 
   tituloHeader: {
     flex: 1,
-
     textAlign: "center",
-
     fontSize: 21,
     fontWeight: "700",
-
     color: "#111111",
   },
 
   espacoHeader: {
     width: 42,
   },
-
-  /* ROLAGEM */
 
   scroll: {
     flex: 1,
@@ -465,26 +411,18 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
 
-  /* TÍTULO DA SEÇÃO */
-
   tituloSecao: {
     fontSize: 20,
     fontWeight: "700",
-
     color: TEXT,
-
     marginBottom: 20,
   },
 
-  /* CONFIGURAÇÕES */
-
   configuracao: {
     minHeight: 82,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
     paddingVertical: 14,
   },
 
@@ -500,28 +438,21 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 16,
     fontWeight: "600",
-
     color: TEXT,
-
     marginBottom: 5,
   },
 
   descricao: {
     fontSize: 14,
     lineHeight: 20,
-
     color: "#666666",
   },
 
   divisor: {
     height: 1,
-
     backgroundColor: "#E5E5E5",
-
     marginVertical: 4,
   },
-
-  /* ANTECEDÊNCIA */
 
   antecedenciaContainer: {
     marginTop: 4,
@@ -531,9 +462,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-
     color: TEXT,
-
     marginTop: 8,
     marginBottom: 9,
   },
@@ -541,18 +470,13 @@ const styles = StyleSheet.create({
   campo: {
     width: "100%",
     height: 58,
-
     borderWidth: 1,
     borderColor: "#777777",
-
     borderRadius: 10,
-
     paddingHorizontal: 17,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
     backgroundColor: "#FFFFFF",
   },
 
@@ -561,56 +485,39 @@ const styles = StyleSheet.create({
     color: TEXT,
   },
 
-  /* MODAL */
-
   modalFundo: {
     flex: 1,
-
     backgroundColor: "rgba(0, 0, 0, 0.35)",
-
     justifyContent: "center",
     alignItems: "center",
-
     paddingHorizontal: 25,
   },
 
   modalContainer: {
     width: "100%",
-
     backgroundColor: "#FFFFFF",
-
     borderRadius: 16,
-
     padding: 22,
-
     elevation: 8,
-
     shadowColor: "#000",
-
     shadowOffset: {
       width: 0,
       height: 3,
     },
-
     shadowOpacity: 0.2,
-
     shadowRadius: 6,
   },
 
   modalTitulo: {
     fontSize: 20,
     fontWeight: "700",
-
     color: TEXT,
-
     marginBottom: 10,
   },
 
   opcao: {
     minHeight: 52,
-
     justifyContent: "center",
-
     borderBottomWidth: 1,
     borderBottomColor: "#EEEEEE",
   },
@@ -627,17 +534,14 @@ const styles = StyleSheet.create({
 
   botaoCancelar: {
     height: 45,
-
     justifyContent: "center",
     alignItems: "center",
-
     marginTop: 8,
   },
 
   textoCancelar: {
     fontSize: 15,
     fontWeight: "600",
-
     color: "#666666",
   },
 
@@ -645,4 +549,3 @@ const styles = StyleSheet.create({
     height: 30,
   },
 });
-

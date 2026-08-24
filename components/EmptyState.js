@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import PrimaryButton from './PrimaryButton';
 import colors from '../theme/colors';
+import spacing from '../theme/spacing';
+import typography from '../theme/typography';
 
 export default function EmptyState({
   image,
@@ -35,19 +37,19 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 30,
+    paddingVertical: spacing['3xl'] - 2,
   },
 
   image: {
     width: 150,
     height: 150,
-    marginBottom: 18,
+    marginBottom: spacing.lg + 2,
   },
 
   text: {
-    fontSize: 15,
+    fontSize: typography.size.sm + 1,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 18,
+    marginBottom: spacing.lg + 2,
   },
 });

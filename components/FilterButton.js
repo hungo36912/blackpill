@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
 
 export default function FilterButton({ onPress }) {
   return (
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   button: {
     width: 48,
     height: 48,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',

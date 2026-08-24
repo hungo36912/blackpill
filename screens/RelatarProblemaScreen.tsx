@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -8,9 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import colors from '../theme/colors';
+import { spacing } from '../theme/spacing';
+import { typography } from '../theme/typography';
+import { radius } from '../theme/radius';
 
 type Props = {
   onVoltar: () => void;
@@ -61,7 +66,7 @@ export default function RelatarProblemaScreen({
           Relatar problema
         </Text>
 
-        <View style={{ width: 26 }} />
+        <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -101,12 +106,7 @@ export default function RelatarProblemaScreen({
             );
           })}
 
-          <Text
-            style={[
-              styles.label,
-              { marginTop: 20 },
-            ]}
-          >
+          <Text style={styles.labelDescricao}>
             Descreva o que aconteceu
           </Text>
 
@@ -120,12 +120,7 @@ export default function RelatarProblemaScreen({
             onChangeText={setDescricao}
           />
 
-          <Text
-            style={[
-              styles.label,
-              { marginTop: 20 },
-            ]}
-          >
+          <Text style={styles.labelAnexo}>
             Anexar print (opcional)
           </Text>
 
@@ -176,49 +171,69 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
 
   headerTitle: {
-    fontSize: 18,
+    fontSize: typography.size.lg,
     fontWeight: '700',
     color: colors.text,
   },
 
+  headerSpacer: {
+    width: 26,
+  },
+
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing['3xl'],
   },
 
   card: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
-    marginTop: 8,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginTop: spacing.sm,
   },
 
   label: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 10,
+    marginBottom: spacing.sm,
+  },
+
+  labelDescricao: {
+    fontSize: typography.size.sm,
+    fontWeight: '700',
+    color: colors.text,
+    marginTop: spacing.xl,
+    marginBottom: spacing.sm,
+  },
+
+  labelAnexo: {
+    fontSize: typography.size.sm,
+    fontWeight: '700',
+    color: colors.text,
+    marginTop: spacing.xl,
+    marginBottom: spacing.sm,
   },
 
   opcaoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
 
   opcaoTexto: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     color: colors.text,
     flex: 1,
-    marginRight: 10,
+    marginRight: spacing.sm,
   },
 
   radioExterno: {
@@ -245,10 +260,10 @@ const styles = StyleSheet.create({
   textArea: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    fontSize: typography.size.sm,
     color: colors.text,
     minHeight: 90,
     textAlignVertical: 'top',
@@ -258,36 +273,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.border,
-    borderRadius: 10,
-    paddingVertical: 24,
+    borderRadius: radius.md,
+    paddingVertical: spacing.xl,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   anexoTexto: {
     color: colors.textSecondary,
-    fontSize: 13,
-    marginTop: 6,
+    fontSize: typography.size.xs,
+    marginTop: spacing.xs,
   },
 
   botao: {
     backgroundColor: colors.primary,
-    borderRadius: 10,
-    paddingVertical: 15,
+    borderRadius: radius.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: spacing.xl,
   },
 
   botaoTexto: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: typography.size.md,
     fontWeight: '700',
   },
 
   rodape: {
     textAlign: 'center',
     color: colors.textSecondary,
-    fontSize: 12,
-    marginTop: 16,
+    fontSize: typography.size.xs,
+    marginTop: spacing.lg,
   },
 });

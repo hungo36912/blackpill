@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../theme/colors';
+import radius from '../theme/radius';
+import spacing from '../theme/spacing';
 
 type AccordionItemProps = {
   icon?: React.ComponentProps<typeof Ionicons>['name'];
@@ -60,9 +62,9 @@ export default function AccordionItem({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    marginBottom: 12,
-    padding: 16,
+    borderRadius: radius.lg,
+    marginBottom: spacing.md,
+    padding: spacing.lg,
   },
 
   header: {
@@ -73,11 +75,11 @@ const styles = StyleSheet.create({
   iconCircle: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: radius['2xl'],
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: spacing.md,
   },
 
   headerTextos: {

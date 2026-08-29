@@ -12,7 +12,7 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 
-import colors from "../theme/colors";
+import colors from "../../theme/colors";
 
 type Props = {
   onVoltar: () => void;

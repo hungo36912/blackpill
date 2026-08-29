@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import Splash from "./src/screens/Splash/Splash";
+import Splash from "./screens/Splash/Splash";
 
-import LoginScreen from "./screens/LoginScreen";
-import CadastroScreen from "./screens/CadastroScreen";
-import RecSenhaScreen from "./screens/RecSenhaScreen";
+import LoginScreen from "./screens/Auth/LoginScreen";
+import CadastroScreen from "./screens/Auth/CadastroScreen";
+import RecSenhaScreen from "./screens/Auth/RecSenhaScreen";
 
 import HomeScreen from "./screens/Home/HomeScreen";
 import MedicamentosScreen from "./screens/Medicamentos/MedicamentosScreen";
@@ -12,28 +12,28 @@ import AdicionarMedicamentoScreen from "./screens/Medicamentos/AdicionarMedicame
 
 import BottomNavBar from "./components/BottomNavBar";
 
-import AgendaScreen from "./screens/AgendaScreen";
-import CalendarScreen from "./screens/CalendarScreen";
+import AgendaScreen from "./screens/Agenda/AgendaScreen";
+import CalendarScreen from "./screens/Agenda/CalendarScreen";
 
-import PerfilScreen from "./screens/PerfilScreen";
-import FichaMedicaScreen from "./screens/FichaMedicaScreen";
-import HistoricoScreen from "./screens/HistoricoScreen";
-import RelatoriosScreen from "./screens/RelatorioScreen";
+import PerfilScreen from "./screens/Perfil/PerfilScreen";
+import FichaMedicaScreen from "./screens/Ficha/FichaMedicaScreen";
+import HistoricoScreen from "./screens/Historico/HistoricoScreen";
+import RelatoriosScreen from "./screens/Relatorio/RelatorioScreen";
 
-import Lembretes from "./src/screens/Lembretes/Lembretes";
-import NovoLembrete from "./src/screens/NovoLembrete/NovoLembrete";
-import Notificacoes from "./src/screens/Notificacoes/Notificacoes";
-import EditarLembrete from "./src/screens/EditarLembretes/EditarLembrete";
+import Lembretes from "./screens/Lembretes/Lembretes";
+import NovoLembrete from "./screens/Lembretes/NovoLembrete";
+import Notificacoes from "./screens/Notificacoes/Notificacoes";
+import EditarLembrete from "./screens/Lembretes/EditarLembrete";
 
-import ConfiguracoesScreen from "./screens/ConfiguracoesScreen";
-import BackupSincronizacaoScreen from "./screens/BackupSincronizacaoScreen";
-import AparenciaScreen from "./screens/AparenciaScreen";
-import PrivacidadeScreen from "./screens/PrivacidadeScreen";
-import SobreAppScreen from "./screens/SobreAppScreen";
-import TermosDeUsoScreen from "./screens/TermosDeUsoScreen";
-import PerguntasFrequentesScreen from "./screens/PerguntasFrequentesScreen";
-import FaleConoscoScreen from "./screens/FaleConoscoScreen";
-import RelatarProblemaScreen from "./screens/RelatarProblemaScreen";
+import ConfiguracoesScreen from "./screens/Config/ConfiguracoesScreen";
+import BackupSincronizacaoScreen from "./screens/Backup/BackupSincronizacaoScreen";
+import AparenciaScreen from "./screens/Aparencia/AparenciaScreen";
+import PrivacidadeScreen from "./screens/Termos/PrivacidadeScreen";
+import SobreAppScreen from "./screens/Comunicacao/SobreAppScreen";
+import TermosDeUsoScreen from "./screens/Termos/TermosDeUsoScreen";
+import PerguntasFrequentesScreen from "./screens/Comunicacao/PerguntasFrequentesScreen";
+import FaleConoscoScreen from "./screens/Comunicacao/FaleConoscoScreen";
+import RelatarProblemaScreen from "./screens/Comunicacao/RelatarProblemaScreen";
 
 import {
   View,
@@ -331,7 +331,7 @@ export default function App() {
               onPressSettings={() => {
                 setTelaConfiguracoes(true);
               }}
-              onPressQuickAction={(acao) => {
+              onPressQuickAction={(acao: string) => {
                 if (acao === "add") {
                   setTelaAdicionarMedicamento(true);
                 }

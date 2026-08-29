@@ -18,10 +18,10 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import colors from "../../../theme/colors";
-import spacing from "../../../theme/spacing";
-import typography from "../../../theme/typography";
-import radius from "../../../theme/radius";
+import colors from "../../theme/colors";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
 import {
   ArrowLeft,

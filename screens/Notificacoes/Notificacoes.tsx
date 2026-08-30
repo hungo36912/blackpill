@@ -11,7 +11,7 @@ import {
   Modal,
 } from "react-native";
 
-import colors from "../../../theme/colors";
+import colors from "../../theme/colors";
 
 import {
   ArrowLeft,

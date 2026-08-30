@@ -8,7 +8,7 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import colors from '../theme/colors';
+import colors from '../../theme/colors';
 
 export default function RecSenhaScreen({ onVoltarLogin }) {
   const [email, setEmail] = useState('');
@@ -27,7 +27,7 @@ export default function RecSenhaScreen({ onVoltarLogin }) {
       <View style={styles.content}>
         <View style={styles.logoCircle}>
           <Image
-            source={require('../assets/logo.png')}
+            source={require('../../assets/logo.png')}
             style={styles.logo}
           />
         </View>

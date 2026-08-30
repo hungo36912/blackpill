@@ -10,12 +10,12 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../../components/PageHeader";
 
-import colors from "../theme/colors";
-import spacing from "../theme/spacing";
-import typography from "../theme/typography";
-import radius from "../theme/radius";
+import colors from "../../theme/colors";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
 const TABS = ["Em andamento", "Finalizados", "Todos"] as const;
 

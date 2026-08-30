@@ -8,11 +8,11 @@ import {
   View,
 } from "react-native";
 
-import PageHeader from "../components/PageHeader";
-import colors from "../theme/colors";
-import { spacing } from "../theme/spacing";
-import { typography } from "../theme/typography";
-import { radius } from "../theme/radius";
+import PageHeader from "../../components/PageHeader";
+import colors from "../../theme/colors";
+import { spacing } from "../../theme/spacing";
+import { typography } from "../../theme/typography";
+import { radius } from "../../theme/radius";
 
 type Ficha = {
   nome: string;

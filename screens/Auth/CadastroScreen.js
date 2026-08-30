@@ -9,7 +9,7 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import colors from '../theme/colors';
+import colors from '../../theme/colors';
 
 export default function CadastroScreen({
   onVoltarLogin,
@@ -30,7 +30,7 @@ export default function CadastroScreen({
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
             <Image
-              source={require('../assets/logo.png')}
+              source={require('../../assets/logo.png')}
               style={styles.logo}
             />
           </View>

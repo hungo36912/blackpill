@@ -9,10 +9,10 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import colors from '../theme/colors';
-import radius from '../theme/radius';
-import spacing from '../theme/spacing';
-import typography from '../theme/typography';
+import colors from '../../theme/colors';
+import radius from '../../theme/radius';
+import spacing from '../../theme/spacing';
+import typography from '../../theme/typography';
 
 import {
   Calendar,

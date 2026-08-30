@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import colors from "../../../theme/colors";
+import colors from "../../theme/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +25,7 @@ export default function Splash({ onFinish }: SplashProps) {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../assets/splash/splash.png")}
+        source={require("../../assets/splash/splash.png")}
         style={styles.image}
         resizeMode="cover"
       />

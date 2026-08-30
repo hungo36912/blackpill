@@ -8,7 +8,7 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import colors from '../theme/colors';
+import colors from '../../theme/colors';
 
 export default function LoginScreen({
   onAbrirCadastro,
@@ -24,7 +24,7 @@ export default function LoginScreen({
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
             <Image
-              source={require('../assets/logo.png')}
+              source={require('../../assets/logo.png')}
               style={styles.logo}
             />
           </View>

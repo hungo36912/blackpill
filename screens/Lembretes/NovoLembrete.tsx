@@ -15,10 +15,10 @@ import {
   ScrollView,
 } from "react-native";
 
-import colors from "../../../theme/colors";
-import spacing from "../../../theme/spacing";
-import typography from "../../../theme/typography";
-import radius from "../../../theme/radius";
+import colors from "../../theme/colors";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
 import {
   ArrowLeft,

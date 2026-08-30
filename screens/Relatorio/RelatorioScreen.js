@@ -7,10 +7,10 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import colors from "../theme/colors";
-import { spacing } from "../theme/spacing";
-import { typography } from "../theme/typography";
-import { radius } from "../theme/radius";
+import colors from "../../theme/colors";
+import { spacing } from "../../theme/spacing";
+import { typography } from "../../theme/typography";
+import { radius } from "../../theme/radius";
 
 export default function RelatoriosScreen({ onVoltar }) {
   return (

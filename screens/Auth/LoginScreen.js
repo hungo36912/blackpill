@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../services/api';
 import colors from '../../theme/colors';
 
 export default function LoginScreen({
@@ -17,6 +21,60 @@ export default function LoginScreen({
 }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email.trim() || !senha.trim()) {
+      Alert.alert('Aviso', 'Por favor, preencha o e-mail e a senha.');
+      return;
+    }
+
+    setLoading(true);
+    console.log('--- INICIANDO TENTATIVA DE LOGIN ---');
+    console.log('Email digitado:', email.trim());
+
+    try {
+      const response = await api.post('/auth/login', {
+        email: email.trim(),
+        senha: senha,
+      });
+
+      console.log('--- RESPOSTA DA API RECEBIDA COM SUCESSO ---');
+      console.log('Status HTTP:', response.status);
+      console.log('Dados recebidos:', response.data);
+
+      const { token, user } = response.data;
+
+      if (!token) {
+        throw new Error('Token não retornado pela API');
+      }
+
+      await AsyncStorage.setItem('@blackpill:token', token);
+      await AsyncStorage.setItem('@blackpill:user', JSON.stringify(user || {}));
+
+      console.log('TOKEN SALVO NO ASYNCSTORAGE:', token);
+      console.log('USUARIO SALVO NO ASYNCSTORAGE:', user);
+
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      if (onEntrar) {
+        onEntrar(user);
+      }
+    } catch (error) {
+      console.log('--- ERRO NA AUTENTICAÇÃO ---');
+      console.log('Erro completo:', error);
+      console.log('Status de Erro HTTP:', error.response?.status);
+      console.log('Resposta de Erro da API:', error.response?.data);
+
+      const mensagemErro =
+        error.response?.data?.message ||
+        'Não foi possível conectar ao servidor. Verifique o Ngrok ou sua conexão.';
+
+      Alert.alert('Falha no Login', mensagemErro);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,6 +102,7 @@ export default function LoginScreen({
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          editable={!loading}
         />
 
         <TextInput
@@ -53,11 +112,13 @@ export default function LoginScreen({
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
+          editable={!loading}
         />
 
         <TouchableOpacity
           style={styles.forgotPasswordButton}
           onPress={onAbrirRecuperacao}
+          disabled={loading}
         >
           <Text style={styles.forgotPasswordText}>
             Esqueci minha senha
@@ -65,10 +126,15 @@ export default function LoginScreen({
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.button}
-          onPress={onEntrar}
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleLogin}
+          disabled={loading}
         >
-          <Text style={styles.buttonText}>Entrar</Text>
+          {loading ? (
+            <ActivityIndicator color={colors.card} />
+          ) : (
+            <Text style={styles.buttonText}>Entrar</Text>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -77,7 +143,7 @@ export default function LoginScreen({
           Não tem uma conta?{' '}
           <Text
             style={styles.signUpText}
-            onPress={onAbrirCadastro}
+            onPress={loading ? null : onAbrirCadastro}
           >
             Cadastre-se
           </Text>
@@ -186,6 +252,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  buttonDisabled: {
+    opacity: 0.7,
   },
 
   buttonText: {

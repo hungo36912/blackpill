@@ -15,6 +15,11 @@ import tratamentoRoutes from './routes/tratamentoRoutes.js';
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`[${new Date().toLocaleTimeString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/ficha', fichaRoutes);
 app.use('/api/tratamentos', tratamentoRoutes);

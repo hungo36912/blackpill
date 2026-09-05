@@ -69,8 +69,11 @@ CREATE TABLE `ficha_med` (
   `id_user` char(36) NOT NULL,
   `altura` decimal(5,2) DEFAULT NULL,
   `peso` decimal(5,2) DEFAULT NULL,
-  `sexo` char(1) DEFAULT NULL,
-  `data_nascimento` date DEFAULT NULL
+  `sexo` char(9) DEFAULT NULL,
+  `data_nascimento` date DEFAULT NULL,
+  `alergias` varchar(255) DEFAULT NULL,
+  `obs` varchar(255) DEFAULT NULL,
+  `cond_saude` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

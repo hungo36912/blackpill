@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 // POST /ficha
 export const criarFicha = async (req, res) => {
     try {
-        const { altura, peso, sexo, data_nascimento } = req.body;
+        const { altura, peso, sexo, data_nascimento, alergias, obs, cond_saude } = req.body;
         const id_user = req.user.id;
 
         if (!altura || !peso || !sexo || !data_nascimento) {
@@ -30,14 +30,33 @@ export const criarFicha = async (req, res) => {
         const id_ficha_med = uuidv4();
 
         await db.query(
-            `INSERT INTO ficha_med (id_ficha_med, id_user, altura, peso, sexo, data_nascimento)
-             VALUES (?, ?, ?, ?, ?, ?)`,
-            [id_ficha_med, id_user, altura, peso, sexo.toUpperCase(), data_nascimento]
+            `INSERT INTO ficha_med (id_ficha_med, id_user, altura, peso, sexo, data_nascimento, alergias, obs, cond_saude)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                id_ficha_med,
+                id_user,
+                altura,
+                peso,
+                sexo.toUpperCase(),
+                data_nascimento,
+                alergias || null,
+                obs || null,
+                cond_saude || null,
+            ]
         );
 
         res.status(201).json({
             message: 'Ficha médica criada com sucesso.',
-            ficha: { id_ficha_med, altura, peso, sexo: sexo.toUpperCase(), data_nascimento }
+            ficha: {
+                id_ficha_med,
+                altura,
+                peso,
+                sexo: sexo.toUpperCase(),
+                data_nascimento,
+                alergias: alergias || null,
+                obs: obs || null,
+                cond_saude: cond_saude || null,
+            }
         });
 
     } catch (err) {
@@ -52,7 +71,7 @@ export const buscarFicha = async (req, res) => {
         const id_user = req.user.id;
 
         const [rows] = await db.query(
-            'SELECT id_ficha_med, altura, peso, sexo, data_nascimento FROM ficha_med WHERE id_user = ?',
+            'SELECT id_ficha_med, altura, peso, sexo, data_nascimento, alergias, obs, cond_saude FROM ficha_med WHERE id_user = ?',
             [id_user]
         );
 
@@ -71,10 +90,14 @@ export const buscarFicha = async (req, res) => {
 // PUT /ficha
 export const atualizarFicha = async (req, res) => {
     try {
-        const { altura, peso, sexo, data_nascimento } = req.body;
+        const { altura, peso, sexo, data_nascimento, alergias, obs, cond_saude } = req.body;
         const id_user = req.user.id;
 
-        if (!altura && !peso && !sexo && !data_nascimento) {
+        if (
+            altura === undefined && peso === undefined && sexo === undefined &&
+            data_nascimento === undefined && alergias === undefined &&
+            obs === undefined && cond_saude === undefined
+        ) {
             return res.status(400).json({ message: 'Envie ao menos um campo para atualizar.' });
         }
 
@@ -89,10 +112,13 @@ export const atualizarFicha = async (req, res) => {
         const campos = [];
         const valores = [];
 
-        if (altura)          { campos.push('altura = ?');          valores.push(altura); }
-        if (peso)            { campos.push('peso = ?');            valores.push(peso); }
-        if (sexo)            { campos.push('sexo = ?');            valores.push(sexo.toUpperCase()); }
-        if (data_nascimento) { campos.push('data_nascimento = ?'); valores.push(data_nascimento); }
+        if (altura !== undefined)          { campos.push('altura = ?');          valores.push(altura); }
+        if (peso !== undefined)            { campos.push('peso = ?');            valores.push(peso); }
+        if (sexo !== undefined)            { campos.push('sexo = ?');            valores.push(sexo.toUpperCase()); }
+        if (data_nascimento !== undefined) { campos.push('data_nascimento = ?'); valores.push(data_nascimento); }
+        if (alergias !== undefined)        { campos.push('alergias = ?');        valores.push(alergias); }
+        if (obs !== undefined)             { campos.push('obs = ?');             valores.push(obs); }
+        if (cond_saude !== undefined)      { campos.push('cond_saude = ?');      valores.push(cond_saude); }
 
         valores.push(id_user);
 
@@ -113,7 +139,7 @@ export const atualizarFicha = async (req, res) => {
     }
 };
 
-// DELETE /ficha
+// DELETE /ficha (sem alterações)
 export const deletarFicha = async (req, res) => {
     try {
         const id_user = req.user.id;

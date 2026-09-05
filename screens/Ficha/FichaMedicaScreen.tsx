@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import PageHeader from "../../components/PageHeader";
@@ -13,6 +15,10 @@ import colors from "../../theme/colors";
 import { spacing } from "../../theme/spacing";
 import { typography } from "../../theme/typography";
 import { radius } from "../../theme/radius";
+import api from '../../services/api';
+
+
+
 
 type Ficha = {
   nome: string;
@@ -25,16 +31,94 @@ type Ficha = {
   observacoes: string;
 };
 
-const INITIAL: Ficha = {
-  nome: "Fulano de Tal",
-  dataNascimento: "24/07/1953",
-  sexo: "Masculino",
-  peso: "72 Kg",
-  altura: "1,67 m",
+const EMPTY: Ficha = {
+  nome: "",
+  dataNascimento: "",
+  sexo: "",
+  peso: "",
+  altura: "",
   condicoes: "",
   alergias: "",
   observacoes: "",
 };
+
+// ---------- conversões tela <-> API ----------
+
+const SEXO_PARA_API: Record<string, string> = {
+  Masculino: "M",
+  Feminino: "F",
+  Outro: "O",
+};
+const SEXO_PARA_TELA: Record<string, string> = {
+  M: "Masculino",
+  F: "Feminino",
+  O: "Outro",
+};
+
+function numeroDaString(valor: string): number {
+  // remove tudo que não for dígito, vírgula ou ponto, e troca vírgula por ponto
+  const limpo = valor.replace(/[^\d.,]/g, "").replace(",", ".");
+  return parseFloat(limpo);
+}
+
+function brParaIso(dataBr: string): string {
+  const [d, m, y] = dataBr.split("/");
+  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+}
+
+function isoParaBr(dataIso: string): string {
+  // MySQL costuma devolver 'YYYY-MM-DD' ou 'YYYY-MM-DDTHH:mm:ss.000Z'
+  const [y, m, d] = dataIso.slice(0, 10).split("-");
+  return `${d}/${m}/${y}`;
+
+}
+
+function dataValida(data: string): boolean {
+  const match = data.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return false;
+
+  const [, diaStr, mesStr, anoStr] = match;
+  const dia = Number(diaStr);
+  const mes = Number(mesStr);
+  const ano = Number(anoStr);
+
+  if (mes < 1 || mes > 12) return false;
+
+  const diasNoMes = new Date(ano, mes, 0).getDate();
+  if (dia < 1 || dia > diasNoMes) return false;
+
+  const dataInformada = new Date(ano, mes - 1, dia);
+  if (dataInformada > new Date()) return false;
+
+  return true;
+}
+
+function fichaParaPayload(f: Ficha) {
+  return {
+    altura: numeroDaString(f.altura),
+    peso: numeroDaString(f.peso),
+    sexo: SEXO_PARA_API[f.sexo] ?? f.sexo,
+    data_nascimento: brParaIso(f.dataNascimento),
+    alergias: f.alergias,
+    obs: f.observacoes,
+    cond_saude: f.condicoes,
+  };
+}
+
+function payloadParaFicha(p: any, extras: Partial<Ficha> = {}): Ficha {
+  return {
+    nome: extras.nome ?? "",
+    dataNascimento: isoParaBr(p.data_nascimento),
+    sexo: SEXO_PARA_TELA[p.sexo] ?? p.sexo,
+    peso: `${p.peso} Kg`,
+    altura: `${String(p.altura).replace(".", ",")} m`,
+    condicoes: p.cond_saude ?? "",
+    alergias: p.alergias ?? "",
+    observacoes: p.obs ?? "",
+  };
+}
+
+// ---------- componente de campo  --------
 
 type FieldProps = {
   label: string;
@@ -44,38 +128,24 @@ type FieldProps = {
   onChangeText: (value: string) => void;
 };
 
-function Field({
-  label,
-  value,
-  editing,
-  multiline,
-  onChangeText,
-}: FieldProps) {
+function Field({ label, value, editing, multiline, onChangeText }: FieldProps) {
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{label}</Text>
-
       {editing ? (
         <TextInput
           value={value}
           onChangeText={onChangeText}
           multiline={multiline}
-          style={[
-            styles.input,
-            multiline && styles.textArea,
-          ]}
+          style={[styles.input, multiline && styles.textArea]}
           placeholder={multiline ? "Digite aqui..." : ""}
           placeholderTextColor={colors.placeholder}
         />
       ) : (
         <>
-          <Text
-            style={styles.value}
-            numberOfLines={multiline ? 2 : 1}
-          >
+          <Text style={styles.value} numberOfLines={multiline ? 2 : 1}>
             {value || "—"}
           </Text>
-
           <Text style={styles.chevron}>›</Text>
         </>
       )}
@@ -83,16 +153,102 @@ function Field({
   );
 }
 
+const SEXO_OPCOES = ["Masculino", "Feminino", "Outro"];
+
+function SexoField({
+  value,
+  editing,
+  onChange,
+}: {
+  value: string;
+  editing: boolean;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  if (!editing) {
+    return (
+      <View style={styles.field}>
+        <Text style={styles.label}>Sexo</Text>
+        <Text style={styles.value}>{value || "—"}</Text>
+        <Text style={styles.chevron}>›</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.field}>
+      <Text style={styles.label}>Sexo</Text>
+      <TouchableOpacity style={styles.input} onPress={() => setOpen((o) => !o)}>
+        <Text style={{ color: value ? colors.text : colors.placeholder }}>
+          {value || "Selecione"}
+        </Text>
+      </TouchableOpacity>
+
+      {open && (
+        <View style={styles.dropdown}>
+          {SEXO_OPCOES.map((opcao) => (
+            <TouchableOpacity
+              key={opcao}
+              style={styles.dropdownItem}
+              onPress={() => {
+                onChange(opcao);
+                setOpen(false);
+              }}
+            >
+              <Text style={styles.dropdownItemText}>{opcao}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
+
+
+
 type Props = {
   onVoltar: () => void;
 };
 
-export default function FichaMedicaScreen({
-  onVoltar,
-}: Props) {
+export default function FichaMedicaScreen({ onVoltar }: Props) {
+  const [loading, setLoading] = useState(true);
+  const [salvando, setSalvando] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [ficha, setFicha] = useState<Ficha>(INITIAL);
-  const [draft, setDraft] = useState<Ficha>(INITIAL);
+  const [existeFicha, setExisteFicha] = useState(false);
+  const [ficha, setFicha] = useState<Ficha>(EMPTY);
+  const [draft, setDraft] = useState<Ficha>(EMPTY);
+
+  useEffect(() => {
+    carregarFicha();
+  }, []);
+
+async function carregarFicha() {
+    setLoading(true);
+    try {
+      const [respUsuario, respFicha] = await Promise.allSettled([
+        api.get("/api/auth/me"),
+        api.get("/api/ficha"),
+      ]);
+
+      const nome =
+        respUsuario.status === "fulfilled" ? respUsuario.value.data.nome : "";
+
+      if (respFicha.status === "fulfilled") {
+        setFicha(payloadParaFicha(respFicha.value.data, { nome }));
+        setExisteFicha(true);
+      } else if (respFicha.reason?.response?.status === 404) {
+        // usuário ainda não tem ficha cadastrada, começa em branco (mas já com o nome)
+        setFicha({ ...EMPTY, nome });
+        setExisteFicha(false);
+      } else {
+        Alert.alert("Erro", "Não foi possível carregar a ficha médica.");
+      }
+    } finally {
+      setLoading(false);
+    }
+}
 
   function update(key: keyof Ficha, value: string) {
     setDraft((old) => ({
@@ -101,16 +257,46 @@ export default function FichaMedicaScreen({
     }));
   }
 
-  function toggleEditing() {
-    if (editing) {
-      setFicha(draft);
-      setEditing(false);
-    } else {
+async function toggleEditing() {
+    if (!editing) {
       setDraft(ficha);
       setEditing(true);
+      return;
     }
-  }
 
+    if (!dataValida(draft.dataNascimento)) {
+      Alert.alert("Data inválida", "Informe a data de nascimento no formato dd/mm/aaaa.");
+      return;
+    }
+
+    setSalvando(true);
+    try {
+      const payload = fichaParaPayload(draft);
+      const metodo = existeFicha ? "put" : "post";
+      await api[metodo]("/api/ficha", payload);
+
+      setFicha(draft);
+      setExisteFicha(true);
+      setEditing(false);
+    } catch (error: any) {
+      const mensagem =
+        error.response?.data?.message || "Não foi possível salvar a ficha médica.";
+      Alert.alert("Erro ao salvar", mensagem);
+    } finally {
+      setSalvando(false);
+    }
+}
+
+// ------------------ tela real ------------------------
+
+if (loading) {
+    return (
+      <View style={styles.container}>
+        <PageHeader title="Ficha médica" onBack={onVoltar} />
+        <ActivityIndicator style={{ marginTop: 40 }} color={colors.primary} />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <PageHeader
@@ -143,11 +329,10 @@ export default function FichaMedicaScreen({
             }
           />
 
-          <Field
-            label="Sexo"
+          <SexoField
             value={editing ? draft.sexo : ficha.sexo}
             editing={editing}
-            onChangeText={(value) => update("sexo", value)}
+            onChange={(value) => update("sexo", value)}
           />
 
           <Field
@@ -161,7 +346,7 @@ export default function FichaMedicaScreen({
             label="Altura"
             value={editing ? draft.altura : ficha.altura}
             editing={editing}
-            onChangeText={(value) => update("altura", value)}
+            onChangeText={(value) => update("altura", value.replace(",", "."))}
           />
         </View>
 
@@ -227,11 +412,14 @@ export default function FichaMedicaScreen({
           <TouchableOpacity
             style={styles.saveButton}
             onPress={toggleEditing}
-          >
+            disabled={salvando}>
+          
             <Text style={styles.saveText}>
-              {editing
-                ? "Salvar informações"
-                : "Editar informações"}
+              {salvando 
+              ? "Salvando..." 
+              : editing 
+              ? "Salvar informações" 
+              : "Editar informações"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -346,4 +534,19 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.card,
   },
+
+  dropdown: {
+  marginTop: spacing.xs,
+  borderRadius: radius.sm,
+  backgroundColor: colors.card,
+  overflow: "hidden",
+  },
+dropdownItem: {
+  paddingVertical: spacing.sm,
+  paddingHorizontal: spacing.md,
+  },
+dropdownItemText: {
+  fontSize: typography.size.sm,
+  color: colors.text,
+},
 });

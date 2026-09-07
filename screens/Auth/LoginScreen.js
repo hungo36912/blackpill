@@ -63,6 +63,7 @@ export default function LoginScreen({
     } catch (error) {
       console.log('--- ERRO NA AUTENTICAÇÃO ---');
       console.log('Erro completo:', error);
+      console.log('mensagem de erro:', error.message)
       console.log('Status de Erro HTTP:', error.response?.status);
       console.log('Resposta de Erro da API:', error.response?.data);
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,12 +9,14 @@ import {
   View,
 } from "react-native";
 
+
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import typography from "../../theme/typography";
 import radius from "../../theme/radius";
+import api from "../../services/api";
 
 type Props = {
   onAbrirFicha: () => void;
@@ -32,6 +35,31 @@ type MenuItem = {
   onPress?: () => void;
 };
 
+type Perfil = {
+  nome: string;
+  email: string;
+  idade: number | null;
+  dataNascimento: string;
+};
+
+function calcularIdade(dataNascimentoIso: string): number {
+  const nascimento = new Date(dataNascimentoIso);
+  const hoje = new Date();
+
+  let idade = hoje.getFullYear() - nascimento.getFullYear();
+  const aindaNaoFezAniversario =
+    hoje.getMonth() < nascimento.getMonth() ||
+    (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() < nascimento.getDate());
+
+  if (aindaNaoFezAniversario) idade -= 1;
+  return idade;
+}
+
+function isoParaBr(dataIso: string): string {
+  const [y, m, d] = dataIso.slice(0, 10).split("-");
+  return `${d}/${m}/${y}`;
+}
+
 export default function PerfilScreen({
   onAbrirFicha,
   onAbrirLembretes,
@@ -41,6 +69,36 @@ export default function PerfilScreen({
   onAbrirSobre,
   onSair,
 }: Props) {
+
+  const [loading, setLoading] = useState(true);
+  const [perfil, setPerfil] = useState<Perfil>({ nome: "", email: "", idade: null, dataNascimento:"" });
+
+  useEffect(() => {
+    carregarPerfil();
+  }, []);
+
+  async function carregarPerfil() {
+    setLoading(true);
+    try {
+      const [respUsuario, respFicha] = await Promise.allSettled([
+        api.get("/api/auth/me"),
+        api.get("/api/ficha"),
+      ]);
+
+      const nome = respUsuario.status === "fulfilled" ? respUsuario.value.data.nome : "";
+      const email = respUsuario.status === "fulfilled" ? respUsuario.value.data.email : "";
+
+      const dataNascimentoIso =
+      respFicha.status === "fulfilled" ? respFicha.value.data.data_nascimento : null;
+
+      const idade = dataNascimentoIso ? calcularIdade(dataNascimentoIso) : null;
+      const dataNascimento = dataNascimentoIso ? isoParaBr(dataNascimentoIso) : "";
+
+      setPerfil({ nome, email, idade, dataNascimento});
+    } finally {
+      setLoading(false);
+    }
+  }
   const menu: MenuItem[] = [
     {
       title: "Ficha médica",
@@ -106,17 +164,25 @@ export default function PerfilScreen({
           </View>
 
           <View style={styles.profileInfo}>
-            <Text style={styles.name}>
-              FULANO DE TAL
-            </Text>
+            {loading ? (
+              <ActivityIndicator color={colors.primary} />
+            ) : (
+              <>
+                <Text style={styles.name}>
+                  {perfil.nome.toUpperCase() || "—"}
+                </Text>
 
-            <Text style={styles.email}>
-              fulanodetal@gmail.com
-            </Text>
+                <Text style={styles.email}>
+                  {perfil.email || "—"}
+                </Text>
 
-            <Text style={styles.age}>
-              73 anos
-            </Text>
+                <Text style={styles.age}>
+                  {perfil.idade !== null
+                    ? `${perfil.idade} anos${perfil.dataNascimento ? ` • ${perfil.dataNascimento}` : ""}`
+                    : "Data de nascimento não informada"}
+                </Text>
+              </>
+            )}
           </View>
         </View>
 

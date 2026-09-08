@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import {
   StyleSheet,
   Text,
@@ -8,7 +7,10 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import api from '../../services/api';
 import colors from '../../theme/colors';
 
 export default function CadastroScreen({
@@ -21,12 +23,68 @@ export default function CadastroScreen({
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [aceitouTermos, setAceitouTermos] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleCadastro = async () => {
+    if (!nome.trim() || !email.trim() || !senha.trim()) {
+      Alert.alert('Campos Obrigatórios', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    if (!aceitouTermos) {
+      Alert.alert(
+        'Termos de Uso',
+        'Você precisa aceitar os Termos de Uso e a Política de Privacidade para se cadastrar.'
+      );
+      return;
+    }
+
+    setLoading(true);
+    console.log('--- INICIANDO CADASTRO ---');
+
+    try {
+      const response = await api.post('/auth/register', {
+        nome: nome.trim(),
+        email: email.trim(),
+        senha: senha,
+      });
+
+      console.log('RESPOSTA CADASTRO:', response.data);
+
+      Alert.alert(
+        'Sucesso!',
+        'Conta criada com sucesso! Você já pode realizar o login.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              if (onCadastrar) {
+                onCadastrar();
+              } else if (onVoltarLogin) {
+                onVoltarLogin();
+              }
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      console.log('--- ERRO NO CADASTRO ---');
+      console.log('Erro completo:', error);
+      console.log('Resposta de Erro da API:', error.response?.data);
+
+      const mensagemErro =
+        error.response?.data?.message ||
+        'Não foi possível realizar o cadastro. Tente novamente mais tarde.';
+
+      Alert.alert('Erro no Cadastro', mensagemErro);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.headerBackground}>
-
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
             <Image
@@ -36,17 +94,11 @@ export default function CadastroScreen({
           </View>
         </View>
 
-        <Text style={styles.welcomeText}>
-          Bem-Vindo
-        </Text>
-
+        <Text style={styles.welcomeText}>Bem-Vindo</Text>
       </View>
 
       <View style={styles.cardContainer}>
-
-        <Text style={styles.registerTitle}>
-          Cadastro
-        </Text>
+        <Text style={styles.registerTitle}>Cadastro</Text>
 
         <TextInput
           style={styles.input}
@@ -54,6 +106,7 @@ export default function CadastroScreen({
           placeholderTextColor={colors.placeholder}
           value={nome}
           onChangeText={setNome}
+          editable={!loading}
         />
 
         <TextInput
@@ -64,6 +117,7 @@ export default function CadastroScreen({
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          editable={!loading}
         />
 
         <TextInput
@@ -73,72 +127,58 @@ export default function CadastroScreen({
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
+          editable={!loading}
         />
 
         <View style={styles.checkboxContainer}>
-
           <TouchableOpacity
             style={[
               styles.checkbox,
               aceitouTermos && styles.checkboxChecked,
             ]}
             onPress={() => setAceitouTermos(!aceitouTermos)}
+            disabled={loading}
           >
-            {aceitouTermos && (
-              <View style={styles.checkboxCheck} />
-            )}
+            {aceitouTermos && <View style={styles.checkboxCheck} />}
           </TouchableOpacity>
 
           <Text style={styles.checkboxLabel}>
             Li e concordo com os{' '}
-
-            <Text
-              style={styles.linkText}
-              onPress={onAbrirTermos}
-            >
+            <Text style={styles.linkText} onPress={onAbrirTermos}>
               Termos de Uso
-            </Text>
-
-            {' '}e a{' '}
-
-            <Text
-              style={styles.linkText}
-              onPress={onAbrirPrivacidade}
-            >
+            </Text>{' '}
+            e a{' '}
+            <Text style={styles.linkText} onPress={onAbrirPrivacidade}>
               Política de Privacidade
             </Text>
-
             .
           </Text>
-
         </View>
 
         <TouchableOpacity
-          style={styles.button}
-          onPress={onCadastrar}
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleCadastro}
+          disabled={loading}
         >
-          <Text style={styles.buttonText}>
-            Cadastrar
-          </Text>
+          {loading ? (
+            <ActivityIndicator color={colors.card} />
+          ) : (
+            <Text style={styles.buttonText}>Cadastrar</Text>
+          )}
         </TouchableOpacity>
-
       </View>
 
       <View style={styles.footerContainer}>
-
         <Text style={styles.footerText}>
           Já tem uma conta?{' '}
-
           <Text
             style={styles.loginText}
-            onPress={onVoltarLogin}
+            onPress={loading ? null : onVoltarLogin}
           >
             Login
           </Text>
         </Text>
-
       </View>
-
     </SafeAreaView>
   );
 }
@@ -275,6 +315,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  buttonDisabled: {
+    opacity: 0.7,
   },
 
   buttonText: {

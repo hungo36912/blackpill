@@ -34,7 +34,7 @@ export default function LoginScreen({
     console.log('Email digitado:', email.trim());
 
     try {
-      const response = await api.post('/api/auth/login', {
+      const response = await api.post('/auth/login', {
         email: email.trim(),
         senha: senha,
       });

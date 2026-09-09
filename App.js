@@ -247,6 +247,7 @@ export default function App() {
   }}
          onAbrirNotificacoes={() => {
         setTelaConfiguracoes(false);
+        setOrigemNotificacoes("config");
         setTelaNotificacoes(true);
       }}
 
@@ -295,6 +296,9 @@ export default function App() {
         if (origemNotificacoes === "lembretes") {
           setTelaLembretes(true);
         }
+         if (origemNotificacoes === "config") {
+    setTelaConfiguracoes(true);
+  }
       }}
     />
   );

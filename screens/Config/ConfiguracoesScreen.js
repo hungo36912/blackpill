@@ -16,43 +16,19 @@ import { spacing } from "../../theme/spacing";
 import { typography } from "../../theme/typography";
 import { radius } from "../../theme/radius";
 
-type Props = {
-  onVoltar: () => void;
-  onAbrirBackup: () => void;
-  onAbrirNotificacoes: () => void;
-  onAbrirAparencia: () => void;
-  onAbrirPrivacidade: () => void;
-  onAbrirSobre: () => void;
-  onAbrirTermos: () => void;
-  onAbrirPerguntas: () => void;
-  onAbrirFaleConosco: () => void;
-  onAbrirRelatarProblema: () => void;
-};
-
-type ItemMenuProps = {
-  icon: React.ComponentProps<typeof Ionicons>["name"];
-  titulo: string;
-  subtitulo?: string;
-  onPress?: () => void;
-  custom?: React.ReactNode;
-};
-
-type IdiomaId = "pt-BR" | "en" | "es";
-
 export default function ConfiguracoesScreen({
   onVoltar,
-  onAbrirBackup,
-  onAbrirAparencia,
+  onAbrirNotificacoes,
   onAbrirPrivacidade,
   onAbrirSobre,
   onAbrirTermos,
   onAbrirPerguntas,
   onAbrirFaleConosco,
   onAbrirRelatarProblema,
-  onAbrirNotificacoes,
-}: Props) {
+}) {
   return (
     <SafeAreaView style={styles.container}>
+      {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.botaoVoltar}
@@ -80,37 +56,12 @@ export default function ConfiguracoesScreen({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+        {/* GERAL */}
         <Text style={styles.sectionLabel}>
           GERAL
         </Text>
 
         <View style={styles.card}>
-          <ItemMenu
-            icon="cloud-upload-outline"
-            titulo="Backup e sincronização"
-            subtitulo="Seus dados e seguros"
-            onPress={onAbrirBackup}
-          />
-
-          <Divisor />
-
-          <ItemMenu
-            icon="sunny-outline"
-            titulo="Aparência"
-            subtitulo="Tema claro"
-            onPress={onAbrirAparencia}
-          />
-
-          <Divisor />
-
-          <ItemMenu
-            icon="globe-outline"
-            titulo="Idioma"
-            custom={<SeletorIdioma />}
-          />
-
-          <Divisor />
-
           <ItemMenu
             icon="notifications-outline"
             titulo="Notificações"
@@ -119,6 +70,7 @@ export default function ConfiguracoesScreen({
           />
         </View>
 
+        {/* SEGURANÇA */}
         <Text style={styles.sectionLabel}>
           SEGURANÇA
         </Text>
@@ -132,6 +84,7 @@ export default function ConfiguracoesScreen({
           />
         </View>
 
+        {/* SUPORTE */}
         <Text style={styles.sectionLabel}>
           SUPORTE
         </Text>
@@ -181,22 +134,22 @@ export default function ConfiguracoesScreen({
   );
 }
 
+/* ITEM DO MENU */
+
 function ItemMenu({
   icon,
   titulo,
   subtitulo,
   onPress,
   custom,
-}: ItemMenuProps) {
+}) {
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={onPress}
       disabled={!onPress}
       activeOpacity={0.7}
-      accessibilityRole={
-        onPress ? "button" : undefined
-      }
+      accessibilityRole={onPress ? "button" : undefined}
       accessibilityLabel={titulo}
     >
       <View style={styles.itemIconCircle}>
@@ -232,75 +185,13 @@ function ItemMenu({
   );
 }
 
-function SeletorIdioma() {
-  const [idioma, setIdioma] =
-    React.useState<IdiomaId>("pt-BR");
-
-  const idiomas: {
-    id: IdiomaId;
-    label: string;
-  }[] = [
-    {
-      id: "pt-BR",
-      label: "Português (Brasil)",
-    },
-    {
-      id: "en",
-      label: "English",
-    },
-    {
-      id: "es",
-      label: "Español",
-    },
-  ];
-
-  return (
-    <View style={styles.seletorIdioma}>
-      {idiomas.map((item) => {
-        const selecionado =
-          item.id === idioma;
-
-        return (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.idiomaRow}
-            onPress={() =>
-              setIdioma(item.id)
-            }
-            activeOpacity={0.7}
-            accessibilityRole="radio"
-            accessibilityLabel={item.label}
-            accessibilityState={{
-              selected: selecionado,
-            }}
-          >
-            <Text style={styles.idiomaTexto}>
-              {item.label}
-            </Text>
-
-            <View
-              style={[
-                styles.radioExterno,
-                selecionado &&
-                  styles.radioExternoAtivo,
-              ]}
-            >
-              {selecionado && (
-                <View
-                  style={styles.radioInterno}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
+/* DIVISOR */
 
 function Divisor() {
   return <View style={styles.divisor} />;
 }
+
+/* ESTILOS */
 
 const styles = StyleSheet.create({
   container: {
@@ -403,45 +294,5 @@ const styles = StyleSheet.create({
   divisor: {
     height: 1,
     backgroundColor: colors.border,
-  },
-
-  seletorIdioma: {
-    marginTop: spacing.sm,
-  },
-
-  idiomaRow: {
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: spacing.xs,
-  },
-
-  idiomaTexto: {
-    flex: 1,
-    fontSize: typography.size.md,
-    lineHeight: typography.size.md + 6,
-    color: colors.text,
-  },
-
-  radioExterno: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  radioExternoAtivo: {
-    borderColor: colors.primary,
-  },
-
-  radioInterno: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.primary,
   },
 });

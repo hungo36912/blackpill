@@ -9,7 +9,6 @@ import {
   View,
 } from "react-native";
 
-
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
@@ -18,45 +17,30 @@ import typography from "../../theme/typography";
 import radius from "../../theme/radius";
 import api from "../../services/api";
 
-type Props = {
-  onAbrirFicha: () => void;
-  onAbrirLembretes: () => void;
-  onAbrirHistorico: () => void;
-  onAbrirRelatorios: () => void;
-  onAbrirAjuda: () => void;
-  onAbrirSobre: () => void;
-  onSair: () => void;
-};
-
-type MenuItem = {
-  title: string;
-  subtitle: string;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
-  onPress?: () => void;
-};
-
-type Perfil = {
-  nome: string;
-  email: string;
-  idade: number | null;
-  dataNascimento: string;
-};
-
-function calcularIdade(dataNascimentoIso: string): number {
+function calcularIdade(dataNascimentoIso) {
   const nascimento = new Date(dataNascimentoIso);
   const hoje = new Date();
 
-  let idade = hoje.getFullYear() - nascimento.getFullYear();
+  let idade =
+    hoje.getFullYear() - nascimento.getFullYear();
+
   const aindaNaoFezAniversario =
     hoje.getMonth() < nascimento.getMonth() ||
-    (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() < nascimento.getDate());
+    (hoje.getMonth() === nascimento.getMonth() &&
+      hoje.getDate() < nascimento.getDate());
 
-  if (aindaNaoFezAniversario) idade -= 1;
+  if (aindaNaoFezAniversario) {
+    idade -= 1;
+  }
+
   return idade;
 }
 
-function isoParaBr(dataIso: string): string {
-  const [y, m, d] = dataIso.slice(0, 10).split("-");
+function isoParaBr(dataIso) {
+  const [y, m, d] = dataIso
+    .slice(0, 10)
+    .split("-");
+
   return `${d}/${m}/${y}`;
 }
 
@@ -64,14 +48,18 @@ export default function PerfilScreen({
   onAbrirFicha,
   onAbrirLembretes,
   onAbrirHistorico,
-  onAbrirRelatorios,
   onAbrirAjuda,
   onAbrirSobre,
   onSair,
-}: Props) {
-
+}) {
   const [loading, setLoading] = useState(true);
-  const [perfil, setPerfil] = useState<Perfil>({ nome: "", email: "", idade: null, dataNascimento:"" });
+
+  const [perfil, setPerfil] = useState({
+    nome: "",
+    email: "",
+    idade: null,
+    dataNascimento: "",
+  });
 
   useEffect(() => {
     carregarPerfil();
@@ -79,27 +67,49 @@ export default function PerfilScreen({
 
   async function carregarPerfil() {
     setLoading(true);
-    try {
-      const [respUsuario, respFicha] = await Promise.allSettled([
-        api.get("/api/auth/me"),
-        api.get("/api/ficha"),
-      ]);
 
-      const nome = respUsuario.status === "fulfilled" ? respUsuario.value.data.nome : "";
-      const email = respUsuario.status === "fulfilled" ? respUsuario.value.data.email : "";
+    try {
+      const [respUsuario, respFicha] =
+        await Promise.allSettled([
+          api.get("/api/auth/me"),
+          api.get("/api/ficha"),
+        ]);
+
+      const nome =
+        respUsuario.status === "fulfilled"
+          ? respUsuario.value.data.nome
+          : "";
+
+      const email =
+        respUsuario.status === "fulfilled"
+          ? respUsuario.value.data.email
+          : "";
 
       const dataNascimentoIso =
-      respFicha.status === "fulfilled" ? respFicha.value.data.data_nascimento : null;
+        respFicha.status === "fulfilled"
+          ? respFicha.value.data.data_nascimento
+          : null;
 
-      const idade = dataNascimentoIso ? calcularIdade(dataNascimentoIso) : null;
-      const dataNascimento = dataNascimentoIso ? isoParaBr(dataNascimentoIso) : "";
+      const idade = dataNascimentoIso
+        ? calcularIdade(dataNascimentoIso)
+        : null;
 
-      setPerfil({ nome, email, idade, dataNascimento});
+      const dataNascimento = dataNascimentoIso
+        ? isoParaBr(dataNascimentoIso)
+        : "";
+
+      setPerfil({
+        nome,
+        email,
+        idade,
+        dataNascimento,
+      });
     } finally {
       setLoading(false);
     }
   }
-  const menu: MenuItem[] = [
+
+  const menu = [
     {
       title: "Ficha médica",
       subtitle: "Consulte seus dados de saúde",
@@ -108,25 +118,22 @@ export default function PerfilScreen({
     },
     {
       title: "Meus Lembretes",
-      subtitle: "Gerencie seus lembretes e notificações",
+      subtitle:
+        "Gerencie seus lembretes e notificações",
       icon: "notifications-outline",
       onPress: onAbrirLembretes,
     },
     {
       title: "Histórico de tratamento",
-      subtitle: "Veja seus tratamentos anteriores",
+      subtitle:
+        "Veja seus tratamentos anteriores",
       icon: "arrow-undo-outline",
       onPress: onAbrirHistorico,
     },
     {
-      title: "Relatórios",
-      subtitle: "Acompanhe seu progresso",
-      icon: "bar-chart-outline",
-      onPress: onAbrirRelatorios,
-    },
-    {
       title: "Ajuda e suporte",
-      subtitle: "Dúvidas frequentes e suporte",
+      subtitle:
+        "Dúvidas frequentes e suporte",
       icon: "help-circle-outline",
       onPress: onAbrirAjuda,
     },
@@ -144,6 +151,7 @@ export default function PerfilScreen({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+        {/* HEADER */}
         <View style={styles.header}>
           <View style={styles.headerSide} />
 
@@ -154,6 +162,7 @@ export default function PerfilScreen({
           <View style={styles.headerSide} />
         </View>
 
+        {/* CARD DO PERFIL */}
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <Ionicons
@@ -165,7 +174,9 @@ export default function PerfilScreen({
 
           <View style={styles.profileInfo}>
             {loading ? (
-              <ActivityIndicator color={colors.primary} />
+              <ActivityIndicator
+                color={colors.primary}
+              />
             ) : (
               <>
                 <Text style={styles.name}>
@@ -178,7 +189,11 @@ export default function PerfilScreen({
 
                 <Text style={styles.age}>
                   {perfil.idade !== null
-                    ? `${perfil.idade} anos${perfil.dataNascimento ? ` • ${perfil.dataNascimento}` : ""}`
+                    ? `${perfil.idade} anos${
+                        perfil.dataNascimento
+                          ? ` • ${perfil.dataNascimento}`
+                          : ""
+                      }`
                     : "Data de nascimento não informada"}
                 </Text>
               </>
@@ -186,6 +201,7 @@ export default function PerfilScreen({
           </View>
         </View>
 
+        {/* MENU */}
         <View style={styles.card}>
           {menu.map((item, index) => (
             <TouchableOpacity
@@ -194,7 +210,8 @@ export default function PerfilScreen({
               onPress={item.onPress}
               style={[
                 styles.item,
-                index !== menu.length - 1 && styles.itemBorder,
+                index !== menu.length - 1 &&
+                  styles.itemBorder,
               ]}
               accessibilityRole="button"
               accessibilityLabel={item.title}
@@ -227,6 +244,7 @@ export default function PerfilScreen({
           ))}
         </View>
 
+        {/* SAIR */}
         <TouchableOpacity
           style={styles.logoutButton}
           activeOpacity={0.8}

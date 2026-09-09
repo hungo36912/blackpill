@@ -30,19 +30,15 @@ const GREEN = colors.reminder;
 const DARK_GREEN = colors.reminderDark;
 const TEXT = colors.reminderText;
 
-type Props = {
-  onVoltar: () => void;
-  onAdicionarLembrete: () => void;
-  onAbrirConfiguracoes: () => void;
-};
-
 export default function Lembretes({
   onVoltar,
   onAdicionarLembrete,
   onAbrirConfiguracoes,
-}: Props) {
+  onAbrirCalendario,
+}) {
+
   function abrirCalendario() {
-    console.log("Calendário de tratamento");
+    onAbrirCalendario();
   }
 
   return (
@@ -53,7 +49,9 @@ export default function Lembretes({
       />
 
       <View style={styles.container}>
+
         <View style={styles.header}>
+
           <TouchableOpacity
             style={styles.botaoVoltar}
             onPress={onVoltar}
@@ -73,10 +71,13 @@ export default function Lembretes({
           </Text>
 
           <View style={styles.espacoHeader} />
+
         </View>
 
         <View style={styles.conteudo}>
+
           <View style={styles.ilustracao}>
+
             <View style={styles.circuloIlustracao} />
             <View style={styles.ponto1} />
             <View style={styles.ponto2} />
@@ -87,6 +88,7 @@ export default function Lembretes({
               color={GREEN}
               strokeWidth={1.8}
             />
+
           </View>
 
           <Text style={styles.titulo}>
@@ -120,6 +122,7 @@ export default function Lembretes({
           </TouchableOpacity>
 
           <View style={styles.opcoes}>
+
             <TouchableOpacity
               style={styles.card}
               onPress={onAbrirConfiguracoes}
@@ -128,6 +131,7 @@ export default function Lembretes({
               accessibilityLabel="Configurações"
               accessibilityHint="Sons, vibrações e notificações"
             >
+
               <View style={styles.iconeCard}>
                 <Settings
                   size={34}
@@ -137,6 +141,7 @@ export default function Lembretes({
               </View>
 
               <View style={styles.textosCard}>
+
                 <Text style={styles.tituloCard}>
                   Configurações
                 </Text>
@@ -144,6 +149,7 @@ export default function Lembretes({
                 <Text style={styles.descricaoCard}>
                   Sons, vibrações e notificações
                 </Text>
+
               </View>
 
               <ChevronRight
@@ -151,6 +157,7 @@ export default function Lembretes({
                 color={TEXT}
                 strokeWidth={2.5}
               />
+
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -161,15 +168,19 @@ export default function Lembretes({
               accessibilityLabel="Calendário de tratamento"
               accessibilityHint="Visualizar todos os horários"
             >
+
               <View style={styles.iconeCard}>
+
                 <CalendarDays
                   size={34}
                   color={DARK_GREEN}
                   strokeWidth={1.8}
                 />
+
               </View>
 
               <View style={styles.textosCard}>
+
                 <Text style={styles.tituloCard}>
                   Calendário de tratamento
                 </Text>
@@ -177,6 +188,7 @@ export default function Lembretes({
                 <Text style={styles.descricaoCard}>
                   Visualizar todos os horários
                 </Text>
+
               </View>
 
               <ChevronRight
@@ -184,15 +196,20 @@ export default function Lembretes({
                 color={TEXT}
                 strokeWidth={2.5}
               />
+
             </TouchableOpacity>
+
           </View>
+
         </View>
+
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
   safeArea: {
     flex: 1,
     backgroundColor: colors.card,
@@ -374,4 +391,5 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: spacing.xs,
   },
+
 });

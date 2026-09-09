@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   View,
@@ -10,54 +10,44 @@ import {
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import typography from '../../theme/typography';
-
-import SearchBar from '../../components/SearchBar';
-import FilterButton from '../../components/FilterButton';
 import EmptyState from '../../components/EmptyState';
 
 export default function MedicamentosScreen({
   onAddMedicamento,
 }) {
-  const [search, setSearch] = useState('');
 
   const medicamentos = [];
 
   return (
+
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+
       <Text style={styles.pageTitle}>
         Medicamentos
       </Text>
 
-      <View style={styles.searchRow}>
-        <View style={styles.searchContainer}>
-          <SearchBar
-            value={search}
-            onChangeText={setSearch}
-          />
-        </View>
-
-        <FilterButton
-          onPress={() => {}}
-        />
-      </View>
-
       {medicamentos.length === 0 && (
+
         <EmptyState
           image={require('../../assets/empty-medications.png')}
           text="Nenhum medicamento adicionado"
           buttonLabel="Adicionar medicamento"
           onPress={onAddMedicamento}
         />
+
       )}
+
     </ScrollView>
+
   );
 }
 
 const styles = StyleSheet.create({
+
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -78,15 +68,4 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
 
-  searchRow: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing['2xl'],
-  },
-
-  searchContainer: {
-    flex: 1,
-  },
 });

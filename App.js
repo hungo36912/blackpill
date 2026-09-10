@@ -86,6 +86,9 @@ export default function App() {
   const [telaRelatarProblema, setTelaRelatarProblema] =
     useState(false);
 
+  const [origemTermos, setOrigemTermos] = useState("config");
+  const [origemPrivacidade, setOrigemPrivacidade] = useState("config");
+
   const [telaFichaMedica, setTelaFichaMedica] = useState(false);
   const [telaHistorico, setTelaHistorico] = useState(false);
   const [telaCalendario, setTelaCalendario] = useState(false);
@@ -139,10 +142,12 @@ export default function App() {
         }}
         onAbrirTermos={() => {
           setTelaCadastro(false);
+          setOrigemTermos("cadastro");
           setTelaTermos(true);
         }}
         onAbrirPrivacidade={() => {
           setTelaCadastro(false);
+          setOrigemPrivacidade("cadastro");
           setTelaPrivacidade(true);
         }}
       />
@@ -169,7 +174,17 @@ export default function App() {
   if (telaPrivacidade) {
     return (
       <PrivacidadeScreen
-        onVoltar={() => setTelaPrivacidade(false)}
+        onVoltar={() => {
+          setTelaPrivacidade(false);
+
+          if (origemPrivacidade === "cadastro") {
+            setTelaCadastro(true);
+          }
+
+          if (origemPrivacidade === "config") {
+            setTelaConfiguracoes(true);
+          }
+        }}
       />
     );
   }
@@ -191,7 +206,17 @@ export default function App() {
   if (telaTermos) {
     return (
       <TermosDeUsoScreen
-        onVoltar={() => setTelaTermos(false)}
+        onVoltar={() => {
+          setTelaTermos(false);
+
+          if (origemTermos === "cadastro") {
+            setTelaCadastro(true);
+          }
+
+          if (origemTermos === "config") {
+            setTelaConfiguracoes(true);
+          }
+        }}
       />
     );
   }
@@ -253,6 +278,7 @@ export default function App() {
 
       onAbrirPrivacidade={() => {
         setTelaConfiguracoes(false);
+        setOrigemPrivacidade("config");
         setTelaPrivacidade(true);
       }}
 
@@ -263,6 +289,7 @@ export default function App() {
 
       onAbrirTermos={() => {
         setTelaConfiguracoes(false);
+        setOrigemTermos("config");
         setTelaTermos(true);
       }}
 
@@ -296,13 +323,15 @@ export default function App() {
         if (origemNotificacoes === "lembretes") {
           setTelaLembretes(true);
         }
-         if (origemNotificacoes === "config") {
-    setTelaConfiguracoes(true);
-  }
+
+        if (origemNotificacoes === "config") {
+          setTelaConfiguracoes(true);
+        }
       }}
     />
   );
 }
+
   /*
    * NOVO LEMBRETE
    */
@@ -655,3 +684,4 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
+

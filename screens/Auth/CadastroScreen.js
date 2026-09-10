@@ -43,7 +43,7 @@ export default function CadastroScreen({
     console.log('--- INICIANDO CADASTRO ---');
 
     try {
-      const response = await api.post('/auth/register', {
+      const response = await api.post('/api/auth/register', {
         nome: nome.trim(),
         email: email.trim(),
         senha: senha,
@@ -70,6 +70,7 @@ export default function CadastroScreen({
     } catch (error) {
       console.log('--- ERRO NO CADASTRO ---');
       console.log('Erro completo:', error);
+      console.log('Mensagem erro:', error.message);
       console.log('Resposta de Erro da API:', error.response?.data);
 
       const mensagemErro =

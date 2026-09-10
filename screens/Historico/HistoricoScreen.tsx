@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
+  ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,7 +10,7 @@ import {
   View,
 } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import api from "../../services/api";import { Ionicons } from "@expo/vector-icons";
 
 import PageHeader from "../../components/PageHeader";
 
@@ -28,7 +30,40 @@ type HistoricoItem = {
   status: string;
 };
 
-const HISTORICO: HistoricoItem[] = [];
+type RemedioTratamento = {
+  cd_remedio: string;
+  nome: string;
+  dose: string;
+};
+
+type TratamentoApi = {
+  id_tratamento: string;
+  nome_tratamento: string;
+  data_inicio: string;
+  data_fim: string | null;
+  status_ativo: number | boolean;
+  remedios: RemedioTratamento[];
+  horarios: string[];
+};
+
+function tratamentosParaHistorico(tratamentos: TratamentoApi[]): HistoricoItem[] {
+  const itens: HistoricoItem[] = [];
+
+  for (const t of tratamentos) {
+    const status = t.status_ativo ? "Pendente" : "Concluído";
+
+    for (const remedio of t.remedios) {
+      itens.push({
+        id: `${t.id_tratamento}-${remedio.cd_remedio}`,
+        nome: remedio.nome,
+        dose: remedio.dose,
+        status,
+      });
+    }
+  }
+
+  return itens;
+}
 
 type Props = {
   onVoltar: () => void;
@@ -36,8 +71,29 @@ type Props = {
 
 export default function HistoricoScreen({ onVoltar }: Props) {
   const [tab, setTab] = useState<Tab>("Em andamento");
+  const [historico, setHistorico] = useState<HistoricoItem[]>([]);
+  const [carregando, setCarregando] = useState(true);
 
-  const visible = HISTORICO.filter((item) => {
+  useEffect(() => {
+    carregarHistorico();
+  }, []);
+
+  async function carregarHistorico() {
+    setCarregando(true);
+    try {
+      const { data } = await api.get("/api/tratamentos");
+      setHistorico(tratamentosParaHistorico(data));
+    } catch (error: any) {
+      Alert.alert(
+        "Não foi possível carregar",
+        error.response?.data?.message || "Confira sua conexão e tente novamente."
+      );
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  const visible = historico.filter((item) => {
     if (tab === "Todos") {
       return true;
     }
@@ -83,11 +139,13 @@ export default function HistoricoScreen({ onVoltar }: Props) {
         })}
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        {visible.length === 0 ? (
+    <ScrollView
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      {carregando ? (
+        <ActivityIndicator style={{ marginTop: 40 }} color={colors.primary} />
+      ) : visible.length === 0 ? (
           <View style={styles.empty}>
             <View style={styles.emptyIconCircle}>
               <Ionicons

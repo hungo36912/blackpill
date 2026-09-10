@@ -13,7 +13,11 @@ import {
   Modal,
   Platform,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import api from "../../services/api";
+import { dataParaApi } from "../../services/lembretes";
 
 import colors from "../../theme/colors";
 import spacing from "../../theme/spacing";
@@ -43,6 +47,7 @@ export default function NovoLembrete({
   onSalvar,
 }: Props) {
   const [notificacao, setNotificacao] = useState(false);
+  const [salvando, setSalvando] = useState(false);
 
   const [medicamento, setMedicamento] = useState("");
 
@@ -193,6 +198,28 @@ export default function NovoLembrete({
     agora.setSeconds(0);
 
     return agora;
+  }
+
+  async function salvarLembrete() {
+    if (!formularioValido || salvando) return;
+    setSalvando(true);
+    try {
+      await api.post("/api/lembretes", {
+        medicamento: medicamento.trim(),
+        horario,
+        frequencia,
+        dias_semana: diasSelecionados,
+        data_unica: frequencia === "Uma vez" ? dataParaApi(dataSelecionada) : null,
+        notificacao,
+      });
+      Alert.alert("Lembrete criado", "O lembrete foi salvo com sucesso.", [
+        { text: "OK", onPress: onSalvar },
+      ]);
+    } catch (error: any) {
+      Alert.alert("Não foi possível salvar", error?.response?.data?.message || "Confira a conexão com o servidor e tente novamente.");
+    } finally {
+      setSalvando(false);
+    }
   }
 
   return (
@@ -485,18 +512,18 @@ export default function NovoLembrete({
                 ? styles.botaoAtivo
                 : styles.botaoDesabilitado,
             ]}
-            onPress={onSalvar}
-            disabled={!formularioValido}
+            onPress={salvarLembrete}
+            disabled={!formularioValido || salvando}
             activeOpacity={0.8}
             accessibilityRole="button"
             accessibilityLabel="Salvar lembrete"
             accessibilityState={{
-              disabled: !formularioValido,
+              disabled: !formularioValido || salvando,
             }}
           >
-            <Text style={styles.textoSalvar}>
-              Salvar lembrete
-            </Text>
+            {salvando ? <ActivityIndicator color={colors.card} /> : (
+              <Text style={styles.textoSalvar}>Salvar lembrete</Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
 

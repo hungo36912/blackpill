@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://making-pursuant-candle.ngrok-free.dev/api'; 
+const API_URL = ' https://cardinal-dipper-wad.ngrok-free.dev'; 
 
 const api = axios.create({
   baseURL: API_URL,

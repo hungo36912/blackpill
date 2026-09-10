@@ -12,7 +12,10 @@ import {
   ScrollView,
   Modal,
   Platform,
+  ActivityIndicator,
 } from "react-native";
+import api from "../../services/api";
+import { dataParaApi, Lembrete } from "../../services/lembretes";
 
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -36,28 +39,30 @@ const TEXT = colors.reminderText;
 const RED = colors.reminderDanger;
 
 type Props = {
+  lembrete: Lembrete;
   onVoltar?: () => void;
   onSalvar?: () => void;
   onExcluir?: () => void;
 };
 
 export default function EditarLembrete({
+  lembrete,
   onVoltar,
   onSalvar,
   onExcluir,
 }: Props) {
-  const [medicamento, setMedicamento] =
-    useState("Losartana");
+  const [medicamento, setMedicamento] = useState(lembrete.medicamento);
 
   const [horario, setHorario] =
-    useState("08:00");
+    useState(lembrete.horario);
 
   const [horarioDate, setHorarioDate] =
     useState(() => {
       const date = new Date();
 
-      date.setHours(8);
-      date.setMinutes(0);
+      const [hora, minuto] = lembrete.horario.split(":").map(Number);
+      date.setHours(hora);
+      date.setMinutes(minuto);
       date.setSeconds(0);
       date.setMilliseconds(0);
 
@@ -68,26 +73,27 @@ export default function EditarLembrete({
     useState(false);
 
   const [frequencia, setFrequencia] =
-    useState("Todos os dias");
+    useState(lembrete.frequencia);
 
   const [mostrarFrequencia, setMostrarFrequencia] =
     useState(false);
 
   const [diasSelecionados, setDiasSelecionados] =
-    useState<number[]>([]);
+    useState<number[]>(lembrete.dias_semana || []);
 
-  const [data, setData] = useState("");
+  const [data, setData] = useState(() => lembrete.data_unica ? lembrete.data_unica.split("-").reverse().join("/") : "");
 
   const [dataDate, setDataDate] =
-    useState<Date | null>(null);
+    useState<Date | null>(() => lembrete.data_unica ? new Date(`${lembrete.data_unica}T12:00:00`) : null);
 
   const [mostrarData, setMostrarData] =
     useState(false);
 
   const [notificacao, setNotificacao] =
-    useState(true);
+    useState(lembrete.notificacao);
+  const [salvando, setSalvando] = useState(false);
 
-  const opcoesFrequencia = [
+  const opcoesFrequencia: Lembrete["frequencia"][] = [
     "Todos os dias",
     "Dias específicos",
     "Uma vez",
@@ -132,7 +138,7 @@ export default function EditarLembrete({
   }
 
   function selecionarFrequencia(
-    opcao: string
+    opcao: Lembrete["frequencia"]
   ) {
     setFrequencia(opcao);
     setMostrarFrequencia(false);
@@ -196,7 +202,7 @@ export default function EditarLembrete({
     setData(`${dia}/${mes}/${ano}`);
   }
 
-  function salvarAlteracoes() {
+  async function salvarAlteracoes() {
     if (!medicamento.trim()) {
       Alert.alert(
         "Atenção",
@@ -230,18 +236,22 @@ export default function EditarLembrete({
       return;
     }
 
-    Alert.alert(
-      "Lembrete atualizado",
-      "As alterações foram salvas.",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            onSalvar?.();
-          },
-        },
-      ]
-    );
+    setSalvando(true);
+    try {
+      await api.put(`/api/lembretes/${lembrete.id_lembrete}`, {
+        medicamento: medicamento.trim(), horario, frequencia,
+        dias_semana: diasSelecionados,
+        data_unica: frequencia === "Uma vez" ? dataParaApi(dataDate) : null,
+        notificacao,
+      });
+      Alert.alert("Lembrete atualizado", "As alterações foram salvas.", [
+        { text: "OK", onPress: onSalvar },
+      ]);
+    } catch (error: any) {
+      Alert.alert("Não foi possível salvar", error?.response?.data?.message || "Confira a conexão com o servidor.");
+    } finally {
+      setSalvando(false);
+    }
   }
 
   function excluirLembrete() {
@@ -256,8 +266,13 @@ export default function EditarLembrete({
         {
           text: "Excluir",
           style: "destructive",
-          onPress: () => {
-            onExcluir?.();
+          onPress: async () => {
+            try {
+              await api.delete(`/api/lembretes/${lembrete.id_lembrete}`);
+              onExcluir?.();
+            } catch (error: any) {
+              Alert.alert("Não foi possível excluir", error?.response?.data?.message || "Confira a conexão com o servidor.");
+            }
           },
         },
       ]
@@ -491,11 +506,12 @@ export default function EditarLembrete({
           <TouchableOpacity
             style={styles.botaoSalvar}
             onPress={salvarAlteracoes}
+            disabled={salvando}
             activeOpacity={0.8}
           >
-            <Text style={styles.textoSalvar}>
-              Salvar alterações
-            </Text>
+            {salvando ? <ActivityIndicator color="#FFFFFF" /> : (
+              <Text style={styles.textoSalvar}>Salvar alterações</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

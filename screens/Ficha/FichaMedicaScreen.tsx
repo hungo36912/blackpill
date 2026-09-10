@@ -42,7 +42,7 @@ const EMPTY: Ficha = {
   observacoes: "",
 };
 
-// ---------- conversões tela <-> API ----------
+// ---------- conversões tela api ----------
 
 const SEXO_PARA_API: Record<string, string> = {
   Masculino: "M",
@@ -67,7 +67,7 @@ function brParaIso(dataBr: string): string {
 }
 
 function isoParaBr(dataIso: string): string {
-  // MySQL costuma devolver 'YYYY-MM-DD' ou 'YYYY-MM-DDTHH:mm:ss.000Z'
+  
   const [y, m, d] = dataIso.slice(0, 10).split("-");
   return `${d}/${m}/${y}`;
 

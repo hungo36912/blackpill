@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Text,
   StyleSheet,
   ScrollView,
+  View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../services/api';
 
 import {
   Feather,
@@ -78,6 +81,25 @@ export default function HomeScreen({
   onPressBell,
   onPressSettings,
 }) {
+  const [nome, setNome] = useState('');
+  const [lembretesHoje, setLembretesHoje] = useState([]);
+
+  useEffect(() => {
+    let ativo = true;
+    async function carregar() {
+      try {
+        const usuarioSalvo = JSON.parse((await AsyncStorage.getItem('@blackpill:user')) || '{}');
+        if (ativo) setNome(usuarioSalvo.nome || '');
+        const { data } = await api.get('/lembretes/hoje');
+        if (ativo) setLembretesHoje(data);
+      } catch (error) {
+        console.log('Não foi possível carregar a Home:', error?.message);
+      }
+    }
+    carregar();
+    return () => { ativo = false; };
+  }, []);
+
   return (
     <ScrollView
       style={styles.screen}
@@ -90,7 +112,7 @@ export default function HomeScreen({
       />
 
       <Text style={styles.greetingTitle}>
-        Olá, Fulano
+        Olá{nome ? `, ${nome.split(' ')[0]}` : ''}
       </Text>
 
       <Text style={styles.greetingSubtitle}>
@@ -108,14 +130,20 @@ export default function HomeScreen({
         title="Medicamentos de hoje"
       />
 
-      <EmptyCard message="Nenhum alarme configurado para hoje">
-        <PrimaryButton
-          label="Adicionar alarme"
-          icon="plus"
-          variant="pill"
-          onPress={onAddAlarme}
-        />
-      </EmptyCard>
+      {lembretesHoje.length === 0 ? (
+        <EmptyCard message="Nenhum alarme configurado para hoje">
+          <PrimaryButton label="Adicionar alarme" icon="plus" variant="pill" onPress={onAddAlarme} />
+        </EmptyCard>
+      ) : (
+        <View style={styles.todayList}>
+          {lembretesHoje.map((item) => (
+            <View key={item.id_lembrete} style={styles.todayCard}>
+              <View style={styles.todayTime}><Feather name="clock" size={18} color={colors.primary} /><Text style={styles.todayTimeText}>{item.horario}</Text></View>
+              <Text style={styles.todayMedicine}>{item.medicamento}</Text>
+            </View>
+          ))}
+        </View>
+      )}
 
       <SectionTitle
         icon={
@@ -168,4 +196,9 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginBottom: spacing.xl,
   },
+  todayList: { gap: spacing.sm, marginBottom: spacing.xl },
+  todayCard: { minHeight: 64, paddingHorizontal: spacing.md, borderRadius: 14, backgroundColor: colors.card, flexDirection: 'row', alignItems: 'center' },
+  todayTime: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, minWidth: 86 },
+  todayTimeText: { color: colors.primary, fontWeight: '700', fontSize: typography.size.md },
+  todayMedicine: { color: colors.text, fontWeight: '600', fontSize: typography.size.md },
 });

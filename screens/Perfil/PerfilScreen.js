@@ -162,7 +162,6 @@ export default function PerfilScreen({
           <View style={styles.headerSide} />
         </View>
 
-        {/* CARD DO PERFIL */}
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <Ionicons
@@ -201,7 +200,6 @@ export default function PerfilScreen({
           </View>
         </View>
 
-        {/* MENU */}
         <View style={styles.card}>
           {menu.map((item, index) => (
             <TouchableOpacity
@@ -244,7 +242,7 @@ export default function PerfilScreen({
           ))}
         </View>
 
-        {/* SAIR */}
+
         <TouchableOpacity
           style={styles.logoutButton}
           activeOpacity={0.8}

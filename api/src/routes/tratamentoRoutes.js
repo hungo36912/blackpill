@@ -1,5 +1,6 @@
 import express from 'express';
-import { criarTratamento, listarTratamentos, atualizarTratamento, deletarTratamento, atualizarStatusTratamento,} from '../controllers/tratamentoController.js';
+import { criarTratamento, listarTratamentos, atualizarTratamento, deletarTratamento, atualizarStatusTratamento } from '../controllers/tratamentoController.js';
+import { confirmarDose, buscarAgendaDoDia, buscarResumoCalendario } from '../controllers/registroDoseController.js';
 
 import authMiddleware from '../middlewares/authMiddleware.js';
 
@@ -12,5 +13,9 @@ router.get('/', listarTratamentos);
 router.put('/:id', atualizarTratamento);
 router.delete('/:id', deletarTratamento);
 router.patch('/:id/status', atualizarStatusTratamento);
+
+router.get('/agenda', buscarAgendaDoDia);
+router.get('/calendario', buscarResumoCalendario);
+router.post('/:id/dose', confirmarDose);
 
 export default router;

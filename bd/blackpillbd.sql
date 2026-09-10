@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25/06/2026 às 18:55
+-- Tempo de geração: 10/09/2026 às 20:28
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -76,6 +76,13 @@ CREATE TABLE `ficha_med` (
   `cond_saude` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `ficha_med`
+--
+
+INSERT INTO `ficha_med` (`id_ficha_med`, `id_user`, `altura`, `peso`, `sexo`, `data_nascimento`, `alergias`, `obs`, `cond_saude`) VALUES
+('df6acd98-2c9f-4c64-a296-90833738d0f3', '401f34c4-4040-40b0-ad88-2c9719b4a406', 1.70, 60.00, 'M', '2008-03-12', 'Betinhas', 'Blablablabla', 'O');
+
 -- --------------------------------------------------------
 
 --
@@ -86,6 +93,20 @@ CREATE TABLE `horario_tratamento` (
   `id_horario` char(36) NOT NULL,
   `fk_id_tratamento` char(36) NOT NULL,
   `horario` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `registro_dose`
+--
+
+CREATE TABLE `registro_dose` (
+  `id_registro` char(36) NOT NULL,
+  `fk_id_tratamento` char(36) NOT NULL,
+  `data` date NOT NULL,
+  `horario` time NOT NULL,
+  `confirmado_em` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -162,6 +183,14 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Despejando dados para a tabela `usuario`
+--
+
+INSERT INTO `usuario` (`id_user`, `nome`, `email`, `senha`) VALUES
+('401f34c4-4040-40b0-ad88-2c9719b4a406', 'Arthur', 'arthur@email.com', '$2b$10$Wzd24smMn.UYJEui7UvrGe3bc6gL0r8rkTctABYzoDFDFx5ZB.i46'),
+('e2659970-a829-42a5-9df1-ed0f98ab3174', 'Celine de Jesus Lial', 'dejesuslialfirminoc@gmail.com', '$2b$10$xUcmsM/b/Qls.PL/JqoDS.eynYkusPEzT1y30ZuOEKs9m3.vvN0RO');
+
+--
 -- Índices para tabelas despejadas
 --
 
@@ -184,6 +213,13 @@ ALTER TABLE `ficha_med`
 ALTER TABLE `horario_tratamento`
   ADD PRIMARY KEY (`id_horario`),
   ADD KEY `FK_disparo_tratamento` (`fk_id_tratamento`);
+
+--
+-- Índices de tabela `registro_dose`
+--
+ALTER TABLE `registro_dose`
+  ADD PRIMARY KEY (`id_registro`),
+  ADD UNIQUE KEY `uq_registro_dose` (`fk_id_tratamento`,`data`,`horario`);
 
 --
 -- Índices de tabela `remedio`
@@ -228,6 +264,12 @@ ALTER TABLE `ficha_med`
 --
 ALTER TABLE `horario_tratamento`
   ADD CONSTRAINT `FK_disparo_tratamento` FOREIGN KEY (`fk_id_tratamento`) REFERENCES `tratamento` (`id_tratamento`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `registro_dose`
+--
+ALTER TABLE `registro_dose`
+  ADD CONSTRAINT `FK_registro_tratamento` FOREIGN KEY (`fk_id_tratamento`) REFERENCES `tratamento` (`id_tratamento`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `remedio`

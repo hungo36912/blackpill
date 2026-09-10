@@ -88,6 +88,11 @@ export default function App() {
 
   const [origemTermos, setOrigemTermos] = useState("config");
   const [origemPrivacidade, setOrigemPrivacidade] = useState("config");
+  const [origemPerguntas, setOrigemPerguntas] = useState("config");
+  const [origemFaleConosco, setOrigemFaleConosco] =
+    useState("config");
+  const [origemRelatarProblema, setOrigemRelatarProblema] =
+    useState("config");
 
   const [telaFichaMedica, setTelaFichaMedica] = useState(false);
   const [telaHistorico, setTelaHistorico] = useState(false);
@@ -227,9 +232,20 @@ export default function App() {
   if (telaPerguntas) {
     return (
       <PerguntasFrequentesScreen
-        onVoltar={() => setTelaPerguntas(false)}
+        onVoltar={() => {
+          setTelaPerguntas(false);
+
+          if (origemPerguntas === "config") {
+            setTelaConfiguracoes(true);
+          }
+
+          if (origemPerguntas === "perfil") {
+            setAbaAtual("perfil");
+          }
+        }}
         onAbrirRelatarProblema={() => {
           setTelaPerguntas(false);
+          setOrigemRelatarProblema("perguntas");
           setTelaRelatarProblema(true);
         }}
       />
@@ -242,7 +258,17 @@ export default function App() {
   if (telaFaleConosco) {
     return (
       <FaleConoscoScreen
-        onVoltar={() => setTelaFaleConosco(false)}
+        onVoltar={() => {
+          setTelaFaleConosco(false);
+
+          if (origemFaleConosco === "config") {
+            setTelaConfiguracoes(true);
+          }
+
+          if (origemFaleConosco === "perfil") {
+            setAbaAtual("perfil");
+          }
+        }}
       />
     );
   }
@@ -253,7 +279,21 @@ export default function App() {
   if (telaRelatarProblema) {
     return (
       <RelatarProblemaScreen
-        onVoltar={() => setTelaRelatarProblema(false)}
+        onVoltar={() => {
+          setTelaRelatarProblema(false);
+
+          if (origemRelatarProblema === "config") {
+            setTelaConfiguracoes(true);
+          }
+
+          if (origemRelatarProblema === "perguntas") {
+            setTelaPerguntas(true);
+          }
+
+          if (origemRelatarProblema === "perfil") {
+            setAbaAtual("perfil");
+          }
+        }}
       />
     );
   }
@@ -264,73 +304,81 @@ export default function App() {
   if (telaConfiguracoes) {
     return (
       <ConfiguracoesScreen
-  
-  onVoltar={() => {
-    setTelaConfiguracoes(false);
-    setTelaNotificacoes(false);
-    setAbaAtual("inicio");
-  }}
-         onAbrirNotificacoes={() => {
-        setTelaConfiguracoes(false);
-        setOrigemNotificacoes("config");
-        setTelaNotificacoes(true);
-      }}
 
-      onAbrirPrivacidade={() => {
-        setTelaConfiguracoes(false);
-        setOrigemPrivacidade("config");
-        setTelaPrivacidade(true);
-      }}
+        onVoltar={() => {
+          setTelaConfiguracoes(false);
+          setTelaNotificacoes(false);
+          setAbaAtual("inicio");
+        }}
 
-      onAbrirSobre={() => {
-        setTelaConfiguracoes(false);
-        setTelaSobreApp(true);
-      }}
+        onAbrirNotificacoes={() => {
+          setTelaConfiguracoes(false);
+          setOrigemNotificacoes("config");
+          setTelaNotificacoes(true);
+        }}
 
-      onAbrirTermos={() => {
-        setTelaConfiguracoes(false);
-        setOrigemTermos("config");
-        setTelaTermos(true);
-      }}
+        onAbrirPrivacidade={() => {
+          setTelaConfiguracoes(false);
+          setOrigemPrivacidade("config");
+          setTelaPrivacidade(true);
+        }}
 
-      onAbrirPerguntas={() => {
-        setTelaConfiguracoes(false);
-        setTelaPerguntas(true);
-      }}
+        onAbrirSobre={() => {
+          setTelaConfiguracoes(false);
+          setTelaSobreApp(true);
+        }}
 
-      onAbrirFaleConosco={() => {
-        setTelaConfiguracoes(false);
-        setTelaFaleConosco(true);
-      }}
+        onAbrirTermos={() => {
+          setTelaConfiguracoes(false);
+          setOrigemTermos("config");
+          setTelaTermos(true);
+        }}
 
-      onAbrirRelatarProblema={() => {
-        setTelaConfiguracoes(false);
-        setTelaRelatarProblema(true);
-      }}
-    />
-  );
-}
+        onAbrirPerguntas={() => {
+          setTelaConfiguracoes(false);
+          setOrigemPerguntas("config");
+          setTelaPerguntas(true);
+        }}
+
+        onAbrirFaleConosco={() => {
+          setTelaConfiguracoes(false);
+          setOrigemFaleConosco("config");
+          setTelaFaleConosco(true);
+        }}
+
+        onAbrirRelatarProblema={() => {
+          setTelaConfiguracoes(false);
+          setOrigemRelatarProblema("config");
+          setTelaRelatarProblema(true);
+        }}
+      />
+    );
+  }
 
   /*
    * NOTIFICAÇÕES
    */
   if (telaNotificacoes) {
-  return (
-    <Notificacoes
-      onVoltar={() => {
-        setTelaNotificacoes(false);
+    return (
+      <Notificacoes
+        onVoltar={() => {
+          setTelaNotificacoes(false);
 
-        if (origemNotificacoes === "lembretes") {
-          setTelaLembretes(true);
-        }
+          if (origemNotificacoes === "lembretes") {
+            setTelaLembretes(true);
+          }
 
-        if (origemNotificacoes === "config") {
-          setTelaConfiguracoes(true);
-        }
-      }}
-    />
-  );
-}
+          if (origemNotificacoes === "config") {
+            setTelaConfiguracoes(true);
+          }
+
+          if (origemNotificacoes === "home") {
+            setAbaAtual("inicio");
+          }
+        }}
+      />
+    );
+  }
 
   /*
    * NOVO LEMBRETE
@@ -366,44 +414,44 @@ export default function App() {
    * CALENDÁRIO
    */
   if (telaCalendario) {
-  return (
-    <Calendar
-      onVoltar={() => {
-        setTelaCalendario(false);
+    return (
+      <Calendar
+        onVoltar={() => {
+          setTelaCalendario(false);
 
-        if (origemCalendario === "lembretes") {
-          setTelaLembretes(true);
-        } else {
-          setAbaAtual("agenda");
-        }
-      }}
-    />
-  );
-}
+          if (origemCalendario === "lembretes") {
+            setTelaLembretes(true);
+          } else {
+            setAbaAtual("agenda");
+          }
+        }}
+      />
+    );
+  }
 
   /*
    * LEMBRETES
    */
   if (telaLembretes) {
-  return (
-    <Lembretes
-      onVoltar={() => setTelaLembretes(false)}
-      onAdicionarLembrete={() =>
-        setTelaNovoLembrete(true)
-      }
-      onAbrirConfiguracoes={() => {
-        setTelaLembretes(false);
-        setOrigemNotificacoes("lembretes");
-        setTelaNotificacoes(true);
-          }}
-          onAbrirCalendario={() => {
+    return (
+      <Lembretes
+        onVoltar={() => setTelaLembretes(false)}
+        onAdicionarLembrete={() =>
+          setTelaNovoLembrete(true)
+        }
+        onAbrirConfiguracoes={() => {
+          setTelaLembretes(false);
+          setOrigemNotificacoes("lembretes");
+          setTelaNotificacoes(true);
+        }}
+        onAbrirCalendario={() => {
           setTelaLembretes(false);
           setOrigemCalendario("lembretes");
           setTelaCalendario(true);
-}}
-    />
-  );
-}
+        }}
+      />
+    );
+  }
 
   /*
    * FICHA MÉDICA
@@ -455,20 +503,22 @@ export default function App() {
           {/* HOME */}
           {abaAtual === "inicio" && (
             <HomeScreen
+
               onAddAlarme={() =>
                 setTelaNovoLembrete(true)
               }
 
               onPressBell={() => {
-  setOrigemNotificacoes("home");
-  setTelaNotificacoes(true);
-}}
+                setOrigemNotificacoes("home");
+                setTelaNotificacoes(true);
+              }}
 
               onPressSettings={() => {
                 setTelaConfiguracoes(true);
               }}
 
               onPressQuickAction={(acao) => {
+
                 if (acao === "add") {
                   setTelaAdicionarMedicamento(true);
                 }
@@ -484,6 +534,7 @@ export default function App() {
                 if (acao === "alertas") {
                   setTelaLembretes(true);
                 }
+
               }}
             />
           )}
@@ -509,6 +560,7 @@ export default function App() {
           {/* PERFIL */}
           {abaAtual === "perfil" && (
             <PerfilScreen
+
               onAbrirFicha={() => {
                 setTelaFichaMedica(true);
               }}
@@ -522,6 +574,7 @@ export default function App() {
               }}
 
               onAbrirAjuda={() => {
+                setOrigemPerguntas("perfil");
                 setTelaPerguntas(true);
               }}
 
@@ -558,6 +611,7 @@ export default function App() {
             setAbaAtual("perfil");
           }}
         />
+
       </View>
     );
   }
@@ -586,6 +640,7 @@ export default function App() {
         style={styles.background}
         resizeMode="cover"
       >
+
         <TouchableOpacity
           style={styles.botaoProximo}
           onPress={proximaTela}
@@ -607,12 +662,14 @@ export default function App() {
             Pular
           </Text>
         </TouchableOpacity>
+
       </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: colors.card,
@@ -683,5 +740,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.primary,
   },
-});
 
+});

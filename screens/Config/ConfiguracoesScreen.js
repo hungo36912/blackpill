@@ -6,15 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
-import { spacing } from "../../theme/spacing";
-import { typography } from "../../theme/typography";
-import { radius } from "../../theme/radius";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
 export default function ConfiguracoesScreen({
   onVoltar,
@@ -27,9 +26,11 @@ export default function ConfiguracoesScreen({
   onAbrirRelatarProblema,
 }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+
       {/* HEADER */}
       <View style={styles.header}>
+
         <TouchableOpacity
           style={styles.botaoVoltar}
           onPress={onVoltar}
@@ -48,7 +49,6 @@ export default function ConfiguracoesScreen({
           Configurações
         </Text>
 
-        <View style={styles.espacoHeader} />
       </View>
 
       <ScrollView
@@ -56,6 +56,7 @@ export default function ConfiguracoesScreen({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+
         {/* GERAL */}
         <Text style={styles.sectionLabel}>
           GERAL
@@ -90,6 +91,7 @@ export default function ConfiguracoesScreen({
         </Text>
 
         <View style={styles.card}>
+
           <ItemMenu
             icon="information-circle-outline"
             titulo="Sobre o aplicativo"
@@ -128,9 +130,12 @@ export default function ConfiguracoesScreen({
             titulo="Relatar problema"
             onPress={onAbrirRelatarProblema}
           />
+
         </View>
+
       </ScrollView>
-    </SafeAreaView>
+
+    </View>
   );
 }
 
@@ -152,6 +157,7 @@ function ItemMenu({
       accessibilityRole={onPress ? "button" : undefined}
       accessibilityLabel={titulo}
     >
+
       <View style={styles.itemIconCircle}>
         <Ionicons
           name={icon}
@@ -161,6 +167,7 @@ function ItemMenu({
       </View>
 
       <View style={styles.itemConteudo}>
+
         <Text style={styles.itemTitulo}>
           {titulo}
         </Text>
@@ -172,6 +179,7 @@ function ItemMenu({
         )}
 
         {custom}
+
       </View>
 
       {onPress && (
@@ -181,6 +189,7 @@ function ItemMenu({
           color={colors.textSecondary}
         />
       )}
+
     </TouchableOpacity>
   );
 }
@@ -188,45 +197,60 @@ function ItemMenu({
 /* DIVISOR */
 
 function Divisor() {
-  return <View style={styles.divisor} />;
+  return (
+    <View style={styles.divisor} />
+  );
 }
 
 /* ESTILOS */
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.authBackground,
   },
 
+  /* HEADER IGUAL AO DA AGENDA */
+
   header: {
-    minHeight: 76,
-    flexDirection: "row",
+    minHeight: 75,
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
+
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+
+    shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
   },
 
   botaoVoltar: {
+    position: "absolute",
+    left: spacing.lg,
+
     width: 48,
     height: 48,
+
     justifyContent: "center",
     alignItems: "center",
+
+    zIndex: 1,
   },
 
   headerTitle: {
-    flex: 1,
-    textAlign: "center",
     fontSize: typography.size.xl,
     lineHeight: typography.size.xl + 8,
-    fontWeight: "700",
+    fontWeight: "800",
     color: colors.text,
-  },
-
-  espacoHeader: {
-    width: 48,
   },
 
   scroll: {
@@ -244,8 +268,10 @@ const styles = StyleSheet.create({
     lineHeight: typography.size.sm + 5,
     fontWeight: "700",
     color: colors.textSecondary,
+
     marginTop: spacing.xl,
     marginBottom: spacing.sm,
+
     letterSpacing: 0.6,
   },
 
@@ -258,18 +284,24 @@ const styles = StyleSheet.create({
 
   item: {
     minHeight: 72,
+
     flexDirection: "row",
     alignItems: "center",
+
     paddingVertical: spacing.md,
   },
 
   itemIconCircle: {
     width: 44,
     height: 44,
+
     borderRadius: 22,
+
     backgroundColor: colors.primaryLight,
+
     alignItems: "center",
     justifyContent: "center",
+
     marginRight: spacing.md,
   },
 
@@ -280,14 +312,18 @@ const styles = StyleSheet.create({
   itemTitulo: {
     fontSize: typography.size.md,
     lineHeight: typography.size.md + 6,
+
     fontWeight: "600",
+
     color: colors.text,
   },
 
   itemSubtitulo: {
     fontSize: typography.size.sm,
     lineHeight: typography.size.sm + 5,
+
     color: colors.textSecondary,
+
     marginTop: spacing.xs,
   },
 
@@ -295,4 +331,5 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.border,
   },
+
 });

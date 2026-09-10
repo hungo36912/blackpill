@@ -10,39 +10,43 @@ import {
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import typography from '../../theme/typography';
+
 import EmptyState from '../../components/EmptyState';
 
 export default function MedicamentosScreen({
   onAddMedicamento,
 }) {
-
   const medicamentos = [];
 
   return (
+    <View style={styles.screen}>
 
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+      {/* CABEÇALHO */}
 
-      <Text style={styles.pageTitle}>
-        Medicamentos
-      </Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>
+          Medicamentos
+        </Text>
+      </View>
 
-      {medicamentos.length === 0 && (
+      {/* CONTEÚDO */}
 
-        <EmptyState
-          image={require('../../assets/empty-medications.png')}
-          text="Nenhum medicamento adicionado"
-          buttonLabel="Adicionar medicamento"
-          onPress={onAddMedicamento}
-        />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {medicamentos.length === 0 && (
+          <EmptyState
+            image={require('../../assets/empty-medications.png')}
+            text="Nenhum medicamento adicionado"
+            buttonLabel="Adicionar medicamento"
+            onPress={onAddMedicamento}
+          />
+        )}
+      </ScrollView>
 
-      )}
-
-    </ScrollView>
-
+    </View>
   );
 }
 
@@ -53,19 +57,77 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
 
-  content: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing['4xl'],
+  /* CABEÇALHO PADRONIZADO */
+
+  header: {
+    height: 75,
+
+    backgroundColor:
+      colors.authBackground,
+
+    justifyContent:
+      'center',
+
+    alignItems:
+      'center',
+
+    borderBottomWidth: 1,
+
+    borderBottomColor:
+      colors.border,
+
+    paddingHorizontal:
+      spacing.lg,
+
+    shadowColor:
+      colors.text,
+
+    shadowOpacity:
+      0.08,
+
+    shadowRadius:
+      5,
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
   },
 
-  pageTitle: {
-    textAlign: 'center',
-    fontSize: typography.size.xl,
-    lineHeight: typography.size.xl + 8,
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: spacing.xl,
+  headerTitle: {
+    color:
+      colors.text,
+
+    fontSize:
+      typography.size.xl,
+
+    lineHeight:
+      typography.size.xl + 8,
+
+    fontWeight:
+      '800',
+
+    textAlign:
+      'center',
+  },
+
+  /* CONTEÚDO */
+
+  scroll: {
+    flex: 1,
+  },
+
+  content: {
+    paddingHorizontal:
+      spacing.xl,
+
+    paddingTop:
+      spacing.xl,
+
+    paddingBottom:
+      spacing['4xl'],
   },
 
 });

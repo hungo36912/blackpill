@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 import {
@@ -14,12 +15,13 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
-import api from "../../services/api";
-import { dataParaApi, Lembrete } from "../../services/lembretes";
 
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import api from "../../services/api";
+import { dataParaApi } from "../../services/lembretes";
+
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
 import spacing from "../../theme/spacing";
@@ -27,7 +29,6 @@ import typography from "../../theme/typography";
 import radius from "../../theme/radius";
 
 import {
-  ArrowLeft,
   Clock,
   ChevronRight,
   Check,
@@ -38,20 +39,14 @@ const GREEN = colors.reminder;
 const TEXT = colors.reminderText;
 const RED = colors.reminderDanger;
 
-type Props = {
-  lembrete: Lembrete;
-  onVoltar?: () => void;
-  onSalvar?: () => void;
-  onExcluir?: () => void;
-};
-
 export default function EditarLembrete({
   lembrete,
   onVoltar,
   onSalvar,
   onExcluir,
-}: Props) {
-  const [medicamento, setMedicamento] = useState(lembrete.medicamento);
+}) {
+  const [medicamento, setMedicamento] =
+    useState(lembrete.medicamento);
 
   const [horario, setHorario] =
     useState(lembrete.horario);
@@ -60,7 +55,9 @@ export default function EditarLembrete({
     useState(() => {
       const date = new Date();
 
-      const [hora, minuto] = lembrete.horario.split(":").map(Number);
+      const [hora, minuto] =
+        lembrete.horario.split(":").map(Number);
+
       date.setHours(hora);
       date.setMinutes(minuto);
       date.setSeconds(0);
@@ -79,21 +76,34 @@ export default function EditarLembrete({
     useState(false);
 
   const [diasSelecionados, setDiasSelecionados] =
-    useState<number[]>(lembrete.dias_semana || []);
+    useState(lembrete.dias_semana || []);
 
-  const [data, setData] = useState(() => lembrete.data_unica ? lembrete.data_unica.split("-").reverse().join("/") : "");
+  const [data, setData] = useState(() =>
+    lembrete.data_unica
+      ? lembrete.data_unica
+          .split("-")
+          .reverse()
+          .join("/")
+      : ""
+  );
 
   const [dataDate, setDataDate] =
-    useState<Date | null>(() => lembrete.data_unica ? new Date(`${lembrete.data_unica}T12:00:00`) : null);
+    useState(() =>
+      lembrete.data_unica
+        ? new Date(`${lembrete.data_unica}T12:00:00`)
+        : null
+    );
 
   const [mostrarData, setMostrarData] =
     useState(false);
 
   const [notificacao, setNotificacao] =
     useState(lembrete.notificacao);
-  const [salvando, setSalvando] = useState(false);
 
-  const opcoesFrequencia: Lembrete["frequencia"][] = [
+  const [salvando, setSalvando] =
+    useState(false);
+
+  const opcoesFrequencia = [
     "Todos os dias",
     "Dias específicos",
     "Uma vez",
@@ -110,8 +120,8 @@ export default function EditarLembrete({
   ];
 
   function alterarHorario(
-    event: DateTimePickerEvent,
-    selectedDate?: Date
+    event,
+    selectedDate
   ) {
     setMostrarHorario(false);
 
@@ -137,9 +147,7 @@ export default function EditarLembrete({
     setHorario(`${horas}:${minutos}`);
   }
 
-  function selecionarFrequencia(
-    opcao: Lembrete["frequencia"]
-  ) {
+  function selecionarFrequencia(opcao) {
     setFrequencia(opcao);
     setMostrarFrequencia(false);
 
@@ -159,7 +167,7 @@ export default function EditarLembrete({
     }
   }
 
-  function alternarDia(index: number) {
+  function alternarDia(index) {
     setDiasSelecionados((diasAtuais) => {
       if (diasAtuais.includes(index)) {
         return diasAtuais.filter(
@@ -172,8 +180,8 @@ export default function EditarLembrete({
   }
 
   function alterarData(
-    event: DateTimePickerEvent,
-    selectedDate?: Date
+    event,
+    selectedDate
   ) {
     setMostrarData(false);
 
@@ -237,18 +245,39 @@ export default function EditarLembrete({
     }
 
     setSalvando(true);
+
     try {
-      await api.put(`/api/lembretes/${lembrete.id_lembrete}`, {
-        medicamento: medicamento.trim(), horario, frequencia,
-        dias_semana: diasSelecionados,
-        data_unica: frequencia === "Uma vez" ? dataParaApi(dataDate) : null,
-        notificacao,
-      });
-      Alert.alert("Lembrete atualizado", "As alterações foram salvas.", [
-        { text: "OK", onPress: onSalvar },
-      ]);
-    } catch (error: any) {
-      Alert.alert("Não foi possível salvar", error?.response?.data?.message || "Confira a conexão com o servidor.");
+      await api.put(
+        `/api/lembretes/${lembrete.id_lembrete}`,
+        {
+          medicamento: medicamento.trim(),
+          horario,
+          frequencia,
+          dias_semana: diasSelecionados,
+          data_unica:
+            frequencia === "Uma vez"
+              ? dataParaApi(dataDate)
+              : null,
+          notificacao,
+        }
+      );
+
+      Alert.alert(
+        "Lembrete atualizado",
+        "As alterações foram salvas.",
+        [
+          {
+            text: "OK",
+            onPress: onSalvar,
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert(
+        "Não foi possível salvar",
+        error?.response?.data?.message ||
+          "Confira a conexão com o servidor."
+      );
     } finally {
       setSalvando(false);
     }
@@ -268,10 +297,17 @@ export default function EditarLembrete({
           style: "destructive",
           onPress: async () => {
             try {
-              await api.delete(`/api/lembretes/${lembrete.id_lembrete}`);
+              await api.delete(
+                `/api/lembretes/${lembrete.id_lembrete}`
+              );
+
               onExcluir?.();
-            } catch (error: any) {
-              Alert.alert("Não foi possível excluir", error?.response?.data?.message || "Confira a conexão com o servidor.");
+            } catch (error) {
+              Alert.alert(
+                "Não foi possível excluir",
+                error?.response?.data?.message ||
+                  "Confira a conexão com o servidor."
+              );
             }
           },
         },
@@ -288,19 +324,19 @@ export default function EditarLembrete({
             style={styles.botaoVoltar}
             onPress={onVoltar}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
-            <ArrowLeft
+            <Ionicons
+              name="chevron-back"
               size={28}
-              color={TEXT}
-              strokeWidth={2.5}
+              color={colors.text}
             />
           </TouchableOpacity>
 
           <Text style={styles.tituloHeader}>
             Editar lembrete
           </Text>
-
-          <View style={styles.espacoHeader} />
         </View>
 
         <ScrollView
@@ -509,8 +545,12 @@ export default function EditarLembrete({
             disabled={salvando}
             activeOpacity={0.8}
           >
-            {salvando ? <ActivityIndicator color="#FFFFFF" /> : (
-              <Text style={styles.textoSalvar}>Salvar alterações</Text>
+            {salvando ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.textoSalvar}>
+                Salvar alterações
+              </Text>
             )}
           </TouchableOpacity>
 
@@ -616,40 +656,38 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 76,
-    flexDirection: "row",
+    minHeight: 75,
+    backgroundColor: colors.authBackground,
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
-    elevation: 3,
     shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
+    elevation: 2,
   },
 
   botaoVoltar: {
-    width: 42,
-    height: 42,
+    position: "absolute",
+    left: spacing.lg,
+    width: 48,
+    height: 48,
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "center",
+    zIndex: 1,
   },
 
   tituloHeader: {
-    flex: 1,
-    textAlign: "center",
     fontSize: typography.size.xl,
-    fontWeight: "700",
+    lineHeight: typography.size.xl + 8,
+    fontWeight: "800",
     color: colors.text,
-  },
-
-  espacoHeader: {
-    width: 42,
   },
 
   scroll: {
@@ -864,3 +902,4 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
 });
+

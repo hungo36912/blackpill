@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 
 import {
@@ -15,6 +16,7 @@ import colors from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import typography from "../../theme/typography";
 import radius from "../../theme/radius";
+
 import api from "../../services/api";
 
 function calcularIdade(dataNascimentoIso) {
@@ -22,12 +24,15 @@ function calcularIdade(dataNascimentoIso) {
   const hoje = new Date();
 
   let idade =
-    hoje.getFullYear() - nascimento.getFullYear();
+    hoje.getFullYear() -
+    nascimento.getFullYear();
 
   const aindaNaoFezAniversario =
     hoje.getMonth() < nascimento.getMonth() ||
-    (hoje.getMonth() === nascimento.getMonth() &&
-      hoje.getDate() < nascimento.getDate());
+    (
+      hoje.getMonth() === nascimento.getMonth() &&
+      hoje.getDate() < nascimento.getDate()
+    );
 
   if (aindaNaoFezAniversario) {
     idade -= 1;
@@ -147,22 +152,27 @@ export default function PerfilScreen({
 
   return (
     <View style={styles.container}>
+
+      {/* CABEÇALHO */}
+
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>
+          Perfil
+        </Text>
+      </View>
+
+      {/* CONTEÚDO */}
+
       <ScrollView
+        style={styles.screen}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* HEADER */}
-        <View style={styles.header}>
-          <View style={styles.headerSide} />
 
-          <Text style={styles.pageTitle}>
-            Perfil
-          </Text>
-
-          <View style={styles.headerSide} />
-        </View>
+        {/* CARD DO PERFIL */}
 
         <View style={styles.profileCard}>
+
           <View style={styles.avatar}>
             <Ionicons
               name="person"
@@ -172,6 +182,7 @@ export default function PerfilScreen({
           </View>
 
           <View style={styles.profileInfo}>
+
             {loading ? (
               <ActivityIndicator
                 color={colors.primary}
@@ -197,10 +208,15 @@ export default function PerfilScreen({
                 </Text>
               </>
             )}
+
           </View>
+
         </View>
 
+        {/* MENU */}
+
         <View style={styles.card}>
+
           {menu.map((item, index) => (
             <TouchableOpacity
               key={item.title}
@@ -215,6 +231,7 @@ export default function PerfilScreen({
               accessibilityLabel={item.title}
               accessibilityHint={item.subtitle}
             >
+
               <View style={styles.iconCircle}>
                 <Ionicons
                   name={item.icon}
@@ -224,6 +241,7 @@ export default function PerfilScreen({
               </View>
 
               <View style={styles.itemText}>
+
                 <Text style={styles.itemTitle}>
                   {item.title}
                 </Text>
@@ -231,6 +249,7 @@ export default function PerfilScreen({
                 <Text style={styles.itemSubtitle}>
                   {item.subtitle}
                 </Text>
+
               </View>
 
               <Ionicons
@@ -238,10 +257,13 @@ export default function PerfilScreen({
                 size={22}
                 color={colors.textSecondary}
               />
+
             </TouchableOpacity>
           ))}
+
         </View>
 
+        {/* SAIR */}
 
         <TouchableOpacity
           style={styles.logoutButton}
@@ -254,55 +276,123 @@ export default function PerfilScreen({
             SAIR DA CONTA
           </Text>
         </TouchableOpacity>
+
       </ScrollView>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
 
-  content: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing["3xl"],
-  },
+  /* CABEÇALHO PADRONIZADO */
 
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
+    height: 75,
+
+    backgroundColor:
+      colors.authBackground,
+
+    justifyContent:
+      "center",
+
+    alignItems:
+      "center",
+
+    borderBottomWidth: 1,
+
+    borderBottomColor:
+      colors.border,
+
+    paddingHorizontal:
+      spacing.lg,
+
+    shadowColor:
+      colors.text,
+
+    shadowOpacity:
+      0.08,
+
+    shadowRadius:
+      5,
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
   },
 
-  headerSide: {
-    width: 40,
-    height: 40,
+  headerTitle: {
+    color:
+      colors.text,
+
+    fontSize:
+      typography.size.xl,
+
+    lineHeight:
+      typography.size.xl + 8,
+
+    fontWeight:
+      "800",
+
+    textAlign:
+      "center",
   },
 
-  pageTitle: {
+  /* SCROLL */
+
+  screen: {
     flex: 1,
-    textAlign: "center",
-    fontSize: typography.size.xl,
-    lineHeight: typography.size.xl + 8,
-    fontWeight: "700",
-    color: colors.text,
   },
+
+  content: {
+    paddingHorizontal:
+      spacing.lg,
+
+    paddingTop:
+      spacing.xl,
+
+    paddingBottom:
+      spacing["3xl"],
+  },
+
+  /* CARD DO PERFIL */
 
   profileCard: {
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: spacing.md,
+    backgroundColor:
+      colors.card,
 
-    shadowColor: colors.text,
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    borderRadius:
+      radius.lg,
+
+    padding:
+      spacing.lg,
+
+    flexDirection:
+      "row",
+
+    alignItems:
+      "center",
+
+    marginBottom:
+      spacing.md,
+
+    shadowColor:
+      colors.text,
+
+    shadowOpacity:
+      0.05,
+
+    shadowRadius:
+      6,
+
     shadowOffset: {
       width: 0,
       height: 2,
@@ -314,11 +404,20 @@ const styles = StyleSheet.create({
   avatar: {
     width: 64,
     height: 64,
+
     borderRadius: 32,
-    backgroundColor: colors.primaryLight,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: spacing.md,
+
+    backgroundColor:
+      colors.primaryLight,
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    marginRight:
+      spacing.md,
   },
 
   profileInfo: {
@@ -326,34 +425,68 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: typography.size.md,
-    lineHeight: typography.size.md + 6,
-    fontWeight: "700",
-    color: colors.text,
+    fontSize:
+      typography.size.md,
+
+    lineHeight:
+      typography.size.md + 6,
+
+    fontWeight:
+      "700",
+
+    color:
+      colors.text,
   },
 
   email: {
-    fontSize: typography.size.sm,
-    lineHeight: typography.size.sm + 5,
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
+    fontSize:
+      typography.size.sm,
+
+    lineHeight:
+      typography.size.sm + 5,
+
+    color:
+      colors.textSecondary,
+
+    marginTop:
+      spacing.xs,
   },
 
   age: {
-    fontSize: typography.size.sm,
-    lineHeight: typography.size.sm + 5,
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
+    fontSize:
+      typography.size.sm,
+
+    lineHeight:
+      typography.size.sm + 5,
+
+    color:
+      colors.textSecondary,
+
+    marginTop:
+      spacing.xs,
   },
 
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    paddingHorizontal: spacing.lg,
+  /* MENU */
 
-    shadowColor: colors.text,
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+  card: {
+    backgroundColor:
+      colors.card,
+
+    borderRadius:
+      radius.lg,
+
+    paddingHorizontal:
+      spacing.lg,
+
+    shadowColor:
+      colors.text,
+
+    shadowOpacity:
+      0.05,
+
+    shadowRadius:
+      6,
+
     shadowOffset: {
       width: 0,
       height: 2,
@@ -364,59 +497,114 @@ const styles = StyleSheet.create({
 
   item: {
     minHeight: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: spacing.md,
+
+    flexDirection:
+      "row",
+
+    alignItems:
+      "center",
+
+    paddingVertical:
+      spacing.md,
   },
 
   itemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+
+    borderBottomColor:
+      colors.border,
   },
 
   iconCircle: {
     width: 48,
     height: 48,
+
     borderRadius: 24,
-    backgroundColor: colors.primaryLight,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: spacing.md,
+
+    backgroundColor:
+      colors.primaryLight,
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    marginRight:
+      spacing.md,
   },
 
   itemText: {
     flex: 1,
-    paddingRight: spacing.sm,
+
+    paddingRight:
+      spacing.sm,
   },
 
   itemTitle: {
-    fontSize: typography.size.md,
-    lineHeight: typography.size.md + 6,
-    fontWeight: "600",
-    color: colors.text,
+    fontSize:
+      typography.size.md,
+
+    lineHeight:
+      typography.size.md + 6,
+
+    fontWeight:
+      "600",
+
+    color:
+      colors.text,
   },
 
   itemSubtitle: {
-    fontSize: typography.size.sm,
-    lineHeight: typography.size.sm + 5,
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
+    fontSize:
+      typography.size.sm,
+
+    lineHeight:
+      typography.size.sm + 5,
+
+    color:
+      colors.textSecondary,
+
+    marginTop:
+      spacing.xs,
   },
 
+  /* SAIR */
+
   logoutButton: {
-    marginTop: spacing.lg,
+    marginTop:
+      spacing.lg,
+
     minHeight: 50,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
-    backgroundColor: colors.danger,
-    alignItems: "center",
-    justifyContent: "center",
+
+    paddingHorizontal:
+      spacing.lg,
+
+    borderRadius:
+      radius.md,
+
+    backgroundColor:
+      colors.danger,
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
   },
 
   logoutText: {
-    fontSize: typography.size.sm,
-    lineHeight: typography.size.sm + 5,
-    fontWeight: "700",
-    color: colors.card,
+    fontSize:
+      typography.size.sm,
+
+    lineHeight:
+      typography.size.sm + 5,
+
+    fontWeight:
+      "700",
+
+    color:
+      colors.card,
   },
+
 });

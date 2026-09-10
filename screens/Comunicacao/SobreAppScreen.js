@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   View,
@@ -6,32 +6,34 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
-} from 'react-native';
+  Image,
+} from "react-native";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-import colors from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
-import { radius } from '../../theme/radius';
+import colors from "../../theme/colors";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
-import AccordionItem from '../../components/AccordionItem';
-
-type Props = {
-  onVoltar: () => void;
-};
+import AccordionItem from "../../components/AccordionItem";
 
 export default function SobreAppScreen({
   onVoltar,
-}: Props) {
+}) {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -39,17 +41,19 @@ export default function SobreAppScreen({
         <Text style={styles.headerTitle}>
           Sobre o aplicativo
         </Text>
-
-        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.cardTopo}>
           <View style={styles.logoCircle}>
-            <Ionicons
-              name="notifications"
-              size={22}
-              color="#fff"
+            <Image
+              source={require("../../assets/logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
             />
           </View>
 
@@ -57,11 +61,9 @@ export default function SobreAppScreen({
             <Text style={styles.nomeApp}>
               AlertaMed
             </Text>
-
             <Text style={styles.slogan}>
               Cuidado que te acompanha.
             </Text>
-
             <Text style={styles.descricaoTopo}>
               O AlertaMed foi criado para ajudar você a organizar seus
               tratamentos e cuidar da sua saúde com mais segurança e
@@ -73,33 +75,31 @@ export default function SobreAppScreen({
         <AccordionItem
           icon="phone-portrait-outline"
           titulo="O que é o AlertaMed?"
-          texto="O AlertaMed é um aplicativo de saúde que permite organizar medicamentos, acompanhar lembretes e gerenciar informações importantes de forma prática e segura."
+          texto="..."
         />
 
         <AccordionItem
           icon="shield-checkmark-outline"
           titulo="Nosso Compromisso"
-          texto="Nosso compromisso é oferecer uma experiência segura, confiável e acessível, ajudando você a manter sua saúde em dia todos os dias."
+          texto="..."
         />
 
         <AccordionItem
           icon="heart-outline"
           titulo="Principais Recursos"
-          texto={
-            '• Lembretes de medicamentos\n• Registro do histórico de utilização\n• Organização de tratamentos\n• Compartilhamento com cuidadores\n• Segurança e proteção dos seus dados'
-          }
+          texto={"..."}
         />
 
         <AccordionItem
           icon="lock-closed-outline"
           titulo="Privacidade e Segurança"
-          texto="Levamos sua privacidade a sério. Seus dados são protegidos e nunca são compartilhados sem o seu consentimento."
+          texto="..."
         />
 
         <AccordionItem
           icon="help-circle-outline"
           titulo="Precisa de Ajuda?"
-          texto="Nossa equipe está pronta para te ajudar. Entre em contato com o suporte sempre que precisar."
+          texto="..."
         />
 
         <View style={styles.card}>
@@ -118,8 +118,8 @@ export default function SobreAppScreen({
               </Text>
 
               <Text style={styles.texto}>
-                Entre em contato com a equipe do AlertaMed pela seção Ajuda
-                e Suporte no aplicativo.
+                Entre em contato com a equipe do AlertaMed pela seção
+                Ajuda e Suporte no aplicativo.
               </Text>
             </View>
 
@@ -135,42 +135,62 @@ export default function SobreAppScreen({
           Versão 1.0 • Última atualização: Junho/2026
         </Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.authBackground,
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    minHeight: 75,
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing['4xl'],
-    paddingVertical: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 2,
+  },
+
+  botaoVoltar: {
+    position: "absolute",
+    left: spacing.lg,
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
   },
 
   headerTitle: {
     fontSize: typography.size.xl,
-    fontWeight: '700',
+    lineHeight: typography.size.xl + 8,
+    fontWeight: "800",
     color: colors.text,
   },
 
-  headerSpacer: {
-    width: 26,
+  scroll: {
+    flex: 1,
   },
 
   content: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing['3xl'],
+    paddingTop: spacing.sm,
+    paddingBottom: spacing["3xl"],
   },
 
   cardTopo: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.card,
     borderRadius: radius.lg,
     padding: spacing.lg,
@@ -181,10 +201,15 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.card,
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: spacing.md,
+  },
+
+  logo: {
+    width: 90,
+    height: 90,
   },
 
   textContainer: {
@@ -193,7 +218,7 @@ const styles = StyleSheet.create({
 
   nomeApp: {
     fontSize: typography.size.lg,
-    fontWeight: '700',
+    fontWeight: "700",
     color: colors.text,
   },
 
@@ -216,8 +241,8 @@ const styles = StyleSheet.create({
   },
 
   header2: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
 
   iconCircle: {
@@ -225,14 +250,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: spacing.md,
   },
 
   titulo: {
     fontSize: typography.size.md,
-    fontWeight: '700',
+    fontWeight: "700",
     color: colors.primary,
   },
 
@@ -244,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   rodape: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.textSecondary,
     fontSize: typography.size.xs,
     marginTop: spacing.xl,

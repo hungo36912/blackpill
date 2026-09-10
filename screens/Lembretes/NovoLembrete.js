@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -16,8 +17,11 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+
 import api from "../../services/api";
 import { dataParaApi } from "../../services/lembretes";
+
+import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
 import spacing from "../../theme/spacing";
@@ -25,7 +29,6 @@ import typography from "../../theme/typography";
 import radius from "../../theme/radius";
 
 import {
-  ArrowLeft,
   ChevronRight,
   Clock,
   Calendar,
@@ -35,17 +38,12 @@ import {
 const GREEN = colors.reminder;
 const TEXT = colors.reminderText;
 
-type Props = {
-  onVoltar: () => void;
-  onSalvar: () => void;
-};
-
 const diasSemana = ["S", "T", "Q", "Q", "S", "S", "D"];
 
 export default function NovoLembrete({
   onVoltar,
   onSalvar,
-}: Props) {
+}) {
   const [notificacao, setNotificacao] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
@@ -59,10 +57,11 @@ export default function NovoLembrete({
     useState(false);
 
   const [diasSelecionados, setDiasSelecionados] =
-    useState<number[]>([]);
+    useState([]);
 
   const [dataSelecionada, setDataSelecionada] =
-    useState<Date | null>(null);
+    useState(null);
+
   const [data, setData] = useState("");
   const [mostrarData, setMostrarData] = useState(false);
 
@@ -86,10 +85,7 @@ export default function NovoLembrete({
     setMostrarHorario(true);
   }
 
-  function alterarHorario(
-    event: any,
-    date?: Date
-  ) {
+  function alterarHorario(event, date) {
     setMostrarHorario(false);
 
     if (!date) {
@@ -109,9 +105,7 @@ export default function NovoLembrete({
     setHorario(`${horas}:${minutos}`);
   }
 
-  function selecionarFrequencia(
-    opcao: string
-  ) {
+  function selecionarFrequencia(opcao) {
     setFrequencia(opcao);
 
     if (opcao === "Todos os dias") {
@@ -132,7 +126,7 @@ export default function NovoLembrete({
     setMostrarFrequencia(false);
   }
 
-  function alternarDia(index: number) {
+  function alternarDia(index) {
     const jaSelecionado =
       diasSelecionados.includes(index);
 
@@ -154,10 +148,7 @@ export default function NovoLembrete({
     setMostrarData(true);
   }
 
-  function alterarData(
-    event: any,
-    date?: Date
-  ) {
+  function alterarData(event, date) {
     setMostrarData(false);
 
     if (!date) {
@@ -202,21 +193,38 @@ export default function NovoLembrete({
 
   async function salvarLembrete() {
     if (!formularioValido || salvando) return;
+
     setSalvando(true);
+
     try {
       await api.post("/api/lembretes", {
         medicamento: medicamento.trim(),
         horario,
         frequencia,
         dias_semana: diasSelecionados,
-        data_unica: frequencia === "Uma vez" ? dataParaApi(dataSelecionada) : null,
+        data_unica:
+          frequencia === "Uma vez"
+            ? dataParaApi(dataSelecionada)
+            : null,
         notificacao,
       });
-      Alert.alert("Lembrete criado", "O lembrete foi salvo com sucesso.", [
-        { text: "OK", onPress: onSalvar },
-      ]);
-    } catch (error: any) {
-      Alert.alert("Não foi possível salvar", error?.response?.data?.message || "Confira a conexão com o servidor e tente novamente.");
+
+      Alert.alert(
+        "Lembrete criado",
+        "O lembrete foi salvo com sucesso.",
+        [
+          {
+            text: "OK",
+            onPress: onSalvar,
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert(
+        "Não foi possível salvar",
+        error?.response?.data?.message ||
+          "Confira a conexão com o servidor e tente novamente."
+      );
     } finally {
       setSalvando(false);
     }
@@ -230,7 +238,9 @@ export default function NovoLembrete({
       />
 
       <View style={styles.container}>
+
         <View style={styles.header}>
+
           <TouchableOpacity
             style={styles.botaoVoltar}
             onPress={onVoltar}
@@ -238,10 +248,10 @@ export default function NovoLembrete({
             accessibilityRole="button"
             accessibilityLabel="Voltar"
           >
-            <ArrowLeft
+            <Ionicons
+              name="chevron-back"
               size={28}
-              color={TEXT}
-              strokeWidth={2.5}
+              color={colors.text}
             />
           </TouchableOpacity>
 
@@ -249,7 +259,6 @@ export default function NovoLembrete({
             Novo lembrete
           </Text>
 
-          <View style={styles.espacoHeader} />
         </View>
 
         <ScrollView
@@ -258,6 +267,7 @@ export default function NovoLembrete({
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+
           <Text style={styles.label}>
             Medicamento
           </Text>
@@ -287,6 +297,7 @@ export default function NovoLembrete({
                 : "Selecionar horário"
             }
           >
+
             <Text
               style={
                 horario
@@ -302,6 +313,7 @@ export default function NovoLembrete({
               color={GREEN}
               strokeWidth={2}
             />
+
           </TouchableOpacity>
 
           {mostrarHorario && (
@@ -331,6 +343,7 @@ export default function NovoLembrete({
             accessibilityRole="button"
             accessibilityLabel="Selecionar frequência"
           >
+
             <Text
               style={
                 frequencia
@@ -355,15 +368,18 @@ export default function NovoLembrete({
                 strokeWidth={2}
               />
             )}
+
           </TouchableOpacity>
 
           {frequencia === "Dias específicos" && (
             <View style={styles.diasContainer}>
+
               <Text style={styles.subtitulo}>
                 Selecione os dias
               </Text>
 
               <View style={styles.diasSemana}>
+
                 {diasSemana.map(
                   (dia, index) => {
                     const selecionado =
@@ -389,6 +405,7 @@ export default function NovoLembrete({
                           selected: selecionado,
                         }}
                       >
+
                         <Text
                           style={
                             selecionado
@@ -398,10 +415,12 @@ export default function NovoLembrete({
                         >
                           {dia}
                         </Text>
+
                       </TouchableOpacity>
                     );
                   }
                 )}
+
               </View>
 
               <TouchableOpacity
@@ -420,10 +439,13 @@ export default function NovoLembrete({
                 }}
                 activeOpacity={0.8}
               >
+
                 <Text style={styles.textoConfirmar}>
                   Confirmar
                 </Text>
+
               </TouchableOpacity>
+
             </View>
           )}
 
@@ -444,6 +466,7 @@ export default function NovoLembrete({
                     : "Selecionar data"
                 }
               >
+
                 <Text
                   style={
                     data
@@ -459,6 +482,7 @@ export default function NovoLembrete({
                   color={GREEN}
                   strokeWidth={2}
                 />
+
               </TouchableOpacity>
 
               {mostrarData && (
@@ -485,6 +509,7 @@ export default function NovoLembrete({
           </Text>
 
           <View style={styles.notificacaoContainer}>
+
             <Text style={styles.notificacaoTexto}>
               Receber lembrete
             </Text>
@@ -503,6 +528,7 @@ export default function NovoLembrete({
               }
               accessibilityLabel="Receber lembrete"
             />
+
           </View>
 
           <TouchableOpacity
@@ -518,13 +544,23 @@ export default function NovoLembrete({
             accessibilityRole="button"
             accessibilityLabel="Salvar lembrete"
             accessibilityState={{
-              disabled: !formularioValido || salvando,
+              disabled:
+                !formularioValido || salvando,
             }}
           >
-            {salvando ? <ActivityIndicator color={colors.card} /> : (
-              <Text style={styles.textoSalvar}>Salvar lembrete</Text>
+
+            {salvando ? (
+              <ActivityIndicator
+                color={colors.card}
+              />
+            ) : (
+              <Text style={styles.textoSalvar}>
+                Salvar lembrete
+              </Text>
             )}
+
           </TouchableOpacity>
+
         </ScrollView>
 
         <Modal
@@ -535,8 +571,11 @@ export default function NovoLembrete({
             setMostrarFrequencia(false)
           }
         >
+
           <View style={styles.modalFundo}>
+
             <View style={styles.modalContainer}>
+
               <Text style={styles.modalTitulo}>
                 Frequência
               </Text>
@@ -550,6 +589,7 @@ export default function NovoLembrete({
                 }
                 activeOpacity={0.7}
               >
+
                 <View
                   style={[
                     styles.radio,
@@ -571,6 +611,7 @@ export default function NovoLembrete({
                 <Text style={styles.textoOpcao}>
                   Todos os dias
                 </Text>
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -582,6 +623,7 @@ export default function NovoLembrete({
                 }
                 activeOpacity={0.7}
               >
+
                 <View
                   style={[
                     styles.radio,
@@ -603,6 +645,7 @@ export default function NovoLembrete({
                 <Text style={styles.textoOpcao}>
                   Dias específicos
                 </Text>
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -614,6 +657,7 @@ export default function NovoLembrete({
                 }
                 activeOpacity={0.7}
               >
+
                 <View
                   style={[
                     styles.radio,
@@ -633,6 +677,7 @@ export default function NovoLembrete({
                 <Text style={styles.textoOpcao}>
                   Uma vez
                 </Text>
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -642,6 +687,7 @@ export default function NovoLembrete({
                 }
                 activeOpacity={0.8}
               >
+
                 <Text
                   style={
                     styles.textoModalConfirmar
@@ -649,6 +695,7 @@ export default function NovoLembrete({
                 >
                   Confirmar
                 </Text>
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -658,19 +705,26 @@ export default function NovoLembrete({
                 }
                 activeOpacity={0.7}
               >
+
                 <Text style={styles.textoCancelar}>
                   Cancelar
                 </Text>
+
               </TouchableOpacity>
+
             </View>
+
           </View>
+
         </Modal>
+
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
   safeArea: {
     flex: 1,
     backgroundColor: colors.card,
@@ -682,33 +736,38 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    minHeight: 76,
-    flexDirection: "row",
+    minHeight: 75,
+    backgroundColor: colors.authBackground,
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+    shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 2,
   },
 
   botaoVoltar: {
+    position: "absolute",
+    left: spacing.lg,
     width: 48,
     height: 48,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 1,
   },
 
   tituloHeader: {
-    flex: 1,
-    textAlign: "center",
     fontSize: typography.size.xl,
     lineHeight: typography.size.xl + 8,
-    fontWeight: "700",
-    color: TEXT,
-  },
-
-  espacoHeader: {
-    width: 48,
+    fontWeight: "800",
+    color: colors.text,
   },
 
   scroll: {

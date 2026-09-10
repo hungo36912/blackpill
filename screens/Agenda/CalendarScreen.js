@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
+import { Ionicons } from "@expo/vector-icons";
+
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import colors from '../../theme/colors';
 import radius from '../../theme/radius';
@@ -141,27 +141,40 @@ export default function CalendarScreen({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+
+      {/* CABEÇALHO */}
       <View style={styles.header}>
+
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={0.7}
           onPress={onVoltar}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
         >
-          <Text style={styles.backIcon}>
-            ‹
-          </Text>
+          <Ionicons
+            name="chevron-back"
+            size={28}
+            color={colors.text}
+          />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>
           Calendário de tratamento
         </Text>
+
       </View>
 
+      {/* CONTEÚDO */}
       <View style={styles.content}>
+
+        {/* CALENDÁRIO */}
         <View style={styles.calendarContainer}>
+
           <Calendar
             current={today}
+
             markedDates={markedDates}
 
             onDayPress={(day) => {
@@ -171,7 +184,9 @@ export default function CalendarScreen({
             }}
 
             firstDay={0}
+
             hideExtraDays={false}
+
             enableSwipeMonths
 
             renderArrow={(direction) => (
@@ -232,15 +247,22 @@ export default function CalendarScreen({
                 '400',
 
               'stylesheet.calendar.header': {
+
                 header: {
                   flexDirection: 'row',
+
                   justifyContent:
                     'space-between',
-                  alignItems: 'center',
+
+                  alignItems:
+                    'center',
+
                   paddingHorizontal:
                     spacing.sm,
+
                   paddingTop:
                     spacing.xs,
+
                   paddingBottom:
                     spacing.md,
                 },
@@ -259,30 +281,38 @@ export default function CalendarScreen({
                 },
               },
             }}
-
-            style={styles.calendar}
           />
+
         </View>
 
+        {/* LEGENDA */}
         <View style={styles.legend}>
+
           <View style={styles.legendItem}>
+
             <View style={styles.greenDot} />
 
             <Text style={styles.legendText}>
               Com medicamentos
             </Text>
+
           </View>
 
           <View style={styles.legendItem}>
+
             <View style={styles.orangeDot} />
 
             <Text style={styles.legendText}>
               Atrasado
             </Text>
+
           </View>
+
         </View>
 
+        {/* DIA SELECIONADO */}
         <View style={styles.selectedDayCard}>
+
           <Text style={styles.selectedDayTitle}>
             {selected.weekday
               .charAt(0)
@@ -291,28 +321,39 @@ export default function CalendarScreen({
             , {selected.day} de{' '}
             {selected.month}
           </Text>
+
         </View>
+
       </View>
-    </SafeAreaView>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
+
     backgroundColor:
       colors.authBackground,
   },
 
+  /* CABEÇALHO */
   header: {
-    height: 75,
-    backgroundColor:
-      colors.background,
+    minHeight: 75,
 
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor:
+      colors.authBackground,
+
+    justifyContent:
+      'center',
+
+    alignItems:
+      'center',
 
     borderBottomWidth: 1,
+
     borderBottomColor:
       colors.border,
 
@@ -324,7 +365,7 @@ const styles = StyleSheet.create({
 
     shadowOpacity: 0.08,
 
-    shadowRadius: 8,
+    shadowRadius: 5,
 
     shadowOffset: {
       width: 0,
@@ -332,29 +373,26 @@ const styles = StyleSheet.create({
     },
 
     elevation: 2,
+
+    position: 'relative',
   },
 
   backButton: {
-    width: 30,
-    height: 40,
+    position: 'absolute',
+
+    left: spacing.lg,
+
+    width: 48,
+
+    height: 48,
 
     justifyContent:
       'center',
 
     alignItems:
-      'flex-start',
-  },
+      'center',
 
-  backIcon: {
-    color:
-      colors.text,
-
-    fontSize: 30,
-
-    fontWeight:
-      '300',
-
-    lineHeight: 32,
+    zIndex: 1,
   },
 
   headerTitle: {
@@ -364,15 +402,22 @@ const styles = StyleSheet.create({
     fontSize:
       typography.size.xl,
 
+    lineHeight:
+      typography.size.xl + 8,
+
     fontWeight:
       '800',
 
-    marginLeft:
-      spacing.xs,
+    textAlign:
+      'center',
   },
 
+  /* CONTEÚDO */
   content: {
     flex: 1,
+
+    paddingHorizontal:
+      spacing.xl,
 
     paddingTop:
       spacing.xl,
@@ -381,9 +426,9 @@ const styles = StyleSheet.create({
       'center',
   },
 
+  /* CALENDÁRIO */
   calendarContainer: {
-    width: '80%',
-    height: 370,
+    width: '90%',
 
     backgroundColor:
       colors.card,
@@ -400,10 +445,6 @@ const styles = StyleSheet.create({
       'hidden',
   },
 
-  calendar: {
-    height: 400,
-  },
-
   arrow: {
     color:
       colors.primary,
@@ -416,9 +457,73 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
 
+  /* LEGENDA */
+  legend: {
+    flexDirection:
+      'row',
+
+    justifyContent:
+      'center',
+
+    alignItems:
+      'center',
+
+    marginTop:
+      spacing.md,
+
+    gap:
+      spacing.md,
+  },
+
+  legendItem: {
+    flexDirection:
+      'row',
+
+    alignItems:
+      'center',
+  },
+
+  greenDot: {
+    width: 5,
+
+    height: 5,
+
+    borderRadius: 3,
+
+    backgroundColor:
+      colors.primary,
+
+    marginRight:
+      spacing.xs,
+  },
+
+  orangeDot: {
+    width: 5,
+
+    height: 5,
+
+    borderRadius: 3,
+
+    backgroundColor:
+      '#F29B38',
+
+    marginRight:
+      spacing.xs,
+  },
+
+  legendText: {
+    color:
+      colors.textSecondary,
+
+    fontSize:
+      typography.size.sm,
+  },
+
+  /* DIA SELECIONADO */
   selectedDayCard: {
     width: '80%',
-    height: 152,
+
+    minHeight: 152,
 
     backgroundColor:
       colors.card,
@@ -452,62 +557,4 @@ const styles = StyleSheet.create({
       '700',
   },
 
-  legend: {
-    flexDirection:
-      'row',
-
-    justifyContent:
-      'center',
-
-    alignItems:
-      'center',
-
-    marginTop:
-      spacing.md,
-
-    gap:
-      spacing.md,
-  },
-
-  legendItem: {
-    flexDirection:
-      'row',
-
-    alignItems:
-      'center',
-  },
-
-  greenDot: {
-    width: 5,
-    height: 5,
-
-    borderRadius: 3,
-
-    backgroundColor:
-      colors.primary,
-
-    marginRight:
-      spacing.xs,
-  },
-
-  orangeDot: {
-    width: 5,
-    height: 5,
-
-    borderRadius: 3,
-
-    backgroundColor:
-      '#F29B38',
-
-    marginRight:
-      spacing.xs,
-  },
-
-  legendText: {
-    color:
-      colors.textSecondary,
-
-    fontSize:
-      typography.size.sm,
-  },
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   View,
@@ -7,31 +7,35 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
+} from "react-native";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-import colors from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
-import { radius } from '../../theme/radius';
+import colors from "../../theme/colors";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
-import AccordionItem from '../../components/AccordionItem';
-
-type Props = {
-  onVoltar: () => void;
-};
+import AccordionItem from "../../components/AccordionItem";
 
 export default function PrivacidadeScreen({
   onVoltar,
-}: Props) {
+}) {
   return (
     <SafeAreaView style={styles.container}>
+
+      {/* CABEÇALHO PADRONIZADO */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -39,11 +43,13 @@ export default function PrivacidadeScreen({
         <Text style={styles.headerTitle}>
           Privacidade
         </Text>
-
-        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+
         <View style={styles.cardTopo}>
           <View style={styles.iconCircle}>
             <Ionicons
@@ -75,7 +81,7 @@ export default function PrivacidadeScreen({
           icon="clipboard-outline"
           titulo="2. Utilização das Informações"
           texto={
-            'As informações coletadas são utilizadas para:\n\n• Organizar tratamentos\n• Emitir lembretes de medicamentos\n• Exibir histórico de utilização\n• Melhorar a experiência de uso do aplicativo'
+            "As informações coletadas são utilizadas para:\n\n• Organizar tratamentos\n• Emitir lembretes de medicamentos\n• Exibir histórico de utilização\n• Melhorar a experiência de uso do aplicativo"
           }
         />
 
@@ -129,6 +135,7 @@ export default function PrivacidadeScreen({
         <Text style={styles.rodape}>
           Versão 1.0 • Última atualização: Junho/2026
         </Text>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -140,36 +147,60 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
 
+  // ---------- CABEÇALHO PADRONIZADO ----------
+
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    minHeight: 75,
+    backgroundColor: colors.authBackground,
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing['4xl'],
-    paddingVertical: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 2,
+  },
+
+  botaoVoltar: {
+    position: "absolute",
+    left: spacing.lg,
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
   },
 
   headerTitle: {
     fontSize: typography.size.xl,
-    fontWeight: '700',
+    lineHeight: typography.size.xl + 8,
+    fontWeight: "800",
     color: colors.text,
+    textAlign: "center",
   },
 
-  headerSpacer: {
-    width: 26,
-  },
+  // ---------- CONTEÚDO ----------
 
   content: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing['3xl'],
+    paddingTop: spacing.lg,
+    paddingBottom: spacing["3xl"],
   },
 
   cardTopo: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.card,
     borderRadius: radius.lg,
     padding: spacing.lg,
     marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 
   iconCircle: {
@@ -177,8 +208,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: spacing.md,
   },
 
@@ -188,7 +219,7 @@ const styles = StyleSheet.create({
 
   tituloTopo: {
     fontSize: typography.size.md,
-    fontWeight: '700',
+    fontWeight: "700",
     color: colors.primary,
   },
 
@@ -203,16 +234,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: radius.lg,
     padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 
   header2: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
 
   titulo: {
     fontSize: typography.size.md,
-    fontWeight: '700',
+    fontWeight: "700",
     color: colors.primary,
   },
 
@@ -224,7 +257,7 @@ const styles = StyleSheet.create({
   },
 
   rodape: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.textSecondary,
     fontSize: typography.size.xs,
     marginTop: spacing.xl,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import {
   View,
@@ -7,57 +7,63 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
-} from 'react-native';
+} from "react-native";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-import colors from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
-import { radius } from '../../theme/radius';
+import colors from "../../theme/colors";
 
-type Props = {
-  onVoltar: () => void;
-};
+import spacing from "../../theme/spacing";
+
+import typography from "../../theme/typography";
+
+import radius from "../../theme/radius";
 
 const TIPOS_PROBLEMA = [
-  'Lembretes não estão funcionando',
-  'Erro ao sincronizar dados',
-  'O app travou ou fechou sozinho',
-  'Outro',
-] as const;
-
-type TipoProblema = (typeof TIPOS_PROBLEMA)[number];
+  "Lembretes não estão funcionando",
+  "Erro ao sincronizar dados",
+  "O app travou ou fechou sozinho",
+  "Outro",
+];
 
 export default function RelatarProblemaScreen({
   onVoltar,
-}: Props) {
+}) {
   const [tipoSelecionado, setTipoSelecionado] =
-    useState<TipoProblema>(TIPOS_PROBLEMA[0]);
+    useState(TIPOS_PROBLEMA[0]);
 
-  const [descricao, setDescricao] = useState<string>('');
+  const [descricao, setDescricao] = useState("");
 
   const [imagemAnexada, setImagemAnexada] =
-    useState<string | null>(null);
+    useState(null);
 
-  function enviarRelatorio(): void {
+  function enviarRelatorio() {
     const payload = {
       tipo: tipoSelecionado,
       descricao,
       imagem: imagemAnexada,
     };
 
-    console.log('enviando relatorio', payload);
+    console.log("enviando relatorio", payload);
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+
+      {/* HEADER */}
+
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -66,11 +72,14 @@ export default function RelatarProblemaScreen({
           Relatar problema
         </Text>
 
-        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+      >
+
         <View style={styles.card}>
+
           <Text style={styles.label}>
             Tipo de problema
           </Text>
@@ -99,9 +108,12 @@ export default function RelatarProblemaScreen({
                   ]}
                 >
                   {selecionado && (
-                    <View style={styles.radioInterno} />
+                    <View
+                      style={styles.radioInterno}
+                    />
                   )}
                 </View>
+
               </TouchableOpacity>
             );
           })}
@@ -127,7 +139,7 @@ export default function RelatarProblemaScreen({
           <TouchableOpacity
             style={styles.anexoBox}
             onPress={() =>
-              setImagemAnexada('foto.png')
+              setImagemAnexada("foto.png")
             }
           >
             <Ionicons
@@ -139,8 +151,9 @@ export default function RelatarProblemaScreen({
             <Text style={styles.anexoTexto}>
               {imagemAnexada
                 ? imagemAnexada
-                : 'Toque para adicionar imagem'}
+                : "Toque para adicionar imagem"}
             </Text>
+
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -151,99 +164,169 @@ export default function RelatarProblemaScreen({
               Enviar relatório
             </Text>
           </TouchableOpacity>
+
         </View>
 
         <Text style={styles.rodape}>
           Suas informações de dispositivo e versão do app serão incluídas automaticamente
         </Text>
+
       </ScrollView>
-    </SafeAreaView>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
 
+  /* HEADER PADRÃO DO APLICATIVO */
+
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    minHeight: 75,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
+
+    borderBottomWidth: 1,
+
+    borderBottomColor: colors.border,
+
+    shadowColor: colors.text,
+
+    shadowOpacity: 0.08,
+
+    shadowRadius: 5,
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
+  },
+
+  botaoVoltar: {
+    position: "absolute",
+
+    left: spacing.lg,
+
+    width: 48,
+
+    height: 48,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+    zIndex: 1,
   },
 
   headerTitle: {
-    fontSize: typography.size.lg,
-    fontWeight: '700',
-    color: colors.text,
-  },
+    fontSize: typography.size.xl,
 
-  headerSpacer: {
-    width: 26,
+    lineHeight: typography.size.xl + 8,
+
+    fontWeight: "800",
+
+    color: colors.text,
   },
 
   content: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing['3xl'],
+
+    paddingBottom: spacing["3xl"],
   },
 
   card: {
     backgroundColor: colors.card,
+
     borderRadius: radius.lg,
+
     padding: spacing.lg,
+
     marginTop: spacing.sm,
   },
 
   label: {
     fontSize: typography.size.sm,
-    fontWeight: '700',
+
+    fontWeight: "700",
+
     color: colors.text,
+
     marginBottom: spacing.sm,
   },
 
   labelDescricao: {
     fontSize: typography.size.sm,
-    fontWeight: '700',
+
+    fontWeight: "700",
+
     color: colors.text,
+
     marginTop: spacing.xl,
+
     marginBottom: spacing.sm,
   },
 
   labelAnexo: {
     fontSize: typography.size.sm,
-    fontWeight: '700',
+
+    fontWeight: "700",
+
     color: colors.text,
+
     marginTop: spacing.xl,
+
     marginBottom: spacing.sm,
   },
 
   opcaoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+
+    alignItems: "center",
+
+    justifyContent: "space-between",
+
     paddingVertical: spacing.md,
+
     borderBottomWidth: 1,
+
     borderBottomColor: colors.border,
   },
 
   opcaoTexto: {
     fontSize: typography.size.sm,
+
     color: colors.text,
+
     flex: 1,
+
     marginRight: spacing.sm,
   },
 
   radioExterno: {
     width: 20,
+
     height: 20,
+
     borderRadius: 10,
+
     borderWidth: 2,
+
     borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+
+    alignItems: "center",
+
+    justifyContent: "center",
   },
 
   radioExternoAtivo: {
@@ -252,57 +335,86 @@ const styles = StyleSheet.create({
 
   radioInterno: {
     width: 10,
+
     height: 10,
+
     borderRadius: 5,
+
     backgroundColor: colors.primary,
   },
 
   textArea: {
     borderWidth: 1,
+
     borderColor: colors.border,
+
     borderRadius: radius.md,
+
     paddingHorizontal: spacing.md,
+
     paddingVertical: spacing.sm,
+
     fontSize: typography.size.sm,
+
     color: colors.text,
+
     minHeight: 90,
-    textAlignVertical: 'top',
+
+    textAlignVertical: "top",
   },
 
   anexoBox: {
     borderWidth: 1,
-    borderStyle: 'dashed',
+
+    borderStyle: "dashed",
+
     borderColor: colors.border,
+
     borderRadius: radius.md,
+
     paddingVertical: spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
+
+    alignItems: "center",
+
+    justifyContent: "center",
   },
 
   anexoTexto: {
     color: colors.textSecondary,
+
     fontSize: typography.size.xs,
+
     marginTop: spacing.xs,
   },
 
   botao: {
     backgroundColor: colors.primary,
+
     borderRadius: radius.md,
+
     paddingVertical: spacing.lg,
-    alignItems: 'center',
+
+    alignItems: "center",
+
     marginTop: spacing.xl,
   },
 
   botaoTexto: {
-    color: '#fff',
+    color: "#fff",
+
     fontSize: typography.size.md,
-    fontWeight: '700',
+
+    fontWeight: "700",
   },
 
   rodape: {
-    textAlign: 'center',
+    textAlign: "center",
+
     color: colors.textSecondary,
+
     fontSize: typography.size.xs,
+
     marginTop: spacing.lg,
   },
+
 });

@@ -6,32 +6,36 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../../theme/colors";
-import { spacing } from "../../theme/spacing";
-import { typography } from "../../theme/typography";
-import { radius } from "../../theme/radius";
+import spacing from "../../theme/spacing";
+import typography from "../../theme/typography";
+import radius from "../../theme/radius";
 
 import AccordionItem from "../../components/AccordionItem";
 
-type Props = {
-  onVoltar: () => void;
-};
-
 export default function TermosDeUsoScreen({
   onVoltar,
-}: Props) {
+}) {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+
+      {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onVoltar}>
+
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={onVoltar}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
           <Ionicons
             name="chevron-back"
-            size={26}
+            size={28}
             color={colors.text}
           />
         </TouchableOpacity>
@@ -40,11 +44,17 @@ export default function TermosDeUsoScreen({
           Termos de uso
         </Text>
 
-        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+
+        {/* CARD INICIAL */}
         <View style={styles.cardTopo}>
+
           <View style={styles.iconCircle}>
             <Ionicons
               name="document-text-outline"
@@ -54,6 +64,7 @@ export default function TermosDeUsoScreen({
           </View>
 
           <View style={styles.flex}>
+
             <Text style={styles.tituloTopo}>
               Bem-vindo ao AlertaMed
             </Text>
@@ -63,15 +74,19 @@ export default function TermosDeUsoScreen({
               Eles foram criados para garantir uma experiência segura,
               transparente e responsável para todos os usuários.
             </Text>
+
           </View>
+
         </View>
 
+        {/* 1 */}
         <AccordionItem
           icon="checkmark-circle-outline"
           titulo="1. Aceitação dos Termos"
           texto="Ao criar uma conta ou utilizar o aplicativo, você declara que leu, compreendeu e concorda com estes Termos de Uso e com a Política de Privacidade."
         />
 
+        {/* 2 */}
         <AccordionItem
           icon="phone-portrait-outline"
           titulo="2. Uso do Aplicativo"
@@ -80,6 +95,7 @@ export default function TermosDeUsoScreen({
           }
         />
 
+        {/* 3 */}
         <AccordionItem
           icon="person-outline"
           titulo="3. Responsabilidades do Usuário"
@@ -88,26 +104,32 @@ export default function TermosDeUsoScreen({
           }
         />
 
+        {/* 4 */}
         <AccordionItem
           icon="medkit-outline"
           titulo="4. Limitação de Responsabilidade"
           texto="O AlertaMed atua apenas como ferramenta de apoio ao tratamento. A responsabilidade pelas decisões médicas e pelo uso correto dos medicamentos permanece com o usuário e seus profissionais de saúde."
         />
 
+        {/* 5 */}
         <AccordionItem
           icon="refresh-outline"
           titulo="5. Atualizações do Aplicativo"
           texto="O aplicativo poderá receber atualizações para melhorar sua segurança, desempenho e funcionalidades. Algumas alterações poderão modificar estes Termos de Uso."
         />
 
+        {/* 6 */}
         <AccordionItem
           icon="create-outline"
           titulo="6. Alterações nos Termos"
           texto="Os Termos de Uso poderão ser atualizados sempre que necessário. A versão mais recente estará disponível dentro do aplicativo."
         />
 
+        {/* DÚVIDAS */}
         <View style={styles.card}>
+
           <View style={styles.header2}>
+
             <View style={styles.iconCircle}>
               <Ionicons
                 name="mail-outline"
@@ -117,6 +139,7 @@ export default function TermosDeUsoScreen({
             </View>
 
             <View style={styles.flex}>
+
               <Text style={styles.titulo}>
                 Dúvidas?
               </Text>
@@ -125,44 +148,80 @@ export default function TermosDeUsoScreen({
                 Entre em contato com a equipe do AlertaMed pela seção Ajuda e
                 Suporte no aplicativo.
               </Text>
+
             </View>
+
           </View>
+
         </View>
 
+        {/* RODAPÉ */}
         <Text style={styles.rodape}>
           Versão 1.0 • Última atualização: Junho/2026
         </Text>
+
       </ScrollView>
-    </SafeAreaView>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.authBackground,
   },
 
+  /* HEADER PADRONIZADO COM CONFIGURAÇÕES */
+
   header: {
-    flexDirection: "row",
+    minHeight: 75,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
+
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+
+    shadowColor: colors.text,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
+  },
+
+  botaoVoltar: {
+    position: "absolute",
+    left: spacing.lg,
+
+    width: 48,
+    height: 48,
+
+    justifyContent: "center",
+    alignItems: "center",
+
+    zIndex: 1,
   },
 
   headerTitle: {
     fontSize: typography.size.xl,
-    fontWeight: "700",
+    lineHeight: typography.size.xl + 8,
+    fontWeight: "800",
     color: colors.text,
   },
 
-  headerSpacer: {
-    width: 26,
+  scroll: {
+    flex: 1,
   },
 
   content: {
     paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
     paddingBottom: spacing["3xl"],
   },
 
@@ -178,9 +237,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+
     backgroundColor: colors.primaryLight,
+
     alignItems: "center",
     justifyContent: "center",
+
     marginRight: spacing.md,
   },
 
@@ -231,4 +293,5 @@ const styles = StyleSheet.create({
     fontSize: typography.size.xs,
     marginTop: spacing.xl,
   },
+
 });

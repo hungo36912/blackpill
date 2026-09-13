@@ -35,15 +35,21 @@ export const getBulaResumo = async (req, res) => {
     );
 
     const bula = rows[0];
+
     if (!bula)
       return res.status(404).json({ message: 'Bula não encontrada para esse remédio.' });
 
-    // já tem resumo salvo? retorna do cache, sem chamar a IA de novo
     if (bula.bula_resumida) {
-      return res.json({ resumo: bula.bula_resumida, cache: true });
+      return res.json({
+        resumo: bula.bula_resumida,
+        cache: true
+      });
     }
 
-    res.json({ resumo, cache: false });
+    return res.status(404).json({
+      message: 'Resumo da bula não disponível.'
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Erro interno.' });

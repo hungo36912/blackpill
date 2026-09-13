@@ -47,7 +47,7 @@ export default function Lembretes({
 
     try {
       const { data } =
-        await api.get("/services/api/lembretes");
+        await api.get("/api/lembretes");
 
       setLembretes(data);
     } catch (error) {

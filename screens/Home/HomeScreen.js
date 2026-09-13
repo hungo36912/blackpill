@@ -90,7 +90,7 @@ export default function HomeScreen({
       try {
         const usuarioSalvo = JSON.parse((await AsyncStorage.getItem('@blackpill:user')) || '{}');
         if (ativo) setNome(usuarioSalvo.nome || '');
-        const { data } = await api.get('/lembretes/hoje');
+        const { data } = await api.get('/api/lembretes/hoje');
         if (ativo) setLembretesHoje(data);
       } catch (error) {
         console.log('Não foi possível carregar a Home:', error?.message);

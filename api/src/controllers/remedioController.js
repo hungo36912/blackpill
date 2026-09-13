@@ -28,9 +28,13 @@ export const buscarRemedios = async (req, res) => {
       page: Number(page),
       totalPages: Math.ceil(total / limit),
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Erro interno.' });
+ } catch (err) {
+    console.error("ERRO NO CONTROLLER DE REMEDIOS:", err);
+
+    res.status(500).json({
+      message: 'Erro interno.',
+      error: err.message
+    });
   }
 };
 

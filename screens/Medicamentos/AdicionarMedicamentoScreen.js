@@ -41,7 +41,7 @@ export default function AdicionarMedicamentoScreen({
         setCarregando(true);
         setErro("");
 
-        const response = await api.get("/remedios", {
+        const response = await api.get("/api/remedios", {
           params: {
             q: search.trim(),
             page: 1,

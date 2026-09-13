@@ -75,6 +75,7 @@ export default function App() {
   const [telaNovoLembrete, setTelaNovoLembrete] = useState(false);
   const [telaNotificacoes, setTelaNotificacoes] = useState(false);
   const [telaEditarLembrete, setTelaEditarLembrete] = useState(false);
+  const [lembreteEmEdicao, setLembreteEmEdicao] = useState(null);
   const [origemNotificacoes, setOrigemNotificacoes] = useState("home");
   const [origemCalendario, setOrigemCalendario] = useState("agenda");
   const [origemSobreApp, setOrigemSobreApp] = useState("config");
@@ -364,12 +365,19 @@ export default function App() {
     );
   }
 
-  if (telaEditarLembrete) {
+ if (telaEditarLembrete) {
     return (
       <EditarLembrete
-        onVoltar={() =>
-          setTelaEditarLembrete(false)
-        }
+        lembrete={lembreteEmEdicao}
+        onVoltar={() => setTelaEditarLembrete(false)}
+        onSalvar={() => {
+          setTelaEditarLembrete(false);
+          setTelaLembretes(true);
+        }}
+        onExcluir={() => {
+          setTelaEditarLembrete(false);
+          setTelaLembretes(true);
+        }}
       />
     );
   }
@@ -392,7 +400,7 @@ export default function App() {
     );
   }
 
-  if (telaLembretes) {
+if (telaLembretes) {
     return (
       <Lembretes
         onVoltar={() => setTelaLembretes(false)}
@@ -409,10 +417,15 @@ export default function App() {
           setOrigemCalendario("lembretes");
           setTelaCalendario(true);
         }}
+        onEditarLembrete={(lembrete) => {
+          setLembreteEmEdicao(lembrete);
+          setTelaLembretes(false);
+          setTelaEditarLembrete(true);
+        }}
       />
     );
   }
-
+  
   if (telaFichaMedica) {
     return (
       <FichaMedicaScreen

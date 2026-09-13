@@ -12,6 +12,7 @@ import authRoutes from './routes/authRoutes.js';
 import fichaRoutes from './routes/fichaRoutes.js';
 import tratamentoRoutes from './routes/tratamentoRoutes.js';
 import remedioRoutes from './routes/remedioRoutes.js';
+import lembreteRoutes from './routes/lembreteRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -24,7 +25,9 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/ficha', fichaRoutes);
 app.use('/api/tratamentos', tratamentoRoutes);
-app.use('/remedios', remedioRoutes);
+app.use('/api/remedios', remedioRoutes);
+app.use('/api/lembretes', lembreteRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

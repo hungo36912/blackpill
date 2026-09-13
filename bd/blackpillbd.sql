@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 10/09/2026 às 20:28
+-- Tempo de geração: 11/09/2026 às 14:33
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -81,6 +81,8 @@ CREATE TABLE `ficha_med` (
 --
 
 INSERT INTO `ficha_med` (`id_ficha_med`, `id_user`, `altura`, `peso`, `sexo`, `data_nascimento`, `alergias`, `obs`, `cond_saude`) VALUES
+('14403be0-4d8b-4eec-97f7-897b5ae9109c', 'bf3331c4-0d36-4555-8323-dc84599efa0d', 1.72, 55.00, 'M', '2008-12-06', NULL, NULL, NULL),
+('9291d1e2-f44e-4122-9fa0-4012daf26a15', 'e2659970-a829-42a5-9df1-ed0f98ab3174', 1.64, 61.00, 'F', '2008-06-25', 'Etec', '', 'Normal'),
 ('df6acd98-2c9f-4c64-a296-90833738d0f3', '401f34c4-4040-40b0-ad88-2c9719b4a406', 1.70, 60.00, 'M', '2008-03-12', 'Betinhas', 'Blablablabla', 'O');
 
 -- --------------------------------------------------------
@@ -93,6 +95,23 @@ CREATE TABLE `horario_tratamento` (
   `id_horario` char(36) NOT NULL,
   `fk_id_tratamento` char(36) NOT NULL,
   `horario` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `lembrete`
+--
+
+CREATE TABLE `lembrete` (
+  `id_lembrete` char(36) NOT NULL,
+  `fk_usuario_id_user` char(36) NOT NULL,
+  `medicamento` varchar(150) NOT NULL,
+  `horario` time NOT NULL,
+  `frequencia` enum('Todos os dias','Dias específicos','Uma vez') NOT NULL,
+  `dias_semana` text DEFAULT NULL,
+  `data_unica` date DEFAULT NULL,
+  `notificacao` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -188,6 +207,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id_user`, `nome`, `email`, `senha`) VALUES
 ('401f34c4-4040-40b0-ad88-2c9719b4a406', 'Arthur', 'arthur@email.com', '$2b$10$Wzd24smMn.UYJEui7UvrGe3bc6gL0r8rkTctABYzoDFDFx5ZB.i46'),
+('89dde165-7e98-45c1-bd22-32f52dfea6a0', 'Arthur2', 'arthur2@email.com', '$2b$10$ryTzeXaHuAkjoamZMoelGurR67ceqi9rCzbYuO27GbmXnk2pDJuE2'),
+('bf3331c4-0d36-4555-8323-dc84599efa0d', 'Victor', 'victor@email.com', '$2b$10$p7qTRHYiqQg242wL8Qb6UO0e32OkKpNNu7c4z.9X2hQMVhSQgodby'),
 ('e2659970-a829-42a5-9df1-ed0f98ab3174', 'Celine de Jesus Lial', 'dejesuslialfirminoc@gmail.com', '$2b$10$xUcmsM/b/Qls.PL/JqoDS.eynYkusPEzT1y30ZuOEKs9m3.vvN0RO');
 
 --
@@ -213,6 +234,13 @@ ALTER TABLE `ficha_med`
 ALTER TABLE `horario_tratamento`
   ADD PRIMARY KEY (`id_horario`),
   ADD KEY `FK_disparo_tratamento` (`fk_id_tratamento`);
+
+--
+-- Índices de tabela `lembrete`
+--
+ALTER TABLE `lembrete`
+  ADD PRIMARY KEY (`id_lembrete`),
+  ADD KEY `FK_lembrete_usuario` (`fk_usuario_id_user`);
 
 --
 -- Índices de tabela `registro_dose`
@@ -264,6 +292,12 @@ ALTER TABLE `ficha_med`
 --
 ALTER TABLE `horario_tratamento`
   ADD CONSTRAINT `FK_disparo_tratamento` FOREIGN KEY (`fk_id_tratamento`) REFERENCES `tratamento` (`id_tratamento`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `lembrete`
+--
+ALTER TABLE `lembrete`
+  ADD CONSTRAINT `FK_lembrete_usuario` FOREIGN KEY (`fk_usuario_id_user`) REFERENCES `usuario` (`id_user`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `registro_dose`

@@ -4,11 +4,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import SwitchSelector from 'react-native-switch-selector';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import colors from '../../theme/colors';
@@ -19,25 +19,44 @@ import typography from '../../theme/typography';
 import api from '../../services/api';
 import { dataParaApi } from '../../services/lembretes';
 
-export default function AgendaScreen({ onAbrirCalendario }) {
-  const options = [
-    { label: 'Hoje', value: 'hoje' },
-    { label: 'Semana', value: 'semana' },
-    { label: 'Calendário', value: 'calendario' },
-  ];
+LocaleConfig.locales['pt-br'] = {
+  monthNames: [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  ],
+  monthNamesShort: [
+    'Jan.', 'Fev.', 'Mar.', 'Abr.', 'Mai.', 'Jun.',
+    'Jul.', 'Ago.', 'Set.', 'Out.', 'Nov.', 'Dez.',
+  ],
+  dayNames: [
+    'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira',
+    'Quinta-feira', 'Sexta-feira', 'Sábado',
+  ],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  today: 'Hoje',
+};
+LocaleConfig.defaultLocale = 'pt-br';
 
-  const [periodo, setPeriodo] = useState('hoje');
-  const [dataExibida, setDataExibida] = useState('');
+const getToday = () => dataParaApi(new Date());
+
+const formatDate = (dateString) => {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return {
+    day: date.getDate(),
+    month: date.toLocaleDateString('pt-BR', { month: 'long' }),
+    weekday: date.toLocaleDateString('pt-BR', { weekday: 'long' }),
+  };
+};
+
+export default function CalendarScreen({ onVoltar }) {
+  const today = getToday();
+  const [selectedDate, setSelectedDate] = useState(today);
   const [lembretes, setLembretes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const agora = new Date();
-    const diaSemana = agora.toLocaleDateString('pt-BR', { weekday: 'long' });
-    const diaSemanaFormatado = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
-    const dataNumerica = agora.toLocaleDateString('pt-BR');
-    setDataExibida(`${diaSemanaFormatado}, ${dataNumerica}`);
-  }, []);
+  const selected = formatDate(selectedDate);
 
   const carregarLembretes = useCallback(async () => {
     try {
@@ -56,60 +75,52 @@ export default function AgendaScreen({ onAbrirCalendario }) {
     carregarLembretes();
   }, [carregarLembretes]);
 
-  const handlePeriodoChange = (value) => {
-    if (value === 'calendario') {
-      onAbrirCalendario?.();
-      return;
-    }
-    setPeriodo(value);
-  };
+  const markedDates = React.useMemo(() => {
+    const marks = {
+      [selectedDate]: {
+        selected: true,
+        selectedColor: colors.primary,
+        selectedTextColor: '#FFFFFF',
+      },
+    };
 
-  const lembretesFiltrados = React.useMemo(() => {
-    const hoje = new Date();
-    const hojeStr = dataParaApi(hoje);
-    const diaSemanaHoje = hoje.getDay();
-
-    return lembretes.filter((lembrete) => {
+    lembretes.forEach((lembrete) => {
       if (lembrete.data_unica) {
-        if (periodo === 'hoje') {
-          return lembrete.data_unica === hojeStr;
+        const date = lembrete.data_unica;
+        if (!marks[date]) {
+          marks[date] = { marked: true, dotColor: colors.primary };
+        } else {
+          marks[date].marked = true;
+          marks[date].dotColor = colors.primary;
         }
-
-        const dataUnica = new Date(lembrete.data_unica + 'T12:00:00');
-        const diffDias = Math.ceil(
-          (dataUnica.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        return diffDias >= 0 && diffDias <= 7;
       }
-
-      if (periodo === 'hoje') {
-        if (
-          lembrete.frequencia?.toLowerCase().includes('diár') ||
-          lembrete.frequencia?.toLowerCase().includes('diario')
-        ) {
-          return true;
-        }
-        return lembrete.dias_semana?.includes(diaSemanaHoje);
-      }
-
-      return true;
     });
-  }, [lembretes, periodo]);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <View style={styles.cardLeft}>
-        <Ionicons name="medical" size={22} color={colors.primary} />
+    return marks;
+  }, [lembretes, selectedDate]);
+
+  const lembretesDoDia = React.useMemo(() => {
+    return lembretes.filter((l) => {
+      if (l.data_unica) {
+        return l.data_unica === selectedDate;
+      }
+
+      const diaSemana = new Date(selectedDate + 'T12:00:00').getDay();
+      return l.dias_semana?.includes(diaSemana);
+    });
+  }, [lembretes, selectedDate]);
+
+  const renderLembrete = ({ item }) => (
+    <View style={styles.lembreteItem}>
+      <View style={styles.lembreteIcon}>
+        <Ionicons name="medical" size={18} color={colors.primary} />
       </View>
-
-      <View style={styles.cardContent}>
-        <Text style={styles.medicamento}>{item.medicamento}</Text>
-        <Text style={styles.horario}>{item.horario}</Text>
-        <Text style={styles.frequencia}>{item.frequencia}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.lembreteNome}>{item.medicamento}</Text>
+        <Text style={styles.lembreteHorario}>{item.horario}</Text>
       </View>
-
       {item.notificacao && (
-        <Ionicons name="notifications" size={20} color={colors.primary} />
+        <Ionicons name="notifications" size={18} color={colors.primary} />
       )}
     </View>
   );
@@ -117,60 +128,85 @@ export default function AgendaScreen({ onAbrirCalendario }) {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Agenda</Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          activeOpacity={0.7}
+          onPress={onVoltar}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="chevron-back" size={28} color={colors.text} />
+        </TouchableOpacity>
+
+        <Text style={styles.headerTitle}>Calendário de tratamento</Text>
       </View>
 
       <View style={styles.content}>
-        <SwitchSelector
-          options={options}
-          initial={0}
-          onPress={handlePeriodoChange}
-          buttonColor={colors.primary}
-          borderRadius={radius.md}
-          bold
-          backgroundColor={colors.background}
-          style={styles.switchSelector}
-        />
-
-        <View style={styles.dateRow}>
-          <View style={styles.calendarCircle}>
-            <Ionicons name="calendar" size={24} color={colors.primary} />
-          </View>
-
-          <View style={styles.dateInfo}>
-            <Text style={styles.dateTitle}>{dataExibida}</Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.seeAll}
-            activeOpacity={0.7}
-            accessibilityRole="button"
-            accessibilityLabel="Ver todos os alertas"
-            onPress={() => {
-              // TODO: navegar para lista completa
+        <View style={styles.calendarContainer}>
+          <Calendar
+            current={today}
+            markedDates={markedDates}
+            onDayPress={(day) => setSelectedDate(day.dateString)}
+            firstDay={0}
+            enableSwipeMonths
+            renderArrow={(direction) => (
+              <Text style={styles.arrow}>
+                {direction === 'left' ? '‹' : '›'}
+              </Text>
+            )}
+            theme={{
+              backgroundColor: colors.card,
+              calendarBackground: colors.card,
+              textSectionTitleColor: colors.textSecondary,
+              dayTextColor: colors.text,
+              textDisabledColor: colors.border,
+              monthTextColor: colors.text,
+              selectedDayBackgroundColor: colors.primary,
+              selectedDayTextColor: '#FFFFFF',
+              todayTextColor: colors.primary,
+              arrowColor: colors.primary,
+              textDayFontSize: typography.size.sm,
+              textMonthFontSize: typography.size.md,
+              textMonthFontWeight: '700',
+              textDayHeaderFontSize: typography.size.xs,
             }}
-          >
-            <Text style={styles.seeAllText}>Ver todos</Text>
-          </TouchableOpacity>
+          />
         </View>
 
-        {loading ? (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color={colors.primary} />
+        <View style={styles.legend}>
+          <View style={styles.legendItem}>
+            <View style={[styles.dot, { backgroundColor: colors.primary }]} />
+            <Text style={styles.legendText}>Com medicamentos</Text>
           </View>
-        ) : lembretesFiltrados.length === 0 ? (
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>Nenhum alerta agendado.</Text>
+          <View style={styles.legendItem}>
+            <View style={[styles.dot, { backgroundColor: '#F29B38' }]} />
+            <Text style={styles.legendText}>Atrasado</Text>
           </View>
-        ) : (
-          <FlatList
-            data={lembretesFiltrados}
-            keyExtractor={(item) => item.id_lembrete}
-            renderItem={renderItem}
-            contentContainerStyle={styles.listContent}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+        </View>
+
+        <View style={styles.selectedDayCard}>
+          <Text style={styles.selectedDayTitle}>
+            {selected.weekday.charAt(0).toUpperCase() + selected.weekday.slice(1)},{' '}
+            {selected.day} de {selected.month}
+          </Text>
+
+          {loading ? (
+            <ActivityIndicator
+              style={{ marginTop: spacing.lg }}
+              color={colors.primary}
+            />
+          ) : lembretesDoDia.length === 0 ? (
+            <Text style={styles.emptyText}>Nenhum medicamento neste dia</Text>
+          ) : (
+            <FlatList
+              data={lembretesDoDia}
+              keyExtractor={(item) => item.id_lembrete}
+              renderItem={renderLembrete}
+              scrollEnabled={false}
+              style={{ marginTop: spacing.sm }}
+            />
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -185,127 +221,112 @@ const styles = StyleSheet.create({
     minHeight: 75,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
-    shadowColor: colors.text,
-    shadowOpacity: 0.08,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    paddingHorizontal: spacing.lg,
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    left: spacing.lg,
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
   headerTitle: {
+    color: colors.text,
     fontSize: typography.size.xl,
     lineHeight: typography.size.xl + 8,
     fontWeight: '800',
-    color: colors.text,
+    textAlign: 'center',
   },
   content: {
     flex: 1,
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.xl,
-  },
-  switchSelector: {
-    width: '100%',
-    alignSelf: 'center',
-    shadowColor: colors.text,
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  dateRow: {
-    minHeight: 72,
-    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: spacing.lg,
-    marginBottom: spacing.md,
+  },
+  calendarContainer: {
     width: '100%',
-  },
-  calendarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: radius['2xl'],
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.primaryLight,
-  },
-  dateInfo: {
-    flex: 1,
-    marginLeft: spacing.md,
-    paddingRight: spacing.sm,
-  },
-  dateTitle: {
-    fontSize: typography.size.md,
-    lineHeight: typography.size.md + 6,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  seeAll: {
-    minHeight: 44,
-    paddingHorizontal: spacing.md,
+    backgroundColor: colors.card,
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
-  seeAllText: {
+  arrow: {
     color: colors.primary,
-    fontSize: typography.size.sm,
-    lineHeight: typography.size.sm + 5,
-    fontWeight: '700',
+    fontSize: 28,
+    fontWeight: '300',
   },
-  centered: {
-    flex: 1,
+  legend: {
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: spacing.md,
+    gap: spacing.lg,
   },
-  emptyText: {
-    fontSize: typography.size.md,
-    lineHeight: typography.size.md + 6,
-    color: colors.textSecondary,
-    textAlign: 'center',
-  },
-  listContent: {
-    paddingBottom: spacing.xl,
-  },
-  card: {
+  legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.background,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: spacing.xs,
+  },
+  legendText: {
+    color: colors.textSecondary,
+    fontSize: typography.size.sm,
+  },
+  selectedDayCard: {
+    width: '100%',
+    backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.border,
+    marginTop: spacing.lg,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    minHeight: 140,
   },
-  cardLeft: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  selectedDayTitle: {
+    color: colors.text,
+    fontSize: typography.size.sm,
+    fontWeight: '700',
+    marginBottom: spacing.xs,
+  },
+  emptyText: {
+    marginTop: spacing.lg,
+    textAlign: 'center',
+    color: colors.textSecondary,
+    fontSize: typography.size.sm,
+  },
+  lembreteItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  lembreteIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: spacing.md,
+    marginRight: spacing.sm,
   },
-  cardContent: {
-    flex: 1,
-  },
-  medicamento: {
-    fontSize: typography.size.md,
-    fontWeight: '700',
+  lembreteNome: {
+    fontSize: typography.size.sm,
+    fontWeight: '600',
     color: colors.text,
   },
-  horario: {
-    fontSize: typography.size.sm,
-    color: colors.primary,
-    marginTop: 2,
-    fontWeight: '600',
-  },
-  frequencia: {
+  lembreteHorario: {
     fontSize: typography.size.xs,
-    color: colors.textSecondary,
+    color: colors.primary,
     marginTop: 2,
   },
 });

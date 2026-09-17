@@ -16,6 +16,9 @@ import radius from '../../theme/radius';
 import spacing from '../../theme/spacing';
 import typography from '../../theme/typography';
 
+import api from "../../services/api";
+import { dataParaApi } from "../../services/lembretes";
+
 export default function AgendaScreen({ onAbrirCalendario }) {
   const options = [
     { label: 'Hoje', value: '1' },
